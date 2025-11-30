@@ -1,0 +1,29 @@
+{
+  "brand": {
+    "primary": "#d98b33",
+    "accent": "#d98b33"
+  },
+  "surface": {
+    "bg": "#f6d79e",
+    "card": "#ffffff",
+    "ink": "#642a0f"
+  },
+  "text": {
+    "primary": "#1b1b1b",
+    "onDark": "#f7f7f7",
+    "muted": "#6b6b6b"
+  },
+  "palette": [
+    "#e1a558",
+    "#f6d79e",
+    "#a9591d",
+    "#642a0f",
+    "#c97326",
+    "#d98b33",
+    "#f6c674",
+    "#8a390c",
+    "#deba88",
+    "#b07644",
+    "#ba864d"
+  ]
+}

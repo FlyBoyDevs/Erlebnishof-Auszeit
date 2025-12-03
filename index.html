@@ -1,309 +1,943 @@
 <!DOCTYPE html>
 <html lang="de">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
+<head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
     <title>Erlebnishof-Auszeit – Café & Hofladen</title>
     <meta
-      name="description"
-      content="Tierisch gute Auszeit – Entdecke Café & Hofladen mit Herz! Frühstück, Kaffee & Kuchen, regionale Spezialitäten."
+            name="description"
+            content="Tierisch gute Auszeit – Entdecke Café & Hofladen mit Herz! Frühstück, Kaffee & Kuchen, regionale Spezialitäten."
     />
-    <link rel="stylesheet" href="styles.css"/> 
-  </head>
-  <body>
-    <div id="scrollbar"></div>
-    <header class="header">
-      <div class="nav">
+    <link rel="stylesheet"
+          href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+          integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH"
+          crossorigin="anonymous"/>
+    <link rel="stylesheet" href="archive/styles.css"/>
+    <style>
+        .hero__slide--1 {
+            background-image: url("img/home/home1.jpg");
+        }
 
+        .hero__slide--2 {
+            background-image: url("img/home/home2.jpg");
+        }
+
+        .hero__slide--3 {
+            background-image: url("img/home/home3.jpg");
+        }
+
+        #food-menu.section {
+            min-height: auto;
+            padding-top: 42px;
+            padding-bottom: 42px;
+        }
+
+        /* Replace the menu/hof gallery base rules with a responsive thumbnail-like grid.
+           Images will be slightly larger than typical thumbnails but capped with max-width
+           so they don't get too large on wide screens. */
+        .menu-gallery-simple,
+        .hof-gallery-simple {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 12px;
+            margin-top: 16px;
+            justify-items: center;
+        }
+
+        /* Images: responsive, constrained width so they stay slightly larger than thumbnails */
+        .menu-gallery-simple img,
+        .hof-gallery-simple img {
+            width: 100%;
+            max-width: 220px; /* caps image size so it's not too large */
+            height: auto;
+            border-radius: 10px;
+            object-fit: cover;
+            display: block;
+        }
+
+        @media (min-width: 480px) {
+            /* On small tablets/large phones: try 2 items per row with a minimum size */
+            .menu-gallery-simple,
+            .hof-gallery-simple {
+                grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+            }
+        }
+
+        @media (min-width: 768px) {
+            /* On desktop, allow more columns but images remain capped by max-width */
+            .menu-gallery-simple,
+            .hof-gallery-simple {
+                grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+            }
+        }
+
+        .events-container {
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+
+        .events-carousel {
+            position: relative;
+            background: #faf3e4;
+            border-radius: 14px;
+            padding: 16px;
+            overflow: hidden;
+        }
+
+        .event-slide {
+            min-height: 260px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+        }
+
+        .event-slide--intro {
+            text-align: left;
+        }
+
+        .event-slide__intro {
+            max-width: 480px;
+            margin: 0 auto;
+        }
+
+        .event-slide__intro-heading {
+            font-weight: 600;
+            font-size: 1.2rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .event-slide__intro-copy {
+            font-size: 0.95rem;
+            line-height: 1.5;
+        }
+
+        .event-slide img {
+            width: 100%;
+            max-height: 320px;
+            object-fit: contain;
+            border-radius: 10px;
+        }
+
+        /* Events section: centered content, slightly larger list items with custom bullet */
+        .events-layout .events-text {
+            max-width: 820px;
+            margin: 0 auto;
+            text-align: left;
+            padding: 8px 16px;
+        }
+
+        .events-layout .events-text h2 {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .events-list {
+            list-style: none;
+            padding: 0;
+            margin: 0.5rem 0 1rem 0;
+        }
+
+        .events-list li {
+            position: relative;
+            padding-left: 28px;
+            margin-bottom: 8px;
+            line-height: 1.4;
+            font-size: 1rem;
+        }
+
+        .events-list li::before {
+            content: "•";
+            position: absolute;
+            left: 0;
+            top: 0;
+            color: #7a4b1e; /* warm accent color */
+            font-weight: 700;
+            font-size: 1.1rem;
+            line-height: 1;
+        }
+
+        @media (min-width: 768px) {
+            .events-layout .events-text h2 {
+                font-size: 1.4rem;
+            }
+
+            .events-list li {
+                font-size: 1.05rem;
+            }
+        }
+
+        /* Events images: responsive row, images slightly larger than thumbnails */
+        .events-images {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+            gap: 12px;
+            align-items: center;
+            justify-items: center;
+            margin-top: 12px;
+        }
+
+        .events-images img {
+            width: 100%;
+            max-width: 300px; /* cap so images don't get too large */
+            height: auto;
+            border-radius: 8px;
+            object-fit: cover;
+            display: block;
+        }
+
+        #hofladenCarousel img {
+            max-height: 380px;
+            object-fit: contain; /*object-fit: cover;*/
+        }
+    </style>
+</head>
+<body>
+<div id="scrollbar"></div>
+<header class="header">
+    <div class="nav">
         <a href="#" class="brand brand-logo hero_logo" aria-label="Startseite">
-          <img src="img/logo2.svg" alt="Erlebnishof Auszeit" />
+            <img src="img/logo2.svg" id="logo" alt="Erlebnishof Auszeit"/>
         </a>
-        <p class="nav-indicator" data-section-indicator data-default-label="Willkommen">Home</p>
         <div class="nav-controls">
-          <button class="nav-toggle" aria-label="Menü" aria-expanded="false">
-            <span class="bar"></span><span class="bar"></span
-            ><span class="bar"></span>
-          </button>
-          <nav class="main-nav" aria-label="Hauptnavigation">
-            <a href="#ueber" class="i18n-de">Über uns</a>
-            <a href="#ueber" class="i18n-en">About</a>
-            <a href="#food-menu" class="i18n-de">Speisekarte</a>
-            <a href="#food-menu" class="i18n-en">Menu</a>
-            <a href="#hofladen" class="i18n-de">Hofladen</a>
-            <a href="#hofladen" class="i18n-en">Farmstall</a>
-            <a href="#events" class="i18n-de nav-events-link">Events <span class="nav-badge" data-events-badge></span></a>
-            <a href="#events" class="i18n-en nav-events-link">Events <span class="nav-badge" data-events-badge></span></a>
-            <a href="#news" class="i18n-de">Neuigkeiten</a>
-            <a href="#news" class="i18n-en">News</a>
-            <a href="#kontakt" class="i18n-de">Kontakt & Öffnungszeiten</a>
-            <a href="#kontakt" class="i18n-en">Contact & Hours</a>
-          </nav>
-        </div>
-        <!-- language switch removed from header -->
-      </div>
-    </header>
+            <button class="nav-toggle" aria-label="Menü" aria-expanded="false">
+                <span class="bar"></span><span class="bar"></span><span class="bar"></span>
+            </button>
+            <nav class="main-nav" aria-label="Hauptnavigation">
+                <a href="#ueber" class="i18n-de">Über uns</a>
+                <a href="#ueber" class="i18n-en">About</a>
+                <a href="#food-menu" class="i18n-de">Speisekarte</a>
+                <a href="#food-menu" class="i18n-en">Menu</a>
+                <a href="#hofladen" class="i18n-de">Hofladen</a>
+                <a href="#hofladen" class="i18n-en">Farmstall</a>
+                <a href="#news" class="i18n-de">Neuigkeiten <span class="nav-badge"
+                                                                  data-events-badge></span></a>
+                <a href="#news" class="i18n-en">News <span class="nav-badge"
+                                                           data-events-badge></span></a>
+                <a href="#events" class="i18n-de nav-events-link">Events</a>
+                <a href="#events" class="i18n-en nav-events-link">Events</a>
 
-    <section class="hero" aria-label="Hero">
-      <div class="hero__slides" aria-hidden="true" data-hero-track>
+                <a href="#kontakt" class="i18n-de">Kontakt & Öffnungszeiten</a>
+                <a href="#kontakt" class="i18n-en">Contact & Hours</a>
+            </nav>
+        </div>
+    </div>
+</header>
+
+<section class="hero" aria-label="Hero">
+    <div class="hero__slides" aria-hidden="true" data-hero-track>
         <div class="hero__slide hero__slide--1"></div>
         <div class="hero__slide hero__slide--2"></div>
         <div class="hero__slide hero__slide--3"></div>
-      </div>
-      <div class="hero__center">
+    </div>
+    <div class="hero__center">
         <h1 class="hero__title">
-          <span class="hero__line1">Erlebnishof</span>
-          <span class="hero__line2">Auszeit</span>
+            <span class="hero__line1">Erlebnishof</span>
+            <span class="hero__line2">Auszeit</span>
         </h1>
-      </div>
-    </section>
+    </div>
+</section>
 
-    <section id="ueber" class="section bg-wheat" aria-label="Über uns / About">
-      <div class="container">
+<section id="ueber" class="section bg-wheat" aria-label="Über uns / About">
+    <div class="container">
         <h2 class="i18n-de">Über uns</h2>
         <h2 class="i18n-en">About us</h2>
         <p class="about-text i18n-de">
-          Erlebnishof Auszeit ist ein gemütliches Café mit Bauernhof-Atmosphäre in Bernhardswald. Genießen Sie hausgemachte Kuchen, frischen Kaffee und ein reichhaltiges Frühstück in entspannter Umgebung – drinnen oder im idyllischen Außenbereich. Jeden Sonntag verwöhnen wir unsere Gäste mit einem abwechslungsreichen Frühstücksbuffet. Dazu finden Sie in unserem kleinen Hofladen ausgewählte Produkte vom Land.
+            Erlebnishof Auszeit ist ein gemütliches Café mit Bauernhof-Atmosphäre in Bernhardswald. Genießen Sie
+            hausgemachte Kuchen, frischen Kaffee und ein reichhaltiges Frühstück in entspannter Umgebung – drinnen oder
+            im idyllischen Außenbereich. Jeden Sonntag verwöhnen wir unsere Gäste mit einem abwechslungsreichen
+            Frühstücksbuffet. Dazu finden Sie in unserem kleinen Hofladen ausgewählte Produkte vom Land.
         </p>
         <p class="about-text i18n-en">
-          Erlebnishof Auszeit is a cozy café with a farm atmosphere in Bernhardswald. Enjoy homemade cakes, fresh coffee, and a hearty breakfast in a relaxed setting—indoors or in the idyllic outdoor area. Every Sunday we treat our guests to a varied breakfast buffet. You’ll also find selected country products in our small farm shop.
+            Erlebnishof Auszeit is a cozy café with a farm atmosphere in Bernhardswald. Enjoy homemade cakes, fresh
+            coffee, and a hearty breakfast in a relaxed setting—indoors or in the idyllic outdoor area. Every Sunday we
+            treat our guests to a varied breakfast buffet. You’ll also find selected country products in our small farm
+            shop.
         </p>
-      </div>
-    </section>
+    </div>
+</section>
 
-    
-
-    <section id="food-menu" class="section" aria-label="Speisekarte/Menu">
-      <div class="container menu-layout">
+<section id="food-menu" class="section" aria-label="Speisekarte/Menu">
+    <div class="container menu-layout">
         <div class="menu-text">
-          <h2 class="i18n-de">Speisekarte</h2>
-          <h2 class="i18n-en">Menu</h2>
-          <div class="menu-list">
-            <div>
-              <strong class="i18n-de">Frühstück</strong>
-              <strong class="i18n-en">breakfast</strong>
-              <p class="small i18n-de">Liebevoll zusammengestellte Aufstriche, regionale Wurst- & Käsespezialitäten sowie frisches Brot und Gebäck.</p>
-              <p class="small i18n-en">Homemade spreads, local cold cuts &amp; cheese, fresh bread &amp; pastries.</p>
+            <h2 class="i18n-de">Speisekarte</h2>
+            <h2 class="i18n-en">Menu</h2>
+            <div class="menu-list">
+                <div>
+                    <strong class="i18n-de">Frühstück</strong>
+                    <strong class="i18n-en">breakfast</strong>
+                    <p class="small i18n-de">Liebevoll zusammengestellte Aufstriche, regionale Wurst- &
+                        Käsespezialitäten sowie frisches Brot und Gebäck.</p>
+                    <p class="small i18n-en">Homemade spreads, local cold cuts &amp; cheese, fresh bread &amp;
+                        pastries.</p>
+                </div>
+                <div>
+                    <strong class="i18n-de">Kaffee &amp; Kuchen</strong>
+                    <strong class="i18n-en">Coffee &amp; cake</strong>
+                    <p class="small i18n-de">Täglich wechselnde, hausgemachte Kuchen und Torten aus unserer eigenen
+                        Backstube.</p>
+                    <p class="small i18n-en">Fresh cakes &amp; tortes every day from our kitchen.</p>
+                </div>
             </div>
-            <div>
-              <strong class="i18n-de">Kaffee &amp; Kuchen</strong>
-              <strong class="i18n-en">Coffee &amp; cake</strong>
-              <p class="small i18n-de">Täglich wechselnde, hausgemachte Kuchen und Torten aus unserer eigenen Backstube.</p>
-              <p class="small i18n-en">Fresh cakes &amp; tortes every day from our kitchen.</p>
-            </div>
-          </div>
         </div>
-        <div class="menu-gallery">
-          <div class="menu-carousel" data-menu-carousel>
-            <button type="button" class="menu-arrow menu-arrow--prev" aria-label="Vorheriges Foto" data-menu-prev></button>
-            <div class="menu-track" data-menu-track>
-              <p class="small menu-empty" data-menu-empty hidden>Speisekarten-Fotos folgen in Kürze.</p>
-            </div>
-            <button type="button" class="menu-arrow menu-arrow--next" aria-label="Nächstes Foto" data-menu-next></button>
-          </div>
-          <div class="menu-pagination" data-menu-pagination></div>
+        <div class="menu-gallery-simple">
+            <img src="img/menu/cake2.JPG" alt="Kuchen 2">
+            <img src="img/menu/cake4.JPG" alt="Kuchen 4">
+            <img src="img/menu/cake3.JPG" alt="Kuchen 3">
+            <img src="img/menu/cake1.JPG" alt="Kuchen 1">
         </div>
-      </div>
-    </section>
+    </div>
+</section>
 
-    <section id="hofladen" class="section">
-      <div class="container hof-layout">
+<section id="hofladen" class="section">
+    <div class="container hof-layout">
         <div class="hof-text">
-          <h2 class="i18n-de">Hofladen</h2>
-          <h2 class="i18n-en">Farm Shop</h2>
-          <p class="small i18n-de">Regionale Lieblingsprodukte, direkt vom Hof. Alles, was unseren Frühstückstisch besonders macht, können Sie auch mit nach Hause nehmen.</p>
-          <p class="small i18n-en">Regional favorites straight from our farm. Everything that makes our breakfasts special can go home with you.</p>
-          <p class="small i18n-de">
-            Im Hofladen finden Sie Eier, Nudeln, Kartoffeln, Mehl, Speiseöle, hausgemachte Liköre, Marmeladen &amp; Sirup sowie liebevoll arrangierte Geschenkkörbe und Gutscheine.
-          </p>
-          <p class="small i18n-en">
-            Our farm shop stocks eggs, pasta, potatoes, flour, cooking oils, homemade liqueurs, jams &amp; syrups, plus thoughtfully curated gift baskets and vouchers.
-          </p>
+            <h2 class="i18n-de">Hofladen</h2>
+            <h2 class="i18n-en">Farm Shop</h2>
+            <p class="small i18n-de">Regionale Lieblingsprodukte, direkt vom Hof. Alles, was unseren Frühstückstisch
+                besonders macht, können Sie auch mit nach Hause nehmen.</p>
+            <p class="small i18n-en">Regional favorites straight from our farm. Everything that makes our breakfasts
+                special can go home with you.</p>
+            <p class="small i18n-de">
+                Im Hofladen finden Sie Eier, Nudeln, Kartoffeln, Mehl, Speiseöle, hausgemachte Liköre, Marmeladen &amp;
+                Sirup sowie liebevoll arrangierte Geschenkkörbe und Gutscheine.
+            </p>
+            <p class="small i18n-en">
+                Our farm shop stocks eggs, pasta, potatoes, flour, cooking oils, homemade liqueurs, jams &amp; syrups,
+                plus thoughtfully curated gift baskets and vouchers.
+            </p>
         </div>
-        <div class="hof-gallery">
-          <div class="hof-carousel" data-hof-carousel>
-            <button type="button" class="hof-arrow hof-arrow--prev" aria-label="Vorheriges Foto" data-hof-prev></button>
-            <div class="hof-track" data-hof-track>
-              <p class="small hof-empty" data-hof-empty hidden>Hofladen-Fotos folgen in Kürze.</p>
+        <div id="hofladenCarousel"
+             class="carousel slide carousel-dark"
+             data-bs-ride="carousel"
+             data-bs-touch="true">
+            <div class="carousel-inner">
+                <div class="carousel-item active">
+                    <img src="img/hofladen/IMG_3884.jpeg"
+                         class="d-block w-100"
+                         alt="Hofladen mit regionalen Produkten">
+                </div>
+                <div class="carousel-item">
+                    <img src="img/hofladen/IMG_3952.jpeg"
+                         class="d-block w-100"
+                         alt="Produkten Pasta">
+                </div>
+                <div class="carousel-item">
+                    <img src="img/hofladen/IMG_4030.jpeg"
+                         class="d-block w-100"
+                         alt="Produkten Honig etc">
+                </div>
+                <div class="carousel-item">
+                    <img src="img/hofladen/IMG_4102.jpeg"
+                         class="d-block w-100"
+                         alt="Paste">
+                </div>
+                <div class="carousel-item">
+                    <img src="img/hofladen/IMG_4103.jpeg"
+                         class="d-block w-100"
+                         alt="Paste">
+                </div>
+                <div class="carousel-item">
+                    <img src="img/hofladen/IMG_4111.jpeg"
+                         class="d-block w-100"
+                         alt="Geschenkkorb">
+                </div>
+                <div class="carousel-item">
+                    <img src="img/hofladen/IMG_4182.jpeg"
+                         class="d-block w-100"
+                         alt="Kartoffeln">
+                </div>
+                <div class="carousel-item">
+                    <img src="img/hofladen/IMG_4528.jpeg"
+                         class="d-block w-100"
+                         alt="Eier">
+                </div>
+                <div class="carousel-item">
+                    <img src="img/hofladen/IMG_4751.jpeg"
+                         class="d-block w-100"
+                         alt="Mehl">
+                </div>
+                <div class="carousel-item">
+                    <img src="img/hofladen/IMG_4754.jpeg"
+                         class="d-block w-100"
+                         alt="Öls">
+                </div>
             </div>
-            <button type="button" class="hof-arrow hof-arrow--next" aria-label="Nächstes Foto" data-hof-next></button>
-          </div>
-          <div class="hof-pagination" data-hof-pagination></div>
-        </div>
-      </div>
-    </section>
 
-    <section id="events" class="section" aria-label="Neuigkeiten & Termine">
-      <div class="container events-container">
-        <div class="events-heading">
-          <p class="events-heading__label i18n-de">Neuigkeiten</p>
-          <p class="events-heading__label i18n-en">News</p>
+            <button class="carousel-control-prev"
+                    type="button"
+                    data-bs-target="#hofladenCarousel"
+                    data-bs-slide="prev"
+                    aria-label="Vorheriges Bild">
+                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Previous</span>
+            </button>
+            <button class="carousel-control-next"
+                    type="button"
+                    data-bs-target="#hofladenCarousel"
+                    data-bs-slide="next"
+                    aria-label="Nächstes Bild">
+                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Next</span>
+            </button>
         </div>
-        <div class="events-carousel" data-events-carousel>
-          <button type="button" class="events-arrow events-arrow--prev" aria-label="Vorheriges Event" data-events-prev></button>
-          <div class="events-track" data-events-track>
-            <article class="event-slide event-slide--intro">
-              <div class="event-slide__intro">
-                <p class="event-slide__intro-heading i18n-de">Events &amp; Termine</p>
-                <p class="event-slide__intro-heading i18n-en">Events &amp; Happenings</p>
-                <p class="event-slide__intro-copy i18n-de">Aktuelle Impressionen vom Hof: neue Termine, Märkte und besondere Frühstücke.</p>
-                <p class="event-slide__intro-copy i18n-en">Fresh impressions from the farm: new dates, markets, and special brunch moments.</p>
-              </div>
-            </article>
-          </div>
-          <button type="button" class="events-arrow events-arrow--next" aria-label="Nächstes Event" data-events-next></button>
+        <!--        <div class="hof-gallery-simple">-->
+        <!--            <img src="img/hofladen/IMG_3884.jpeg" alt="Hofladen mit regionalen Produkten">-->
+        <!--            <img src="img/hofladen/IMG_3952.jpeg" alt="Produkten Pasta">-->
+        <!--            <img src="img/hofladen/IMG_4030.jpeg" alt="Produkten Honig etc">-->
+        <!--            <img src="img/hofladen/IMG_4102.jpeg" alt="Paste">-->
+        <!--            <img src="img/hofladen/IMG_4103.jpeg" alt="Paste">-->
+        <!--            <img src="img/hofladen/IMG_4111.jpeg" alt="Geschenkkorb">-->
+        <!--            <img src="img/hofladen/IMG_4182.jpeg" alt="Kartoffeln">-->
+        <!--            <img src="img/hofladen/IMG_4528.jpeg" alt="Eier">-->
+        <!--            <img src="img/hofladen/IMG_4751.jpeg" alt="Mehl">-->
+        <!--            <img src="img/hofladen/IMG_4754.jpeg" alt="Öls">-->
+        <!--        </div>-->
+    </div>
+</section>
+
+<section id="news" class="section" aria-label="Neuigkeiten & Termine">
+    <div class="container events-container">
+        <div class="events-heading">
+            <p class="events-heading__label i18n-de">Neuigkeiten</p>
+            <p class="events-heading__label i18n-en">News</p>
+        </div>
+        <div id="newsCarousel" class="carousel slide carousel-dark events-carousel" aria-label="Event-Fotos"
+             data-bs-touch="true">
+            <div class="carousel-indicators" data-events-indicators></div>
+            <div class="carousel-inner" data-events-carousel></div>
+            <button class="carousel-control-prev" type="button" data-bs-target="#newsCarousel" data-bs-slide="prev"
+                    aria-label="Vorherige Folie">
+                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Previous</span>
+            </button>
+            <button class="carousel-control-next" type="button" data-bs-target="#newsCarousel" data-bs-slide="next"
+                    aria-label="Nächste Folie">
+                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Next</span>
+            </button>
         </div>
         <p class="small events-empty-message" data-events-empty hidden>Noch keine Event-Fotos hinzugefügt.</p>
         <div class="events-pagination-wrap">
-          <div class="events-pagination" data-events-pagination></div>
-          <span class="events-pagination-note" data-events-pagination-badge></span>
+            <span class="events-pagination-note" data-events-pagination-badge></span>
         </div>
-      </div>
-    </section>
+    </div>
+</section>
 
-    <section id="news" class="section" aria-label="Events & Termine">
-      <div class="container hof-layout">
-        <div class="hof-text">
-          <h2 class="i18n-de">Private Feiern & Events</h2>
-          <h2 class="i18n-en">Feiern bei uns</h2>
-          <p class="small i18n-de">Gerne richten wir Geburtstage, Familienfeiern oder kleine Firmenevents aus.</p>
-          <p class="small i18n-en">Regional favorites straight from our farm. Everything that makes our breakfasts special can go home with you.</p>
-          <p class="small i18n-de">
-            Für individuelle Anfragen kontaktieren Sie uns bitte telefonisch oder per E-Mail.
-          </p>
+<section id="events" class="section" aria-label="Events & Termine">
+    <div class="container events-layout">
+        <div class="events-text">
+            <h2 class="i18n-de">Private Feiern & Events</h2>
+            <h2 class="i18n-en">Events & Bookings</h2>
+
+            <ul class="events-list" aria-hidden="false">
+                <li>
+                    <span class="i18n-de">Geburtstage</span>
+                    <span class="i18n-en">Birthdays</span>
+                </li>
+                <li>
+                    <span class="i18n-de">Familienfeiern</span>
+                    <span class="i18n-en">Family celebrations</span>
+                </li>
+                <li>
+                    <span class="i18n-de">Kleine Firmen- &amp; Teamevents</span>
+                    <span class="i18n-en">Small business &amp; team events</span>
+                </li>
+            </ul>
+
+            <p class="small i18n-de">Für individuelle Anfragen kontaktieren Sie uns bitte telefonisch oder per
+                E‑Mail.</p>
+            <p class="small i18n-en">For individual enquiries please contact us by phone or email.</p>
+
+            <div class="events-images" aria-hidden="false">
+                <img src="img/events/events1.JPG" alt="Event 1">
+                <img src="img/events/events2.jpeg" alt="Event 2">
+            </div>
+
         </div>
-      </div>
-    </section>
+    </div>
+</section>
+<div class="modal fade" id="imageFullscreenModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-fullscreen">
+        <div class="modal-content bg-black">
+            <div class="modal-body p-0 d-flex justify-content-center align-items-center">
+                <img id="imageFullscreenModalImg"
+                     src=""
+                     alt=""
+                     class="img-fluid"
+                     style="max-height: 100vh; object-fit: contain;">
+            </div>
+            <button type="button"
+                    class="btn-close btn-close-white position-absolute top-0 end-0 m-3"
+                    data-bs-dismiss="modal"
+                    aria-label="Close"></button>
+        </div>
+    </div>
+</div>
 
-    <section id="kontakt" class="section">
-      <div class="container">
+<section id="kontakt" class="section">
+    <div class="container">
         <h2 class="i18n-de">Kontakt & Öffnungszeiten</h2>
         <h2 class="i18n-en">Contact & Hours</h2>
         <p class="hours i18n-de">Freitag, Samstag und Sonntag · 08:30–17:00 Uhr</p>
         <p class="hours i18n-en">Friday, Saturday and Sunday · 08:30–17:00</p>
         <div class="kv">
-          <div>Adresse</div>
-          <div>Bachhofweg 2a, 93170 Bernhardswald</div>
-          <div>Telefon</div>
-          <div><a href="tel:+4994077249620">09407 / 72 49 620</a></div>
-          <div class="i18n-en">Mobile</div>
-          <div><a href="tel:+4917664941923">0176 64941923</a></div>
-          <div>E‑Mail</div>
-          <div>
-            <a href="mailto:Erlebnishof-Auszeit@web.de"
-              >Erlebnishof-Auszeit@web.de</a>
-          </div>
-          <div>Maps</div>
-          <div><a href="https://maps.app.goo.gl/JGKZG3YQoqbwU8hF8" target="_blank" rel="noopener">In Google Maps öffnen</a></div>
+            <div>Adresse</div>
+            <div>Bachhofweg 2a, 93170 Bernhardswald</div>
+            <div>Telefon</div>
+            <div><a href="tel:+4994077249620">09407 / 72 49 620</a></div>
+            <div class="i18n-en">Mobile</div>
+            <div><a href="tel:+4917664941923">0176 64941923</a></div>
+            <div>E‑Mail</div>
+            <div>
+                <a href="mailto:Erlebnishof-Auszeit@web.de"
+                >Erlebnishof-Auszeit@web.de</a>
+            </div>
+            <div>Maps</div>
+            <div><a href="https://maps.app.goo.gl/JGKZG3YQoqbwU8hF8" target="_blank" rel="noopener">In Google Maps
+                öffnen</a></div>
         </div>
         <div class="map-embed" style="margin-top:16px">
-          <p class="small i18n-de">Hinweis: Beim Laden der Karte werden Daten an Google übertragen.</p>
-          <p class="small i18n-en">Note: Loading the map will send data to Google.</p>
-          <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2612.7588123925984!2d12.2390069!3d49.09122339999999!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x479fe9438702b36f%3A0xf00d8f8d9474fb2a!2sErlebnishof%20Auszeit!5e0!3m2!1sen!2sde!4v1764283363194!5m2!1sen!2sde" width="320" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+            <p class="small i18n-de">Hinweis: Beim Laden der Karte werden Daten an Google übertragen.</p>
+            <p class="small i18n-en">Note: Loading the map will send data to Google.</p>
+            <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2612.7588123925984!2d12.2390069!3d49.09122339999999!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x479fe9438702b36f%3A0xf00d8f8d9474fb2a!2sErlebnishof%20Auszeit!5e0!3m2!1sen!2sde!4v1764283363194!5m2!1sen!2sde"
+                    width="320" height="450" style="border:0;" allowfullscreen="" loading="lazy"
+                    referrerpolicy="no-referrer-when-downgrade"></iframe>
         </div>
-      </div>
-    </section>
+    </div>
+</section>
 
-    <footer class="footer">
-      <div class="container row">
+<footer class="footer">
+    <div class="container row">
         <div>
-          © <span id="year"></span> Erlebnishof-Auszeit ·
-          <span class="i18n-de">Fr–So 08:30–17:00</span>
-          <span class="i18n-en">Fri–Sun 08:30–17:00</span> ·
-          Bachhofweg 2a, 93170 Bernhardswald
+            © <span id="year"></span> Erlebnishof-Auszeit ·
+            <span class="i18n-de">Fr–So 08:30–17:00</span>
+            <span class="i18n-en">Fri–Sun 08:30–17:00</span> ·
+            Bachhofweg 2a, 93170 Bernhardswald
         </div>
         <div class="spacer"></div>
         <div class="legal-links">
-          <button type="button" class="legal-link" data-open-modal="impressum">Impressum</button>
-          <span aria-hidden="true">·</span>
-          <button type="button" class="legal-link" data-open-modal="datenschutz">Datenschutz</button>
+            <button type="button" class="legal-link" data-open-modal="impressum">Impressum</button>
+            <span aria-hidden="true">·</span>
+            <button type="button" class="legal-link" data-open-modal="datenschutz">Datenschutz</button>
         </div>
         <div class="lang-switch" role="group" aria-label="Sprache" style="margin-left:16px;">
-          <div class="pill" aria-hidden="true"></div>
-          <button data-lang-btn="de" type="button">DE</button>
-          <button data-lang-btn="en" type="button">EN</button>
+            <div class="pill" aria-hidden="true"></div>
+            <button data-lang-btn="de" type="button">DE</button>
+            <button data-lang-btn="en" type="button">EN</button>
         </div>
-      </div>
-    </footer>
-
-    <div id="cookie-notice" role="dialog" aria-live="polite" class="cookie-notice" style="display:none">
-      <p class="small i18n-de">Diese Seite verwendet eingebettete Inhalte (z. B. Karten). Mit „Akzeptieren“ stimmen Sie der Datenübertragung zu.</p>
-      <p class="small i18n-en">This site uses embedded content (e.g., maps). By clicking "Accept" you agree to data transfer.</p>
-      <button type="button" id="cookie-accept">Akzeptieren</button>
     </div>
+</footer>
 
-    <div class="legal-modal" id="modal-impressum" role="dialog" aria-modal="true" aria-labelledby="modal-impressum-title" hidden>
-      <div class="legal-modal__content">
+<div id="cookie-notice" role="dialog" aria-live="polite" class="cookie-notice" style="display:none">
+    <p class="small i18n-de">Diese Seite verwendet eingebettete Inhalte (z. B. Karten). Mit „Akzeptieren“ stimmen Sie
+        der Datenübertragung zu.</p>
+    <p class="small i18n-en">This site uses embedded content (e.g., maps). By clicking "Accept" you agree to data
+        transfer.</p>
+    <button type="button" id="cookie-accept">Akzeptieren</button>
+</div>
+
+<div class="legal-modal" id="modal-impressum" role="dialog" aria-modal="true" aria-labelledby="modal-impressum-title"
+     hidden>
+    <div class="legal-modal__content">
         <button type="button" class="legal-modal__close" data-modal-close aria-label="Schließen">&times;</button>
         <h3 id="modal-impressum-title">Impressum</h3>
-        <p><strong>Erlebnishof Auszeit</strong><br />Bachhofweg 2a<br />93170 Bernhardswald</p>
-        <p>Telefon: <a href="tel:+4994077249620">09407 / 72 49 620</a><br />Mobil: <a href="tel:+4917664941923">0176 64941923</a><br />E‑Mail: <a href="mailto:Erlebnishof-Auszeit@web.de">Erlebnishof-Auszeit@web.de</a></p>
+        <p><strong>Erlebnishof Auszeit</strong><br/>Bachhofweg 2a<br/>93170 Bernhardswald</p>
+        <p>Telefon: <a href="tel:+4994077249620">09407 / 72 49 620</a><br/>Mobil: <a href="tel:+4917664941923">0176
+            64941923</a><br/>E‑Mail: <a href="mailto:Erlebnishof-Auszeit@web.de">Erlebnishof-Auszeit@web.de</a></p>
         <p>Inhaltlich verantwortlich gemäß § 18 Abs. 2 MStV: Erlebnishof Auszeit.</p>
         <p>Umsatzsteuer-ID: wird nachgereicht.</p>
-      </div>
     </div>
+</div>
 
-    <div class="legal-modal" id="modal-datenschutz" role="dialog" aria-modal="true" aria-labelledby="modal-datenschutz-title" hidden>
-      <div class="legal-modal__content">
+<div class="legal-modal" id="modal-datenschutz" role="dialog" aria-modal="true"
+     aria-labelledby="modal-datenschutz-title" hidden>
+    <div class="legal-modal__content">
         <button type="button" class="legal-modal__close" data-modal-close aria-label="Schließen">&times;</button>
         <h3 id="modal-datenschutz-title">Datenschutz</h3>
-        <p>Wir verarbeiten personenbezogene Daten (z. B. Kontaktanfragen) ausschließlich zur Bearbeitung Ihres Anliegens. Eine Weitergabe erfolgt nur, wenn dies gesetzlich vorgeschrieben ist.</p>
-        <p>Beim Besuch dieser Website fallen Server-Logfiles (IP-Adresse, Uhrzeit, Browser) an. Diese dienen ausschließlich der technischen Sicherheit und werden nach 7 Tagen gelöscht.</p>
-        <p>Für externe Inhalte (z. B. Google Maps) gelten die Datenschutzbestimmungen des jeweiligen Anbieters. Die Einbindung erfolgt nur nach Ihrer Zustimmung.</p>
-        <p>Weitere Fragen richten Sie bitte per E‑Mail an <a href="mailto:Erlebnishof-Auszeit@web.de">Erlebnishof-Auszeit@web.de</a>.</p>
-      </div>
+        <p>Wir verarbeiten personenbezogene Daten (z. B. Kontaktanfragen) ausschließlich zur Bearbeitung Ihres
+            Anliegens. Eine Weitergabe erfolgt nur, wenn dies gesetzlich vorgeschrieben ist.</p>
+        <p>Beim Besuch dieser Website fallen Server-Logfiles (IP-Adresse, Uhrzeit, Browser) an. Diese dienen
+            ausschließlich der technischen Sicherheit und werden nach 7 Tagen gelöscht.</p>
+        <p>Für externe Inhalte (z. B. Google Maps) gelten die Datenschutzbestimmungen des jeweiligen Anbieters. Die
+            Einbindung erfolgt nur nach Ihrer Zustimmung.</p>
+        <p>Weitere Fragen richten Sie bitte per E‑Mail an <a href="mailto:Erlebnishof-Auszeit@web.de">Erlebnishof-Auszeit@web.de</a>.
+        </p>
     </div>
+</div>
 
-    <script src="script.js"></script>
+<script
+        src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+        crossorigin="anonymous"></script>
 <script>
-(() => {
-  const logo = document.getElementById('logo3d');
-  const hero = document.querySelector('.hero');
-  if (!logo || !hero) return;
+    (function () {
+        const root = document.documentElement;
+        const emitLangChange = (value) => {
+            document.dispatchEvent(new CustomEvent('site:lang-change', {detail: value}));
+        };
+        const lang = localStorage.getItem('lang') || 'de';
+        root.setAttribute('data-lang', lang);
+        emitLangChange(lang);
+        document.querySelectorAll('[data-lang-btn]').forEach(btn => {
+            btn.classList.toggle('active', btn.getAttribute('data-lang-btn') === lang);
+            btn.addEventListener('click', () => {
+                const to = btn.getAttribute('data-lang-btn');
+                root.setAttribute('data-lang', to);
+                localStorage.setItem('lang', to);
+                document.querySelectorAll('[data-lang-btn]').forEach(b => b.classList.toggle('active', b === btn));
+                emitLangChange(to);
+            });
+        });
+        document.addEventListener('click', (e) => {
+            const a = e.target.closest('a[href^="#"]');
+            if (!a) return;
+            const id = a.getAttribute('href').slice(1);
+            const el = document.getElementById(id);
+            if (el) {
+                e.preventDefault();
+                el.scrollIntoView({behavior: 'smooth', block: 'start'});
+            }
+        });
+        const yearEl = document.getElementById('year');
+        if (yearEl) yearEl.textContent = new Date().getFullYear();
+    })();
 
-  const maxTilt = 6;   // degrees
-  const ease = 0.12;   // smoothing factor
-  let targetRX = 0, targetRY = 0;
-  let curRX = 0, curRY = 0;
-  let raf = null;
+    (function () {
+        const track = document.querySelector('[data-hero-track]');
+        if (!track) return;
+        const slides = Array.from(track.children);
+        if (!slides.length) return;
+        const prefersReduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+        if (prefersReduced) return;
+        const firstClone = slides[0].cloneNode(true);
+        track.appendChild(firstClone);
+        let index = 0;
+        const intervalMs = 20000;
+        const setTransform = (value, withTransition = true) => {
+            track.style.transition = withTransition ? 'transform 1s ease' : 'none';
+            track.style.transform = `translateX(-${value}%)`;
+        };
+        const advance = () => {
+            index += 1;
+            setTransform(index * 100, true);
+        };
+        track.addEventListener('transitionend', () => {
+            if (index === slides.length) {
+                index = 0;
+                requestAnimationFrame(() => {
+                    setTransform(0, false);
+                });
+            }
+        });
+        setInterval(advance, intervalMs);
+    })();
 
-  const isTouch = matchMedia('(pointer: coarse)').matches;
-  if (isTouch) return;
+    (function () {
+        const header = document.querySelector('.header');
+        const navToggle = document.querySelector('.nav-toggle');
+        const root = document.documentElement;
+        const navLinks = Array.from(document.querySelectorAll('.main-nav a[href^="#"]'));
+        const scrollbar = document.getElementById('scrollbar');
 
-  function onMove(e){
-    const rect = hero.getBoundingClientRect();
-    const x = e.clientX - rect.left;
-    const y = e.clientY - rect.top;
-    const cx = rect.width / 2;
-    const cy = rect.height / 2;
-    const nx = (x - cx) / cx;   // -1..1
-    const ny = (y - cy) / cy;   // -1..1
-    targetRX = (-ny) * maxTilt; // rotateX responds to vertical
-    targetRY = ( nx) * maxTilt; // rotateY responds to horizontal
-    if (!raf) raf = requestAnimationFrame(update);
-  }
+        if (navToggle) {
+            navToggle.addEventListener('click', () => {
+                root.classList.toggle('nav-open');
+                const open = root.classList.contains('nav-open');
+                navToggle.setAttribute('aria-expanded', open);
+            });
+            navLinks.forEach(l =>
+                l.addEventListener('click', () => {
+                    root.classList.remove('nav-open');
+                    navToggle.setAttribute('aria-expanded', 'false');
+                }),
+            );
+        }
 
-  function onLeave(){
-    targetRX = 0; targetRY = 0;
-    if (!raf) raf = requestAnimationFrame(update);
-  }
+        const onScroll = () => {
+            const sc = window.scrollY;
+            const max = document.documentElement.scrollHeight - innerHeight;
+            if (scrollbar) {
+                scrollbar.style.width = (sc / max * 100) + '%';
+            }
+            header.classList.toggle('scrolled', sc > 10);
+        };
 
-  function update(){
-    curRX += (targetRX - curRX) * ease;
-    curRY += (targetRY - curRY) * ease;
-    logo.style.transform = `rotateX(${curRX.toFixed(3)}deg) rotateY(${curRY.toFixed(3)}deg)`;
-    const glow = Math.hypot(curRX, curRY) / maxTilt;
-    const drop = `drop-shadow(${(curRY*1.2).toFixed(1)}px ${(curRX*1.2).toFixed(1)}px ${8 + glow*8}px rgba(0,0,0,0.28))`;
-    logo.style.filter = `${drop} brightness(0) invert(1)`;
-    if (Math.abs(targetRX - curRX) > 0.01 || Math.abs(targetRY - curRY) > 0.01){
-      raf = requestAnimationFrame(update);
-    } else {
-      raf = null;
-    }
-  }
+        addEventListener('scroll', onScroll, {passive: true});
+        onScroll();
+    })();
 
-  hero.addEventListener('mousemove', onMove);
-  hero.addEventListener('mouseleave', onLeave);
-})();
+    (function () {
+        const carouselEl = document.getElementById('newsCarousel');
+        if (!carouselEl) return;
+        if (typeof bootstrap === 'undefined' || typeof bootstrap.Carousel !== 'function') {
+            console.warn('Bootstrap JS is required for the events carousel.');
+            return;
+        }
+        const inner = carouselEl.querySelector('[data-events-carousel]');
+        const indicators = carouselEl.querySelector('[data-events-indicators]');
+        const badgeEls = document.querySelectorAll('[data-events-badge]');
+        const paginationBadge = document.querySelector('[data-events-pagination-badge]');
+        const emptyState = document.querySelector('[data-events-empty]');
+        const newsManifestUrl = 'img/news/manifest.json';
+        const storageKey = 'events_history';
+        const baseIntroSlide = {
+            isIntro: true,
+            titleDe: 'Events & Termine',
+            titleEn: 'Events & Happenings',
+            textDe: 'Aktuelle Impressionen vom Hof: neue Termine, Märkte und besondere Frühstücke.',
+            textEn: 'Fresh impressions from the farm: new dates, markets, and special brunch moments.'
+        };
+        const makeIntroSlide = (overrides = {}) => ({...baseIntroSlide, ...overrides});
+        const getBaseName = (value = '') => value.replace(/^.*\//, '');
+        const toSrc = (value = '') => {
+            if (!value) return '';
+            if (/^(https?:)?\/\//.test(value) || value.startsWith('/') || value.startsWith('img/')) return value;
+            return `img/news/${value}`;
+        };
+        let slides = [];
+        let history = {};
+        try {
+            history = JSON.parse(localStorage.getItem(storageKey)) || {};
+        } catch (err) {
+            history = {};
+        }
+        const isTrackable = (slide) => Boolean(slide && !slide.isIntro && slide.name);
+        const persistHistory = () => {
+            try {
+                localStorage.setItem(storageKey, JSON.stringify(history));
+            } catch (err) {
+            }
+        };
+        const updateBadge = () => {
+            const unseen = slides.filter(isTrackable).filter(item => !history[item.name]).length;
+            badgeEls.forEach(badge => {
+                badge.setAttribute('data-count', unseen);
+                badge.textContent = unseen ? String(unseen) : '';
+            });
+            if (paginationBadge) {
+                paginationBadge.setAttribute('data-count', unseen);
+                paginationBadge.textContent = unseen ? `+${unseen}` : '';
+            }
+        };
+        const markSeen = (slide) => {
+            if (!isTrackable(slide) || history[slide.name]) return;
+            history[slide.name] = Date.now();
+            persistHistory();
+            updateBadge();
+        };
+        const pruneHistory = (validNames) => {
+            const next = {};
+            let changed = false;
+            Object.keys(history).forEach(key => {
+                if (validNames.includes(key)) {
+                    next[key] = history[key];
+                } else {
+                    changed = true;
+                }
+            });
+            if (changed) {
+                history = next;
+                persistHistory();
+            }
+        };
+        const setEmptyState = (visible) => {
+            if (!emptyState) return;
+            emptyState.hidden = !visible;
+        };
+        const parseFromName = (fileName) => {
+            const src = toSrc(fileName);
+            const base = getBaseName(fileName);
+            const withoutExt = base.replace(/\.[^.]+$/, '');
+            const parts = withoutExt.split('_');
+            const rawDate = parts.shift() || '';
+            parts.shift();
+            const title = (parts.join(' ') || 'Event').replace(/-/g, ' ');
+            let dateDe = 'Termin folgt';
+            let dateEn = 'Date tbd';
+            if (rawDate.length === 8) {
+                const y = rawDate.slice(0, 4);
+                const m = rawDate.slice(4, 6);
+                const d = rawDate.slice(6, 8);
+                const date = new Date(`${y}-${m}-${d}T00:00:00`);
+                if (!Number.isNaN(date.getTime())) {
+                    dateDe = date.toLocaleDateString('de-DE', {day: '2-digit', month: '2-digit', year: 'numeric'});
+                    dateEn = date.toLocaleDateString('en-GB', {day: '2-digit', month: 'short', year: 'numeric'});
+                }
+            }
+            return {
+                name: base,
+                title,
+                dateDe,
+                dateEn,
+                src
+            };
+        };
+        const createCarouselItem = (slide, index) => {
+            const item = document.createElement('div');
+            item.className = 'carousel-item';
+            if (index === 0) item.classList.add('active');
+            if (slide.isIntro) {
+                item.innerHTML = `
+          <div class="event-slide event-slide--intro">
+            <div class="event-slide__intro">
+              <p class="event-slide__intro-heading i18n-de">${slide.titleDe}</p>
+              <p class="event-slide__intro-heading i18n-en">${slide.titleEn}</p>
+              <p class="event-slide__intro-copy i18n-de">${slide.textDe}</p>
+              <p class="event-slide__intro-copy i18n-en">${slide.textEn}</p>
+            </div>
+          </div>`;
+                return item;
+            }
+            item.innerHTML = `
+        <div class="event-slide">
+          <img src="${slide.src}" alt="${slide.title}" loading="lazy"/>
+        </div>`;
+            return item;
+        };
+        const buildIndicators = () => {
+            if (!indicators) return;
+            indicators.innerHTML = '';
+            slides.forEach((_, index) => {
+                const indicator = document.createElement('button');
+                indicator.type = 'button';
+                indicator.setAttribute('data-bs-target', '#newsCarousel');
+                indicator.setAttribute('data-bs-slide-to', String(index));
+                indicator.setAttribute('aria-label', `Slide ${index + 1}`);
+                if (index === 0) {
+                    indicator.classList.add('active');
+                    indicator.setAttribute('aria-current', 'true');
+                }
+                indicators.appendChild(indicator);
+            });
+        };
+        let carouselInstance = null;
+        const ensureBootstrapInstance = () => {
+            if (carouselInstance) return;
+            carouselInstance = bootstrap.Carousel.getOrCreateInstance(carouselEl, {
+                interval: 8000,
+                pause: 'hover',
+                touch: true,
+                wrap: true
+            });
+            carouselEl.addEventListener('slid.bs.carousel', (event) => {
+                const index = typeof event.to === 'number' ? event.to : 0;
+                markSeen(slides[index]);
+            });
+        };
+        const buildCarousel = () => {
+            if (!inner) return;
+            inner.innerHTML = '';
+            slides.forEach((slide, index) => {
+                inner.appendChild(createCarouselItem(slide, index));
+            });
+            buildIndicators();
+            ensureBootstrapInstance();
+            if (slides.length) {
+                markSeen(slides[0]);
+            }
+            updateBadge();
+        };
+        const applyData = (list) => {
+            const files = Array.isArray(list) ? list.filter(Boolean) : [];
+            pruneHistory(files.map(getBaseName));
+            slides = [makeIntroSlide(), ...files.map(parseFromName)];
+            buildCarousel();
+            setEmptyState(files.length === 0);
+        };
+        const renderIntroOnly = () => {
+            slides = [makeIntroSlide()];
+            buildCarousel();
+            setEmptyState(true);
+        };
+        renderIntroOnly();
+        fetch(newsManifestUrl)
+            .then(res => (res.ok ? res.json() : []))
+            .then(applyData)
+            .catch(() => {
+                setEmptyState(true);
+            });
+    })();
+
+    (function () {
+        const openers = document.querySelectorAll('[data-open-modal]');
+        const modals = document.querySelectorAll('.legal-modal');
+        if (!openers.length || !modals.length) return;
+        let activeModal = null;
+        let previousFocus = null;
+        const getModalByName = (name) => document.getElementById(`modal-${name}`);
+        const closeModal = () => {
+            if (!activeModal) return;
+            activeModal.hidden = true;
+            activeModal.classList.remove('is-visible');
+            document.body.style.overflow = '';
+            if (previousFocus) previousFocus.focus();
+            activeModal = null;
+        };
+        const openModal = (name) => {
+            const modal = getModalByName(name);
+            if (!modal || activeModal === modal) return;
+            if (activeModal) closeModal();
+            previousFocus = document.activeElement;
+            modal.hidden = false;
+            modal.classList.add('is-visible');
+            document.body.style.overflow = 'hidden';
+            activeModal = modal;
+            const focusTarget = modal.querySelector('.legal-modal__close') || modal;
+            requestAnimationFrame(() => focusTarget.focus());
+        };
+        openers.forEach(btn => {
+            btn.addEventListener('click', (event) => {
+                event.preventDefault();
+                openModal(btn.getAttribute('data-open-modal'));
+            });
+        });
+        modals.forEach(modal => {
+            modal.addEventListener('click', (event) => {
+                if (event.target === modal) closeModal();
+            });
+            modal.querySelectorAll('[data-modal-close]').forEach(close => {
+                close.addEventListener('click', closeModal);
+            });
+        });
+        document.addEventListener('keydown', (event) => {
+            if (event.key === 'Escape') {
+                closeModal();
+            }
+        });
+    })();
+
+    (function () {
+        const newsCarousel = document.getElementById('newsCarousel');
+        if (!newsCarousel) return;
+        if (typeof bootstrap === 'undefined' || !bootstrap.Modal) return;
+
+        const modalEl = document.getElementById('imageFullscreenModal');
+        const modalImg = document.getElementById('imageFullscreenModalImg');
+        if (!modalEl || !modalImg) return;
+
+        const modalInstance = new bootstrap.Modal(modalEl, {
+            backdrop: true,
+            keyboard: true
+        });
+
+        // Delegate click on the inner container so slides added later also work
+        const inner = newsCarousel.querySelector('.carousel-inner');
+        if (!inner) return;
+
+        inner.addEventListener('click', (e) => {
+            const img = e.target;
+            if (!(img instanceof HTMLImageElement)) return;
+
+            modalImg.src = img.currentSrc || img.src;
+            modalImg.alt = img.alt || '';
+            modalInstance.show();
+        });
+    })();
+
+
 </script>
-  </body>
+</body>
 </html>

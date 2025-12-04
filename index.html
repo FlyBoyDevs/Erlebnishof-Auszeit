@@ -94,12 +94,18 @@
             text-align: center;
         }
 
+        /* center the intro slide both horizontally and vertically */
         .event-slide--intro {
-            text-align: left;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding-left: 0;
+            padding-right: 0;
         }
 
         .event-slide__intro {
-            max-width: 480px;
+            max-width: 680px; /* a bit wider so heading + copy can breathe */
             margin: 0 auto;
         }
 
@@ -189,9 +195,25 @@
             display: block;
         }
 
-        #hofladenCarousel img {
-            max-height: 380px;
-            object-fit: contain; /*object-fit: cover;*/
+        /* Ensure carousel inners & items fill their parent and images scale to that box.
+           This keeps a consistent carousel height on mobile and desktop. */
+        #menuCarousel .carousel-inner,
+        #hofladenCarousel .carousel-inner,
+        #newsCarousel .carousel-inner {
+            height: 100%;
+        }
+        #menuCarousel .carousel-item,
+        #hofladenCarousel .carousel-item,
+        #newsCarousel .carousel-item {
+            height: 100%;
+        }
+        #menuCarousel .carousel-item img,
+        #hofladenCarousel .carousel-item img,
+        #newsCarousel .carousel-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            display: block;
         }
     </style>
 </head>
@@ -283,11 +305,50 @@
                 </div>
             </div>
         </div>
-        <div class="menu-gallery-simple">
-            <img src="img/menu/cake2.JPG" alt="Kuchen 2">
-            <img src="img/menu/cake4.JPG" alt="Kuchen 4">
-            <img src="img/menu/cake3.JPG" alt="Kuchen 3">
-            <img src="img/menu/cake1.JPG" alt="Kuchen 1">
+        <div class="menu-gallery">
+            <div id="menuCarousel"
+                 class="carousel slide carousel-dark"
+                 data-bs-ride="carousel"
+                 data-bs-touch="true">
+                <div class="carousel-inner">
+                    <div class="carousel-item active">
+                        <img src="img/menu/cake2.JPG"
+                             class="d-block w-100"
+                             alt="Kuchen 2">
+                    </div>
+                    <div class="carousel-item">
+                        <img src="img/menu/cake4.JPG"
+                             class="d-block w-100"
+                             alt="Kuchen 4">
+                    </div>
+                    <div class="carousel-item">
+                        <img src="img/menu/cake3.JPG"
+                             class="d-block w-100"
+                             alt="Kuchen 3">
+                    </div>
+                    <div class="carousel-item">
+                        <img src="img/menu/cake1.JPG"
+                             class="d-block w-100"
+                             alt="Kuchen 1">
+                    </div>
+                </div>
+                <button class="carousel-control-prev"
+                        type="button"
+                        data-bs-target="#menuCarousel"
+                        data-bs-slide="prev"
+                        aria-label="Vorheriges Bild">
+                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Previous</span>
+                </button>
+                <button class="carousel-control-next"
+                        type="button"
+                        data-bs-target="#menuCarousel"
+                        data-bs-slide="next"
+                        aria-label="Nächstes Bild">
+                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Next</span>
+                </button>
+            </div>
         </div>
     </div>
 </section>
@@ -456,6 +517,7 @@
         </div>
     </div>
 </section>
+
 <div class="modal fade" id="imageFullscreenModal" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-fullscreen">
         <div class="modal-content bg-black">
@@ -510,21 +572,21 @@
     <div class="container row">
         <div>
             © <span id="year"></span> Erlebnishof-Auszeit ·
-            <span class="i18n-de">Fr–So 08:30–17:00</span>
-            <span class="i18n-en">Fri–Sun 08:30–17:00</span> ·
-            Bachhofweg 2a, 93170 Bernhardswald
-        </div>
-        <div class="spacer"></div>
-        <div class="legal-links">
+<!--        </div>-->
+<!--        <div class="legal-links">-->
             <button type="button" class="legal-link" data-open-modal="impressum">Impressum</button>
             <span aria-hidden="true">·</span>
             <button type="button" class="legal-link" data-open-modal="datenschutz">Datenschutz</button>
+            <div class="spacer"></div>
+<!--        <div class="lang-switch"  aria-label="Sprache" style="margin-left:16px;">-->
+            <!-- replaced the two-button switch with a dropdown -->
+            <label for="lang-select" class="visually-hidden">Sprache</label>
+            <select id="lang-select" data-lang-select aria-label="Sprache auswählen">
+                <option value="de">DE</option>
+                <option value="en">EN</option>
+            </select>
         </div>
-        <div class="lang-switch" role="group" aria-label="Sprache" style="margin-left:16px;">
-            <div class="pill" aria-hidden="true"></div>
-            <button data-lang-btn="de" type="button">DE</button>
-            <button data-lang-btn="en" type="button">EN</button>
-        </div>
+<!--        </div>-->
     </div>
 </footer>
 
@@ -580,6 +642,8 @@
         const lang = localStorage.getItem('lang') || 'de';
         root.setAttribute('data-lang', lang);
         emitLangChange(lang);
+
+        // initialize optional button-based switch (kept for backward compatibility if present)
         document.querySelectorAll('[data-lang-btn]').forEach(btn => {
             btn.classList.toggle('active', btn.getAttribute('data-lang-btn') === lang);
             btn.addEventListener('click', () => {
@@ -590,6 +654,22 @@
                 emitLangChange(to);
             });
         });
+
+        // initialize & wire the new select dropdown
+        const select = document.querySelector('[data-lang-select]');
+        if (select) {
+            // set current value
+            select.value = lang;
+            select.addEventListener('change', () => {
+                const to = select.value === 'en' ? 'en' : 'de';
+                root.setAttribute('data-lang', to);
+                localStorage.setItem('lang', to);
+                // if button switch exists, update its active state
+                document.querySelectorAll('[data-lang-btn]').forEach(b => b.classList.toggle('active', b.getAttribute('data-lang-btn') === to));
+                emitLangChange(to);
+            });
+        }
+
         document.addEventListener('click', (e) => {
             const a = e.target.closest('a[href^="#"]');
             if (!a) return;
@@ -936,7 +1016,81 @@
         });
     })();
 
+    (function () {
+        // Replace scroll-based detection with IntersectionObserver so the nav underline
+        // follows which section is actually visible. This sets .is-active on all nav
+        // links whose href points to the active section id (handles DE/EN duplicates).
+        const header = document.querySelector('.header');
+        const navLinks = Array.from(document.querySelectorAll('.main-nav a[href^="#"]'));
 
+        const getHeaderHeight = () => (header && header.offsetHeight) ? header.offsetHeight : 72;
+
+        const setActiveForId = (id) => {
+          // clear all first
+          navLinks.forEach(a => a.classList.remove('is-active'));
+          if (!id) return;
+          // set active on every nav link that targets this id (handles bilingual duplicates)
+          const matches = document.querySelectorAll(`.main-nav a[href="#${CSS.escape(id)}"]`);
+          matches.forEach(a => a.classList.add('is-active'));
+        };
+
+        let observer = null;
+        const createObserver = () => {
+          if (observer) observer.disconnect();
+          const headerH = getHeaderHeight();
+          // rootMargin shifts the viewport so the observer treats the top of the section
+          // as if it's headerH pixels lower (accounting for sticky header), and the bottom
+          // margin biases selection towards sections taking more vertical space.
+          const rootMargin = `-${headerH}px 0px -35% 0px`;
+          observer = new IntersectionObserver((entries) => {
+            // choose the entry with the largest intersectionRatio (most visible)
+            const visible = entries
+              .filter(e => e.isIntersecting)
+              .sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0];
+            if (visible) {
+              setActiveForId(visible.target.id);
+            }
+          }, {root: null, rootMargin, threshold: [0, 0.15, 0.35, 0.6, 0.9]});
+
+          // observe current sections that have matching nav links
+          const sections = Array.from(new Set(navLinks.map(a => a.getAttribute('href').slice(1))))
+            .map(id => document.getElementById(id))
+            .filter(Boolean);
+          sections.forEach(s => observer.observe(s));
+        };
+
+        // re-create observer on resize because header height may change
+        window.addEventListener('resize', () => {
+          createObserver();
+        }, {passive: true});
+
+        // immediately set active on nav clicks (so UI responds while smooth scroll runs)
+        navLinks.forEach(a => {
+          a.addEventListener('click', (ev) => {
+            const id = a.getAttribute('href').slice(1);
+            setActiveForId(id);
+          });
+        });
+
+        // initialize
+        createObserver();
+        // also attempt to set initial active based on current scroll position
+        // (in case intersection callbacks haven't fired yet)
+        requestAnimationFrame(() => {
+          const sections = Array.from(new Set(navLinks.map(a => a.getAttribute('href').slice(1))))
+            .map(id => document.getElementById(id))
+            .filter(Boolean);
+          const headerH = getHeaderHeight();
+          let best = null;
+          sections.forEach(s => {
+            const rect = s.getBoundingClientRect();
+            // prefer section whose top is closest to header area but not too far below
+            const score = Math.max(0, (rect.top - headerH) * (rect.top <= headerH ? -1 : 1));
+            if (best === null || score < best.score) best = {id: s.id, score};
+          });
+          if (best && best.id) setActiveForId(best.id);
+        });
+    })();
 </script>
 </body>
 </html>

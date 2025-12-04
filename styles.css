@@ -360,184 +360,54 @@ a:hover {
   overflow: hidden;
 }
 
-#food-menu .menu-text{
-  padding: 26px 32px;
+/* NEW: make the events section appear as a boxed container like Menu/Hofladen */
+#events .events-layout {
+  margin-top: 12px;
+  background: rgba(255,255,255,0.95);
+  border-radius: var(--radius);
+  box-shadow: 0 32px 60px -40px rgba(57,28,8,.55);
   display: flex;
   flex-direction: column;
-  gap: 12px;
-}
-
-#hofladen .hof-text{
-  padding: 26px 32px;
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-}
-
-#food-menu .menu-desc{
-  margin: 0;
-  color: var(--muted);
-  font-size: clamp(1rem, 1.2vw, 1.1rem);
-}
-
-#food-menu .menu-list{
-  display: grid;
-  gap: 12px;
-  margin-top: 4px;
-}
-
-#food-menu .menu-list strong{
-  display: block;
-  font-size: 1.05rem;
-  color: var(--ink);
-}
-
- 
-
-#food-menu .menu-button{
-  margin-top: 4px;
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  background: var(--brand-primary);
-  color: #2b1c12;
-}
-
-#food-menu .menu-button span{ line-height: 1; }
-
-#food-menu .menu-note{
-  display: block;
-  margin-top: 4px;
-}
-
-#food-menu .menu-gallery,
-#hofladen .hof-gallery{
-  width: 100%;
-  max-width: 1080px;
-  margin: 12px auto 0;
-  position: relative;
   overflow: hidden;
-  border: 1px solid rgba(0,0,0,.08);
-  box-shadow: inset 0 0 0 1px rgba(255,255,255,.05), 0 30px 50px -36px rgba(0,0,0,.65);
-  background: #f3e8cc;
-  min-height: 320px;
+  padding: 18px 0; /* give top/bottom breathing room inside the card */
 }
 
-.menu-carousel,
-.hof-carousel{
-  position: relative;
-  width: 100%;
-  height: 100%;
+/* tighten and align the inner text block to match other sections */
+#events .events-layout .events-text {
+  max-width: var(--maxw);
+  margin: 0 auto;
+  padding: 12px 20px 24px;
+  text-align: left;
 }
 
-.menu-track,
-.hof-track{
-  display: flex;
-  height: 100%;
-  transition: transform .45s ease;
-  touch-action: pan-y;
+/* ensure event images sit comfortably inside the card */
+#events .events-layout .events-images {
+  margin-top: 12px;
+  padding: 0 20px 20px;
+  justify-items: center;
 }
 
-.menu-slide,
-.hof-slide{
-  flex: 0 0 100%;
-  position: relative;
-  margin: 0;
+/* slightly reduce image max-width to visually align with menu/hof images */
+#events .events-layout .events-images img {
+  max-width: 320px;
+  border-radius: 10px;
 }
 
-.menu-slide,
-.hof-slide,
-.event-slide {
-    display: flex;
-    align-items: center;
-    justify-content: center;
+/* smaller screens: keep padding comfortable */
+@media (max-width: 899px) {
+  #events .events-layout {
+    padding: 12px 0;
+  }
+  #events .events-layout .events-text {
+    padding: 10px 16px 18px;
+  }
+  #events .events-layout .events-images {
+    padding: 0 16px 16px;
+    gap: 10px;
+  }
 }
 
-.menu-slide img,
-.hof-slide img,
-.events-carousel img,
-.event-slide img {
-    max-width: 100%;
-    max-height: 100%;
-    width: auto;
-    height: auto;
-    object-fit: contain;
-    object-position: center;
-    display: block;
-}
-
-.menu-slide img,
-.hof-slide img{
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  object-position: center;
-  display: block;
-  filter: saturate(1.05) contrast(1.03);
-}
-
-.menu-arrow,
-.hof-arrow{
-  position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
-  width: 32px;
-  height: 32px;
-  border: none;
-  background: rgba(0,0,0,.6);
-  clip-path: polygon(25% 0, 100% 50%, 25% 100%);
-  cursor: pointer;
-  z-index: 2;
-  transition: background .2s ease;
-}
-
-.menu-arrow--prev,
-.hof-arrow--prev{
-  left: 16px;
-  transform: translateY(-50%) scaleX(-1);
-}
-
-.menu-arrow--next,
-.hof-arrow--next{
-  right: 16px;
-}
-
-.menu-arrow:hover,
-.hof-arrow:hover{
-  background: rgba(0,0,0,.8);
-}
-
-.menu-pagination,
-.hof-pagination{
-  display: flex;
-  gap: 6px;
-  justify-content: center;
-  margin-top: 10px;
-}
-
-.menu-pagination button,
-.hof-pagination button{
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  border: none;
-  background: rgba(0,0,0,.25);
-  cursor: pointer;
-}
-
-.menu-pagination button.is-active,
-.hof-pagination button.is-active{
-  background: var(--brand-primary);
-}
-
-.menu-empty,
-.hof-empty{
-  margin: auto;
-  color: rgba(255,255,255,.85);
-  text-align: center;
-  padding: 30px 20px;
-}
-
+/* keep the shared gallery container styling below */
 #food-menu .menu-gallery,
 #hofladen .hof-gallery,
 .events-carousel{
@@ -550,43 +420,24 @@ a:hover {
   box-shadow: inset 0 0 0 1px rgba(255,255,255,.05), 0 30px 50px -36px rgba(0,0,0,.65);
   background: #f3e8cc;
   cursor: pointer;
+  min-height: 280px;
+  max-height: 520px;
 }
 
-@media (max-width: 640px){
-  #food-menu .menu-text{ padding: 22px; }
-  #food-menu .menu-gallery{ margin-top: 8px; min-height: 220px; max-height: none; }
-  #hofladen .hof-text{ padding: 22px; }
-  #hofladen .hof-gallery{ margin-top: 8px; max-width: 100%; min-height: 220px; max-height: none; }
+#food-menu .menu-gallery img,
+#hofladen .hof-gallery img,
+.events-carousel img{
+  object-fit: cover;
+  width: 100%;
+  height: 100%;
 }
 
-@media (min-width: 900px){
-  #food-menu .menu-layout,
-  #hofladen .hof-layout{
-/*    flex-direction: row;
-    align-items: stretch;
-    gap: 32px;*/
-  }
-
-  #food-menu .menu-text,
-  #hofladen .hof-text{
-    flex: 1;
-  }
-
+@media (min-width: 900px) {
   #food-menu .menu-gallery,
-  #hofladen .hof-gallery{
-    width: 360px;
-    height: 520px;
-    flex: none;
-  }
-
-  #food-menu .menu-track,
-  #hofladen .hof-track{
-    height: 100%;
-  }
-
-  .events-carousel{
-    min-height: 360px;
+  #hofladen .hof-gallery,
+  .events-carousel {
     max-height: 520px;
+    overflow: hidden;
   }
 }
 
@@ -996,7 +847,7 @@ h2 {
 .main-nav a {
   position: relative;
   display: inline-block;
-  padding: .75rem .9rem;
+  padding: .75rem .6rem;
   font-weight: 500;
   letter-spacing: .3px;
   color: var(--text);
@@ -1060,12 +911,10 @@ h2 {
   display: inline-flex;
   align-items: center;
   gap: 4px;
-  background: rgba(0, 0, 0, .04);
-  border: 1px solid rgba(0, 0, 0, .08);
   padding: 4px;
   border-radius: 999px;
-  isolation: isolate;
-  font-family: "Inter", "Segoe UI", system-ui, -apple-system, sans-serif;
+  background: rgba(0,0,0,0.04);
+  border: 1px solid rgba(0,0,0,0.08);
 }
 
 .lang-switch button {
@@ -1082,21 +931,35 @@ h2 {
   letter-spacing: .5px
 }
 
-.lang-switch .pill {
-  position: absolute;
-  top: 4px;
-  bottom: 4px;
-  left: 4px;
-  width: calc(50% - 8px);
-  background: linear-gradient(135deg, var(--brand-primary), #f5c96e);
+.lang-switch select {
+  -webkit-appearance: none;
+  appearance: none;
+  background: transparent;
+  border: none;
+  padding: .35rem .6rem;
+  font-weight: 600;
+  cursor: pointer;
   border-radius: 999px;
-  transition: .35s cubic-bezier(.4, .7, .2, 1);
-  box-shadow: 0 2px 4px -2px rgba(0, 0, 0, .4)
+  color: inherit;
+  font-family: inherit;
+  font-size: .85rem;
 }
 
-[data-lang="en"] .lang-switch .pill {
-  transform: translateX(100%)
+/* small dropdown arrow using a pseudo-element (keeps markup minimal) */
+.lang-switch {
+  padding-right: 36px; /* room for arrow */
 }
+.lang-switch::after {
+  content: "▾";
+  position: absolute;
+  right: 10px;
+  pointer-events: none;
+  font-size: .85rem;
+  color: rgba(0,0,0,.6);
+}
+
+/* keep older pill element safe (if still present) hidden */
+.lang-switch .pill { display: none !important; }
 
 #scrollbar {
   position: fixed;
@@ -1241,32 +1104,38 @@ h2 {
   cursor: pointer;
 }
 
-@media (min-width: 900px) {
-    .menu-track,
-    .hof-track {
-        align-items: center;
-        justify-content: center;
-    }
+/* Keep carousel height stable on small screens to avoid layout jumps when images vary.
+   Adjust values (360px / 36vh) if you prefer a different mobile height. */
+@media (max-width: 899px) {
+  #menuCarousel,
+  #hofladenCarousel,
+  #newsCarousel,
+  #food-menu .menu-gallery,
+  #hofladen .hof-gallery,
+  .events-carousel {
+    /*height: 36vh;       !* mobile-friendly viewport-based height *!*/
+    min-height: 420px;  /* ensure it's not too small on short viewports */
+    max-height: 420px;  /* cap to avoid excessive height on tall phones */
+  }
 
-    #food-menu .menu-gallery img,
-    #hofladen .hof-gallery img,
-    .menu-slide img,
-    .hof-slide img,
-    .event-slide img,
-    .events-carousel img {
-        width: auto;
-        height: 100%;
-        max-width: 100%;
-        object-fit: contain;
-        object-position: center;
-        display: block;
-    }
+  #menuCarousel .carousel-inner,
+  #hofladenCarousel .carousel-inner,
+  #newsCarousel .carousel-inner {
+    height: 100%;
+  }
 
-    /* Keep a reasonable gallery height so letterbox is visible and pagination stays below */
-    #food-menu .menu-gallery,
-    #hofladen .hof-gallery,
-    .events-carousel {
-        max-height: 520px; /* adjust as needed */
-        overflow: hidden;
-    }
+  #menuCarousel .carousel-item,
+  #hofladenCarousel .carousel-item,
+  #newsCarousel .carousel-item {
+    height: 100%;
+  }
+
+  #menuCarousel .carousel-item img,
+  #hofladenCarousel .carousel-item img,
+  #newsCarousel .carousel-item img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain; /* show full image without cropping */
+    display: block;
+  }
 }

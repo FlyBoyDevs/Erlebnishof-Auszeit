@@ -492,33 +492,30 @@ a:hover {
   color: #fff;
 }
 
+/* replace the existing event intro rules with centered layout */
 .event-slide--intro{
   display: flex;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
-  padding: 36px 24px;
+  align-items: center;        /* vertical centering */
+  justify-content: center;    /* horizontal centering */
+  text-align: center;         /* center text inside */
+  padding: 36px 24px;         /* symmetric horizontal padding */
   background: #f7f3ea;
   color: #3b2a1a;
 }
 
 .event-slide__intro{
-  max-width: 80%;
+  max-width: 680px;
+  width: 100%;
+  margin: 0 auto;             /* ensure inner block is centered */
+  text-align: center;         /* center headings & copy */
 }
 
-.event-slide__intro-heading{
-  font-size: clamp(1.8rem, 3vw, 2.6rem);
-  font-weight: 600;
-  margin: 0 0 12px;
-  letter-spacing: .02em;
-  color: inherit;
-}
-
-.event-slide__intro-copy{
-  font-size: clamp(1rem, 1.5vw, 1.25rem);
-  line-height: 1.7;
-  margin: 0;
-  color: inherit;
+/* make sure headings & copy inherit centered alignment */
+.event-slide__intro-heading,
+.event-slide__intro-copy {
+  margin-left: 0;
+  margin-right: 0;
+  text-align: center;
 }
 
 .event-slide img{

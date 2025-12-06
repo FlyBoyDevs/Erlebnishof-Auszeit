@@ -1,1138 +1,1127 @@
 :root {
-  --brand-primary: #d98b33;
-  --brand-accent: #d98b33;
-  --bg: #f6d79e;
-  --ink: #642a0f;
-  --text: #1b1b1b;        /* restore dark body text */
-  --text-on-dark: #f7f7f7;
-  --muted: #6b6b6b;
-  --card: #fff;
-  --radius: 14px;
-  --maxw: 1120px;
-  --plate-bg1:#f0e3c4; /* #f7f3ea; */  /* top sheen */
-  --plate-bg2:#171412;   /* bottom */
-  --gold:#c79a70;
-  --gold-light:#ecd2a7;
-  --plate-text:#e8d3b8; /* warm beige reserved for plaque */
-  --header-h: 72px; /* approximate total sticky header height */
+    --brand-primary: #d98b33;
+    --brand-accent: #d98b33;
+    --bg: #f6d79e;
+    --ink: #642a0f;
+    --text: #1b1b1b;
+    --text-on-dark: #f7f7f7;
+    --muted: #6b6b6b;
+    --card: #fff;
+    --radius: 14px;
+    --maxw: 1120px;
+    --plate-bg1: #f0e3c4;
+    --plate-bg2: #171412;
+    --gold: #c79a70;
+    --gold-light: #ecd2a7;
+    --plate-text: #e8d3b8;
+    --header-h: 65px;
 }
 
+/* --- Base / Reset --- */
 * {
-  box-sizing: border-box
+    box-sizing: border-box
 }
 
-html,
+html, body {
+    margin: 0;
+    padding: 0;
+    height: 100%
+}
+
+/* Add top padding so fixed header doesn't overlap page content */
 body {
-  margin: 0;
-  padding: 0
+    /* main page background image (static on desktop) */
+    background-image: url("img/background_erlebnishof.jpg");
+    background-color: var(--bg); /* fallback */
+    background-repeat: no-repeat;
+    background-position: center center;
+    background-size: cover;
+    background-attachment: fixed;
+    color: var(--text);
+    font-family: "Inter", "Segoe UI", system-ui, -apple-system, sans-serif;
+    line-height: 1.55;
+    padding-top: var(--header-h); /* ensure content starts below fixed header */
 }
 
-body {
-  background: var(--bg);
-  color: var(--text);
-  font-family: "Inter", "Segoe UI", system-ui, -apple-system, sans-serif;
-  line-height: 1.55
+/* --- Containers --- */
+/*.container {*/
+/*    max-width: var(--maxw);*/
+/*    margin: 0 auto;*/
+/*    padding: 0 16px*/
+/*}*/
+
+.section {
+    padding: 16px;
+    min-height: calc(100vh - var(--header-h));
+    display: flex;
+    align-items: center;
+    scroll-margin-top: calc(var(--header-h) + 12px);
+    /*border: #0f1a14 solid 1px; !* TODO remove *!*/
+    position: relative; /* added so ::after can be positioned relative to the section */
 }
 
-a {
-  color: var(--brand-accent);
-  text-decoration: none
+/* ensure section content sits above the overlay */
+.section > .container {
+    width: 90%;
+    position: relative;
+    z-index: 200; /* increased so sections render above the snow canvas */
 }
 
-a:hover {
-  text-decoration: underline
+/* apply the same overlay effect used for .bg-wheat to all sections (except hero).
+   Hero is not a .section, so it will remain unchanged. Adjust RGBA values if you want
+   a lighter/darker tint. */
+.section::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    /*background: linear-gradient(to bottom, rgba(0, 0, 0, .30), rgba(0, 0, 0, .45));*/
+    background: rgba(0, 0, 0, .45);
+    pointer-events: none;
+    z-index: 0;
 }
 
+/* --- Header / Nav --- */
+/* Replace sticky with fixed so header always stays at top of the viewport */
 .header {
-  position: sticky;
-  top: 0;
-  z-index: 1000;
-  backdrop-filter: blur(10px);
-  background: rgba(255, 255, 255, .9);
-  -webkit-backdrop-filter: blur(10px);
-  color: var(--text);
-  box-shadow: 0 12px 30px -22px rgba(0, 0, 0, .45);
-  transition: transform .5s ease, background-color .4s ease
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1500; /* above most content */
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    background: rgba(255, 255, 255, .9);
+    color: var(--text);
+    box-shadow: 0 12px 30px -22px rgba(0, 0, 0, .45);
+    transition: transform .5s ease, background-color .4s ease;
 }
 
+/* keep the scrolled visual state */
 .header.scrolled {
-  background: rgba(255, 255, 255, .98)
-}
-
-/* plaque */
-.nameplate {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  padding: 0.85rem 1.4rem;
-  background:
-    linear-gradient(180deg, var(--plate-bg1), var(--plate-bg2));
-  color: var(--plate-text);
-  /* beveled/ticket corners */
-  clip-path: polygon(10px 0, calc(100% - 10px) 0, 100% 10px, 100% calc(100% - 10px),
-      calc(100% - 10px) 100%, 10px 100%, 0 calc(100% - 10px), 0 10px);
-  border: 2px solid var(--gold);
-  box-shadow:
-    inset 0 0 0 2px var(--gold-light),
-    /* inner gold ring */
-    inset 0 8px 18px rgba(255, 255, 255, .06),
-    /* enamel gloss */
-    inset 0 -10px 18px rgba(0, 0, 0, .25),
-    /* depth */
-    0 8px 20px rgba(0, 0, 0, .25);
-  /* drop shadow */
-  position: relative;
-}
-
-/* corner rivets (optional) */
-.nameplate::before,
-.nameplate::after {
-  content: "";
-  position: absolute;
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  background: radial-gradient(circle at 30% 30%, #fff6, #0000 60%), var(--gold);
-  box-shadow: 0 0 0 1px #8a6a44 inset;
-}
-
-.nameplate::before {
-  left: 12px;
-  top: 12px;
-}
-
-.nameplate::after {
-  right: 12px;
-  bottom: 12px;
-}
-
-.np-title {
-  font-family: "Cormorant Garamond", "Playfair Display", serif;
-  font-weight: 700;
-  letter-spacing: .3px;
-  /* slightly embossed text */
-  text-shadow:
-    0 1px 0 rgba(255, 255, 255, .16),
-    0 2px 0 rgba(0, 0, 0, .4);
-  white-space: nowrap;
-  font-size: clamp(1.2rem, 3.2vw, 2.2rem);
-}
-
-.container {
-  max-width: var(--maxw);
-  margin: 0 auto;
-  padding: 0 16px
+    background: rgba(255, 255, 255, .98)
 }
 
 .nav {
-  display: flex;
-  gap: 16px;
-  align-items: center;
-  padding: 10px 0
+    display: flex;
+    gap: 16px;
+    align-items: center;
+    padding: 10px 0
 }
 
-.brand {
-  font-weight: 800;
-  letter-spacing: .3px
-}
-
-/* Header logo on the left */
-.brand-logo {
-  display: inline-flex;
-  align-items: center;
-  gap: 10px;
-}
 .brand-logo img {
-  height: 44px;
-  width: auto;
-  display: block;
-  /* Improve visibility on dark header */
-  filter: drop-shadow(0 2px 6px rgba(0,0,0,.4)) brightness(1.15) contrast(1.08) saturate(1.1);
+    height: 44px;
+    width: auto;
+    display: block;
+    filter: drop-shadow(0 2px 6px rgba(0, 0, 0, .4)) brightness(1.15) contrast(1.08) saturate(1.1)
 }
 
-/* Optional subtle backdrop for the logo to improve contrast */
-.header .brand-logo {
-  padding: 4px 8px;
+.spacer {
+    flex: 1
 }
 
-.spacer { flex: 1 }
-
-.nav-indicator{
-  display: none;
+.nav-controls {
+    margin-left: auto;
+    display: flex;
+    align-items: center;
+    gap: 12px
 }
 
-.nav-controls{
-  margin-left: auto;
-  display: flex;
-  align-items: center;
-  gap: 12px;
+.nav-toggle {
+    display: none
 }
 
-.lang-toggle button {
-  background: transparent;
-  border: 1px solid rgba(255, 255, 255, .4);
-  color: var(--text-on-dark);
-  padding: .35rem .6rem;
-  border-radius: 10px;
-  cursor: pointer
+.main-nav {
+    display: flex;
+    gap: 4px;
+    align-items: center;
+    font-weight: 600
 }
 
-.lang-toggle button.active {
-  background: rgba(255, 255, 255, .18)
+.main-nav a {
+    position: relative;
+    display: inline-block;
+    padding: .75rem .6rem;
+    font-weight: 500;
+    letter-spacing: .3px;
+    color: var(--text);
+    text-decoration: none
 }
 
-/* ===== Hero (wheat background + centered logo and stacked title) ===== */
-.hero{
-  position: relative;
-  min-height: 100svh; /* full viewport height for the hero section */
-  display: grid;
-  align-items: start;             /* move content near the top */
-  justify-items: center;
-  padding-top: calc(var(--header-h) + 16px); /* sit just below navbar */
-  background: #000;
-  overflow: hidden;
-  isolation: isolate;
+.main-nav a::after {
+    content: "";
+    position: absolute;
+    left: 50%;
+    bottom: 6px;
+    width: 0;
+    height: 2px;
+    background: linear-gradient(90deg, var(--brand-primary), #f5c96e);
+    transition: .35s cubic-bezier(.4, .7, .2, 1);
+    transform: translateX(-50%)
 }
 
-/* Optional subtle gradient for readability */
-.hero::after{
-  content: "";
-  position: absolute; inset: 0;
-  background: linear-gradient(to bottom, rgba(0,0,0,.10), rgba(0,0,0,.25));
-  pointer-events: none;
+.main-nav a:hover::after, .main-nav a.is-active::after {
+    width: 60%
 }
 
-.hero__slides{
-  position: absolute;
-  inset: 0;
-  z-index: 0;
-  display: flex;
-  transform: translateX(0);
-  transition: transform 1s ease;
+.main-nav a.is-active {
+    color: var(--brand-primary)
 }
 
-.hero__slide{
-  flex: 0 0 100%;
-  background-size: cover;
-  background-position: center;
+@media (max-width: 860px) {
+    .nav-toggle {
+        display: flex
+    }
+
+    .main-nav {
+        position: fixed;
+        top: 70px;
+        right: 0;
+        left: 0;
+        flex-direction: column;
+        align-items: center;
+        background: rgba(255, 255, 255, .97);
+        padding: 0;
+        border: 0;
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+        transform-origin: top center;
+        max-height: 0;
+        overflow: hidden;
+        opacity: 0;
+        visibility: hidden;
+        pointer-events: none;
+        transition: max-height .55s cubic-bezier(.6, .05, .3, 1), opacity .2s ease;
+        z-index: 1100;
+    }
+
+    .nav-open .main-nav {
+        max-height: 420px;
+        padding: 8px 12px 20px;
+        opacity: 1;
+        visibility: visible;
+        pointer-events: auto;
+        border-bottom: 1px solid rgba(0, 0, 0, .08)
+    }
+
+    .main-nav a {
+        padding: .85rem 4px;
+        width: 100%;
+        text-align: center
+    }
 }
 
-.hero__slide--1{ background-image: url("img/home/home1.jpg"); }
-.hero__slide--2{ background-image: url("img/home/home2.jpg"); }
-.hero__slide--3{ background-image: url("img/home/home3.jpg"); }
-
-.hero__center{
-  position: relative;
-  z-index: 1;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: .25rem; /* bring title closer to logo */
-  perspective: 900px; /* required for the 3D tilt */
+/* --- Lang select style (pill) --- */
+.lang-switch {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 4px;
+    border-radius: 999px;
+    background: rgba(0, 0, 0, 0.04);
+    border: 1px solid rgba(0, 0, 0, 0.08);
+    padding-right: 36px
 }
 
-.logo-plate{
-  position: relative;
-  display: inline-block;
-}
-.logo-plate > .hero__logo{ position: relative; z-index: 1; display: block; }
-
-.hero__logo{
-  width: min(36vw, 260px);
-  max-width: 300px;
-  transform-style: preserve-3d;
-  will-change: transform, filter;
-  transition: filter .2s ease;
-  filter: drop-shadow(0 6px 12px rgba(0,0,0,.25)) brightness(0) invert(1);
-
+.lang-switch select {
+    -webkit-appearance: none;
+    appearance: none;
+    background: transparent;
+    border: none;
+    padding: .35rem .6rem;
+    font-weight: 600;
+    cursor: pointer;
+    border-radius: 999px;
+    color: inherit;
+    font-family: inherit;
+    font-size: .85rem
 }
 
-.hero__title{
-  margin: .25rem 0 0;
-  text-align: center;
-  line-height: 1.05;
-  color: #fff;
-  /* warm brown outline + glow for readability on photo */
-  -webkit-text-stroke: 1px rgba(59,42,26,.8);
-  paint-order: stroke fill;
-  text-shadow:
-    0 1px 0 rgba(0,0,0,.25),
-    0 0 3px rgba(59,42,26,.55),
-    0 3px 12px rgba(0,0,0,.4);
-  font-weight: 1000;
-  letter-spacing: .02em;
-}
-.hero__line1,
-.hero__line2{
-  font-size: clamp(3rem, 9vw, 6rem);
-  display: block;
-  letter-spacing: 0.05em;
+.lang-switch::after {
+    content: "▾";
+    position: absolute;
+    right: 10px;
+    pointer-events: none;
+    font-size: .85rem;
+    color: rgba(0, 0, 0, .6)
 }
 
-@media (prefers-reduced-motion: reduce){
-  .hero__logo{ transition: none !important; }
-  .hero__slides{ transition: none; }
+.lang-switch .pill {
+    display: none !important
 }
 
-.hero img {
-  width: 100%;
-  height: 56vh;
-  object-fit: cover;
-  display: block;
-  filter: saturate(1.05) contrast(1.05)
-}
-
-/* Ensure the logo image is not cropped by the generic .hero img rule */
-.hero .hero__logo{
-  width: clamp(220px, 48vw, 460px); /* wider logo */
-  max-width: none;
-  height: auto; /* natural aspect ratio from SVG */
-  object-fit: contain;
-}
-
-.hero .overlay {
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(180deg, rgba(0, 0, 0, .45), rgba(0, 0, 0, .25) 50%, rgba(0, 0, 0, .55))
-}
-
-.hero .content {
-  position: absolute;
-  inset: 0;
-  display: grid;
-  place-items: center;
-  text-align: center;
-  color: var(--text-on-dark);
-  padding: 16px
-}
-
-.hero h1 {
-  margin: .2em 0;
-  font-size: clamp(1.8rem, 3.6vw, 3.2rem)
-}
-
-.lead {
-  font-size: clamp(1rem, 1.6vw, 1.25rem);
-  opacity: .95
-}
-
-.button {
-  display: inline-block;
-  background: var(--brand-primary);
-  color: #2b1c12;
-  padding: .7rem 1rem;
-  border-radius: 12px;
-  border: none;
-  font-weight: 700
-}
-
-.button:hover {
-  filter: brightness(.95)
-}
-
-.section {
-  padding: 42px 16px; /* existing spacing */
-  min-height: calc(100vh - var(--header-h));
-  display: flex;
-  align-items: center; /* vertically center shorter content */
-  scroll-margin-top: calc(var(--header-h) + 12px);
-}
-
-.section > .container {width:100%;}
-
-#hofladen.section{
-  min-height: auto;
-  padding: 32px 0;
-}
-
-#hofladen .container{
-  padding: 0 16px;
-}
-
-#food-menu .menu-layout,
-#hofladen .hof-layout{
-  margin-top: 12px;
-  background: rgba(255,255,255,0.95);
-  border-radius: 0;
-  box-shadow: 0 32px 60px -40px rgba(57,28,8,.55);
-  display: flex;
-  flex-direction: column;
-  overflow: hidden;
-}
-
-/* NEW: make the events section appear as a boxed container like Menu/Hofladen */
-#events .events-layout {
-  margin-top: 12px;
-  background: rgba(255,255,255,0.95);
-  border-radius: var(--radius);
-  box-shadow: 0 32px 60px -40px rgba(57,28,8,.55);
-  display: flex;
-  flex-direction: column;
-  overflow: hidden;
-  padding: 18px 0; /* give top/bottom breathing room inside the card */
-}
-
-/* tighten and align the inner text block to match other sections */
-#events .events-layout .events-text {
-  max-width: var(--maxw);
-  margin: 0 auto;
-  padding: 12px 20px 24px;
-  text-align: left;
-}
-
-/* ensure event images sit comfortably inside the card */
-#events .events-layout .events-images {
-  margin-top: 12px;
-  padding: 0 20px 20px;
-  justify-items: center;
-}
-
-/* slightly reduce image max-width to visually align with menu/hof images */
-#events .events-layout .events-images img {
-  max-width: 320px;
-  border-radius: 10px;
-}
-
-/* smaller screens: keep padding comfortable */
-@media (max-width: 899px) {
-  #events .events-layout {
-    padding: 12px 0;
-  }
-  #events .events-layout .events-text {
-    padding: 10px 16px 18px;
-  }
-  #events .events-layout .events-images {
-    padding: 0 16px 16px;
-    gap: 10px;
-  }
-}
-
-/* keep the shared gallery container styling below */
-#food-menu .menu-gallery,
-#hofladen .hof-gallery,
-.events-carousel{
-  width: 100%;
-  max-width: 1080px;
-  margin: 12px auto 0;
-  position: relative;
-  overflow: hidden;
-  border: 1px solid rgba(0,0,0,.08);
-  box-shadow: inset 0 0 0 1px rgba(255,255,255,.05), 0 30px 50px -36px rgba(0,0,0,.65);
-  background: #f3e8cc;
-  cursor: pointer;
-  min-height: 280px;
-  max-height: 520px;
-}
-
-#food-menu .menu-gallery img,
-#hofladen .hof-gallery img,
-.events-carousel img{
-  object-fit: cover;
-  width: 100%;
-  height: 100%;
-}
-
-@media (min-width: 900px) {
-  #food-menu .menu-gallery,
-  #hofladen .hof-gallery,
-  .events-carousel {
-    max-height: 520px;
+/* --- Hero --- */
+.hero {
+    position: relative;
+    min-height: 100svh;
+    display: grid;
+    align-items: start;
+    justify-items: center;
+    padding-top: 16px;
+    background: #000;
     overflow: hidden;
-  }
+    isolation: isolate
 }
 
-/* Events carousel */
-.events-container{
-  display: grid;
-  gap: 18px;
+.hero__slides {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    display: flex;
+    transform: translateX(0);
+    transition: transform 1s ease
 }
 
-#food-menu .menu-gallery,
-#hofladen .hof-gallery{
-  min-height: 280px;
+.hero__slide {
+    flex: 0 0 100%;
+    background-size: cover;
+    background-position: center;
+    position: relative;
 }
 
-.events-track{
-  display: flex;
-  transition: transform .45s ease;
-  height: 100%;
-  min-height: 320px;
+.hero__center {
+    position: relative;
+    z-index: 300; /* keep hero content above the snow effect */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: .25rem;
+    perspective: 900px
 }
 
-.events-arrow{
-  position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
-  width: 36px;
-  height: 36px;
-  border: none;
-  background: rgba(0,0,0,.5);
-  clip-path: polygon(25% 0, 100% 50%, 25% 100%);
-  cursor: pointer;
-  z-index: 2;
-  transition: background .2s ease;
+.hero__logo {
+    width: min(36vw, 260px);
+    max-width: 300px;
+    transform-style: preserve-3d;
+    will-change: transform, filter;
+    transition: filter .2s ease;
+    filter: drop-shadow(0 6px 12px rgba(0, 0, 0, .25)) brightness(0) invert(1)
 }
 
-.events-arrow--prev{
-  left: 12px;
-  transform: translateY(-50%) scaleX(-1);
+.hero__title {
+    margin: .25rem 0 0;
+    text-align: center;
+    line-height: 1.05;
+    color: #fff;
+    -webkit-text-stroke: 1px rgba(59, 42, 26, .8);
+    paint-order: stroke fill;
+    text-shadow: 0 1px 0 rgba(0, 0, 0, .25), 0 0 3px rgba(59, 42, 26, .55), 0 3px 12px rgba(0, 0, 0, .4);
+    font-weight: 1000;
+    letter-spacing: .02em
 }
 
-.events-arrow--next{
-  right: 12px;
+.hero__line1, .hero__line2 {
+    font-size: clamp(3rem, 9vw, 6rem);
+    display: block;
+    letter-spacing: .05em
 }
 
-.events-arrow:hover{
-  background: rgba(0,0,0,.7);
+/* Ensure hero track and slides fill the hero area so background images display */
+.hero__slides {
+    height: 100%;
 }
 
-.event-slide{
-  flex: 0 0 100%;
-  position: relative;
-  color: #fff;
+.hero__slide {
+    height: 100%;
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
+    position: relative;
 }
 
-/* replace the existing event intro rules with centered layout */
-.event-slide--intro{
-  display: flex;
-  align-items: center;        /* vertical centering */
-  justify-content: center;    /* horizontal centering */
-  text-align: center;         /* center text inside */
-  padding: 36px 24px;         /* symmetric horizontal padding */
-  background: #f7f3ea;
-  color: #3b2a1a;
+/* Restore original hero slide background images */
+.hero__slide--1 {
+    background-image: url("img/home/home1.jpg");
 }
 
-.event-slide__intro{
-  max-width: 680px;
-  width: 100%;
-  margin: 0 auto;             /* ensure inner block is centered */
-  text-align: center;         /* center headings & copy */
+.hero__slide--2 {
+    background-image: url("img/home/home2.jpg");
 }
 
-/* make sure headings & copy inherit centered alignment */
-.event-slide__intro-heading,
-.event-slide__intro-copy {
-  margin-left: 0;
-  margin-right: 0;
-  text-align: center;
+.hero__slide--3 {
+    background-image: url("img/home/home3.jpg");
 }
 
-.event-slide img{
-  width: 100%;
-  height: 100%;
-  object-fit: fill;
-  object-position: center;
-  display: block;
-  filter: saturate(1.05) contrast(1.05);
+/* Optional: gentle overlay on all hero slides to keep text readable */
+.hero__slide::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to bottom, rgba(0, 0, 0, 0.06), rgba(0, 0, 0, 0.12));
+    pointer-events: none;
 }
 
-.events-pagination{
-  display: flex;
-  justify-content: center;
-  gap: 8px;
-}
-
-.events-pagination button{
-  width: 10px;
-  height: 10px;
-  border-radius: 50%;
-  border: none;
-  background: rgba(0,0,0,.2);
-  cursor: pointer;
-}
-
-.events-pagination button.is-active{
-  background: var(--brand-primary);
-}
-
-.events-pagination-wrap{
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 10px;
-}
-
-.events-pagination-note{
-  display: inline-flex;
-  min-width: 24px;
-  height: 24px;
-  padding: 0 10px;
-  border-radius: 999px;
-  background: #f35d2a;
-  color: #fff;
-  font-size: .75rem;
-  font-weight: 700;
-  align-items: center;
-  justify-content: center;
-  box-shadow: 0 2px 6px rgba(0,0,0,.25);
-  visibility: hidden;
-  opacity: 0;
-  transition: opacity .2s ease;
-}
-
-.events-pagination-note[data-count="0"],
-.events-pagination-note:not([data-count]){
-  visibility: hidden;
-  opacity: 0;
-}
-
-.events-pagination-note:not([data-count="0"]){
-  visibility: visible;
-  opacity: 1;
-}
-
-.events-lightbox{
-  position: fixed;
-  inset: 0;
-  background: rgba(0,0,0,.85);
-  display: grid;
-  place-items: center;
-  z-index: 4000;
-  padding: 24px;
-}
-
-.events-lightbox figure{
-  position: relative;
-  max-width: min(90vw, 1100px);
-  max-height: 90vh;
-  margin: 0;
-}
-
-.events-lightbox img{
-  width: 100%;
-  height: 100%;
-  object-fit: contain;
-  border-radius: 8px;
-  box-shadow: 0 30px 60px -40px rgba(0,0,0,.9);
-}
-
-.events-lightbox__close{
-  position: absolute;
-  top: -12px;
-  right: -12px;
-  width: 36px;
-  height: 36px;
-  border-radius: 50%;
-  border: none;
-  background: rgba(0,0,0,.7);
-  color: #fff;
-  font-size: 1.5rem;
-  cursor: pointer;
-}
-
-[data-events-empty]{
-  color: var(--muted);
-  text-align: center;
-  margin: 12px 0 0;
-}
-
-@media (min-width: 900px){
-  .events-carousel{
-    min-height: 420px;
-    max-height: none;
-  }
-}
-
-/* About section with same background as hero */
+/* --- About / wheat background --- */
 .bg-wheat {
-  position: relative;
-  /* background-image: url("hero-wheat.jpg");*/
-  background-image: url("img/background_erlebnishof.jpg");
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
-  color: var(--text-on-dark);
-  isolation: isolate;
+    position: relative;
+    color: var(--text-on-dark);
+    isolation: isolate;
 }
 
-.bg-wheat::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(to bottom, rgba(0,0,0,.30), rgba(0,0,0,.45));
-  pointer-events: none;
+
+.bg-wheat > .container {
+    position: relative;
+    z-index: 1
 }
 
-.bg-wheat > .container { position: relative; z-index: 1; }
-
-.bg-wheat h2 { color: #fff; text-shadow: 0 2px 6px rgba(0,0,0,.35); }
+.bg-wheat h2 {
+    color: #fff;
+    text-shadow: 0 2px 6px rgba(0, 0, 0, .35)
+}
 
 .about-text {
-  max-width: 60ch;
-  font-size: clamp(1rem, 1.4vw, 1.25rem);
-  line-height: 1.7;
-  margin: 0;
-  background: rgba(0,0,0,.35);
-  padding: 16px 18px;
-  border-radius: 12px;
-  box-shadow: 0 8px 24px -16px rgba(0,0,0,.6);
+    max-width: 60ch;
+    font-size: clamp(1.1rem, 1.4vw, 1.25rem);
+    line-height: 1.7;
+    margin: 0;
+    background: rgba(0, 0, 0, .35);
+    padding: 16px 18px;
+    border-radius: 12px;
+    box-shadow: 0 8px 24px -16px rgba(0, 0, 0, .6)
 }
 
-h2 {
-  font-size: clamp(1.4rem, 2.2vw, 2rem);
-  margin: 0 0 2px;
-  color: #3b2a1a
+/* --- Card-style sections (menu / hof / events) --- */
+.layout {
+    padding: 24px;
+    /*background: rgba(243, 238, 238, 0.90);*/
+    /*// coffee */
+    /*background: linear-gradient(135deg,*/
+    /*rgba(249, 240, 227, 0.9),*/
+    /*rgba(214, 186, 154, 0.9)*/
+    /*);*/
+
+    /*// Light Latte → Caramel */
+    /*background: linear-gradient(135deg,*/
+    /*rgba(243, 226, 199, 0.9),*/
+    /*rgba(200, 150, 110, 0.9)*/
+    /*);*/
+
+    /*// Farmhouse Cream → Sage*/
+    /*background: linear-gradient(135deg,*/
+    /*rgba(248, 240, 224, 0.9),*/
+    /*rgba(189, 200, 170, 0.9)*/
+    /*);*/
+
+    /*background: linear-gradient(135deg,*/
+    /*rgba(244, 213, 160, 0.9),*/
+    /*rgba(160, 121, 94, 0.9)*/
+    /*);*/
+
+    background: linear-gradient(135deg,
+    rgba(247, 243, 243, 0.9),
+    rgba(236, 230, 230, 0.9)
+    );
+    box-shadow: 0 32px 60px -40px rgba(57, 28, 8, .55);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    border-radius: var(--radius);
+    min-height: calc(100vh - var(--header-h) - 10);
+    isolation: isolate;
 }
 
-.grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-  gap: 16px
+.layout::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background-image:
+            linear-gradient(0deg, rgba(255,255,255,.03) 50%, transparent 50%),
+            linear-gradient(90deg, rgba(0,0,0,.03) 50%, transparent 50%);
+    background-size: 3px 3px;
+    opacity: 0.35;
+    mix-blend-mode: multiply;
+    pointer-events: none;
+    z-index: 1;
 }
 
+/* darker cozy farm gradient */
+.container--dark {
+    background: linear-gradient(135deg,
+        rgba(123, 100, 72, 0.9) 0%,   /* warm dark wheat / wood */
+        rgba(74, 79, 54, 0.9) 100%    /* muted farmhouse green/brown */
+    );
+    color: #ffffff;
+}
+
+/* make sure headings & text are really white */
+.container--dark h1,
+.container--dark h2,
+.container--dark h3,
+.container--dark p,
+.container--dark li,
+.container--dark .small {
+    color: #ffffff;
+}
+
+/* links on dark background */
+.container--dark a {
+    color: #ffe9b8;
+}
+.container--dark a:hover {
+    color: #ffffff;
+}
+
+.container--dark .event-slide--intro p{
+    color: #3b2a1a;
+}
+
+/* events specific card adjustments */
+#events .events-layout {
+
+}
+
+#events .events-layout .events-text {
+    max-width: var(--maxw);
+    margin: 0 auto;
+    text-align: left
+}
+
+#events .events-layout .events-images {
+    margin-top: 12px;
+    padding: 0 20px 20px;
+    justify-items: center
+}
+
+#events .events-layout .events-images img {
+    max-width: 320px;
+    border-radius: 10px
+}
+
+/* --- Menu gallery (carousel) --- */
+.menu-gallery {
+    /*width: 100%;*/
+    /*max-width: 1080px;*/
+    /*margin: 12px auto 0;*/
+    /*position: relative;*/
+    /*overflow: hidden;*/
+    /*border: 1px solid rgba(0, 0, 0, .08);*/
+    /*box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .05), 0 30px 50px -36px rgba(0, 0, 0, .65);*/
+    /*background: #f3e8cc;*/
+    /*cursor: pointer;*/
+    /*min-height: 280px;*/
+    /*max-height: 520px*/
+}
+
+#menuCarousel, .hof-carousel {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    min-height: 320px
+}
+
+#food-menu .menu-gallery img, #hofladen .hof-gallery img, .events-carousel img {
+    object-fit: cover;
+    width: 100%;
+    height: 100%
+}
+
+/* ensure carousel inner/items/images fill container and keep consistent mobile height */
+#menuCarousel .carousel-inner, #hofladenCarousel .carousel-inner, #newsCarousel .carousel-inner {
+    height: 100%
+}
+
+#menuCarousel .carousel-item, #hofladenCarousel .carousel-item, #newsCarousel .carousel-item {
+    height: 100%
+}
+
+#menuCarousel .carousel-item img, #hofladenCarousel .carousel-item img, #newsCarousel .carousel-item img {
+    width: 50vw;
+    height: 50vh;
+    object-fit: contain;
+    display: block;
+    justify-items: center;
+}
+
+/* keep a stable, non-jumping carousel height on small screens */
+@media (max-width: 899px) {
+    #menuCarousel, #hofladenCarousel, #newsCarousel, #food-menu .menu-gallery, #hofladen .hof-gallery, .events-carousel {
+        min-height: 360px;
+        max-height: 420px;
+    }
+
+    #menuCarousel .carousel-item img, #hofladenCarousel .carousel-item img, #newsCarousel .carousel-item img {
+        object-fit: contain;
+    }
+}
+
+/* --- Hofladen gallery fallback grid --- */
+.menu-gallery-simple, .hof-gallery-simple {
+    display: grid;
+    grid-template-columns:1fr;
+    gap: 12px;
+    margin-top: 16px;
+    justify-items: center
+}
+
+.menu-gallery-simple img, .hof-gallery-simple img {
+    width: 100%;
+    max-width: 220px;
+    height: auto;
+    border-radius: 10px;
+    object-fit: cover;
+    display: block
+}
+
+@media (min-width: 480px) {
+    .menu-gallery-simple, .hof-gallery-simple {
+        grid-template-columns:repeat(auto-fit, minmax(160px, 1fr))
+    }
+}
+
+@media (min-width: 768px) {
+    .menu-gallery-simple, .hof-gallery-simple {
+        grid-template-columns:repeat(auto-fit, minmax(160px, 1fr))
+    }
+}
+
+/* --- Events carousel / track / slides --- */
+.events-container {
+    display: grid;
+    gap: 18px
+}
+
+.events-carousel {
+    width: 100%;
+    max-width: 1080px;
+    margin: 12px auto 0;
+    position: relative;
+    overflow: hidden;
+    /*border: 1px solid rgba(0, 0, 0, .08);*/
+    /*box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .05), 0 30px 50px -36px rgba(0, 0, 0, .65);*/
+    cursor: pointer;
+    min-height: 280px;
+}
+
+.events-track {
+    display: flex;
+    transition: transform .45s ease;
+    height: 100%;
+    min-height: 320px
+}
+
+.event-slide {
+    flex: 0 0 100%;
+    position: relative;
+    /*color: #fff;*/
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    height: 100%;
+}
+
+.event-slide img {
+    width: 100%;
+    max-height: 60vh;
+    object-fit: contain;
+    border-radius: 10px;
+}
+
+.event-slide--intro {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 36px 24px;
+    background: #f7f3ea;
+    color: #3b2a1a !important;
+    max-width: 60vw;
+    height: 100%;
+}
+
+.event-slide__intro {
+    max-width: 40vw;
+    width: 100%;
+    margin: 0 auto;
+    text-align: center
+}
+
+/* active slide: center its contents */
+#newsCarousel .carousel-item.active,
+.events-carousel .carousel-item.active {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0; /* keep centering exact */
+}
+
+#newsCarousel .carousel-item img {
+    height: 50vh;
+    width: 50vw;
+}
+
+/* events pagination & badges */
+.events-pagination {
+    display: flex;
+    justify-content: center;
+    gap: 8px
+}
+
+.events-pagination button {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    border: none;
+    background: rgba(0, 0, 0, .2);
+    cursor: pointer
+}
+
+.events-pagination button.is-active {
+    background: var(--brand-primary)
+}
+
+.events-pagination-wrap {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px
+}
+
+.events-pagination-note {
+    display: inline-flex;
+    min-width: 24px;
+    height: 24px;
+    padding: 0 10px;
+    border-radius: 999px;
+    background: #f35d2a;
+    color: #fff;
+    font-size: .75rem;
+    font-weight: 700;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, .25);
+    visibility: hidden;
+    opacity: 0;
+    transition: opacity .2s ease
+}
+
+.events-pagination-note[data-count="0"], .events-pagination-note:not([data-count]) {
+    visibility: hidden;
+    opacity: 0
+}
+
+.events-pagination-note:not([data-count="0"]) {
+    visibility: visible;
+    opacity: 1
+}
+
+/* events images grid used in events section */
+.events-images {
+    display: grid;
+    grid-template-columns:repeat(auto-fit, minmax(160px, 1fr));
+    gap: 12px;
+    align-items: center;
+    justify-items: center;
+    margin-top: 12px
+}
+
+.events-images img {
+    width: 100%;
+    max-width: 300px;
+    height: auto;
+    border-radius: 8px;
+    object-fit: cover;
+    display: block
+}
+
+/* --- Misc / cards / modals --- */
 .card {
-  background: var(--card);
-  border: 1px solid rgba(0, 0, 0, .06);
-  border-radius: var(--radius);
-  padding: 16px
+    background: var(--card);
+    border: 1px solid rgba(0, 0, 0, .06);
+    border-radius: var(--radius);
+    padding: 16px
 }
 
 .kv {
-  display: grid;
-  grid-template-columns: 140px 1fr;
-  gap: 6px 12px
+    display: grid;
+    grid-template-columns:140px 1fr;
+    gap: 6px 12px
 }
 
 .small {
-  color: var(--muted);
-  margin: 0.2em 0;
+    /*color: var(--muted);*/
+    margin: 0.2em 0;
+    font-size: .95rem;
+    color: var(--text);
 }
 
 .footer {
-  background: var(--ink);
-  color: var(--text-on-dark)
+    background: var(--ink);
+    color: var(--text-on-dark)
 }
 
-.footer .row {
-  display: flex;
-  gap: 12px;
-  align-items: center;
-  flex-wrap: wrap;
-  padding: 16px 0
+footer .container {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    padding: 16px 0;
+    justify-content: center; /* <-- added to center-align footer content */
 }
 
-.legal-links{
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  font-size: .95rem;
+.legal-link {
+    background: none;
+    border: none;
+    color: var(--text-on-dark);
+    opacity: .9;
+    font: inherit;
+    cursor: pointer;
+    padding: 0
 }
 
-.legal-link{
-  background: none;
-  border: none;
-  color: var(--text-on-dark);
-  opacity: .9;
-  font: inherit;
-  cursor: pointer;
-  padding: 0;
+.legal-modal {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, .65);
+    display: grid;
+    place-items: center;
+    padding: 24px;
+    z-index: 5000
 }
 
-.legal-link:hover,
-.legal-link:focus-visible{
-  opacity: 1;
-  text-decoration: underline;
+.legal-modal[hidden] {
+    display: none
 }
 
-.legal-modal{
-  position: fixed;
-  inset: 0;
-  background: rgba(0,0,0,.65);
-  display: grid;
-  place-items: center;
-  padding: 24px;
-  z-index: 5000;
+.legal-modal__content {
+    max-width: min(640px, 90vw);
+    background: #fffdf7;
+    color: #2f2013;
+    padding: 32px;
+    border-radius: 16px;
+    box-shadow: 0 40px 90px -40px rgba(0, 0, 0, .55);
+    position: relative;
+    overflow-y: auto;
+    max-height: 90vh
 }
 
-.legal-modal[hidden]{
-  display: none;
-}
-
-.legal-modal__content{
-  max-width: min(640px, 90vw);
-  background: #fffdf7;
-  color: #2f2013;
-  padding: 32px;
-  border-radius: 16px;
-  box-shadow: 0 40px 90px -40px rgba(0,0,0,.55);
-  position: relative;
-  overflow-y: auto;
-  max-height: 90vh;
-}
-
-.legal-modal__content h3{
-  margin-top: 0;
-  font-size: 1.6rem;
-}
-
-.legal-modal__content p{
-  margin-bottom: 1rem;
-  line-height: 1.6;
-}
-
-.legal-modal__close{
-  position: absolute;
-  top: 12px;
-  right: 12px;
-  border: none;
-  background: rgba(0,0,0,.08);
-  width: 36px;
-  height: 36px;
-  border-radius: 50%;
-  font-size: 1.5rem;
-  cursor: pointer;
-}
-
-.badge {
-  display: inline-block;
-  background: var(--brand-primary);
-  color: #2b1c12;
-  padding: .1rem .5rem;
-  border-radius: .5rem;
-  font-weight: 700
+.legal-modal__close {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    border: none;
+    background: rgba(0, 0, 0, .08);
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    font-size: 1.5rem;
+    cursor: pointer
 }
 
 /* bilingual visibility */
 [data-lang="de"] .i18n-en {
-  display: none !important;
+    display: none !important
 }
 
 [data-lang="en"] .i18n-de {
-  display: none !important;
+    display: none !important
 }
 
+/* nav badge */
+.nav-badge {
+    display: inline-flex;
+    min-width: 20px;
+    height: 20px;
+    padding: 0 6px;
+    border-radius: 999px;
+    background: #f35d2a;
+    color: #fff;
+    font-size: .7rem;
+    font-weight: 700;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, .25);
+    transform: translateY(-2px);
+    visibility: hidden;
+    opacity: 0;
+    transition: opacity .2s ease, visibility .2s ease
+}
+
+.nav-badge[data-count="0"] {
+    visibility: hidden;
+    opacity: 0
+}
+
+.nav-badge:not([data-count="0"]) {
+    visibility: visible;
+    opacity: 1
+}
+
+/* scroll progress bar */
+#scrollbar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 3px;
+    background: linear-gradient(90deg, var(--brand-primary), #f5c96e);
+    width: 0;
+    z-index: 1500;
+    box-shadow: 0 0 0 1px rgba(0, 0, 0, .05)
+}
+
+/* responsive adjustments */
+@media (min-width: 768px) {
+    .events-layout .events-text h2 {
+        font-size: 1.4rem
+    }
+
+    .events-list li {
+        font-size: 1.05rem
+    }
+}
+
+@media (min-width: 900px) {
+    .events-carousel {
+        min-height: 420px;
+        max-height: none
+    }
+}
+
+@media (max-width: 899px) {
+    /* stabilize mobile carousel height to avoid jumping */
+    #menuCarousel, #hofladenCarousel, #newsCarousel, #food-menu .menu-gallery, #hofladen .hof-gallery, .events-carousel {
+        min-height: 360px;
+        max-height: 420px
+    }
+}
+
+/* small utility tweaks */
+.visually-hidden {
+    position: absolute !important;
+    height: 1px;
+    width: 1px;
+    overflow: hidden;
+    clip: rect(1px, 1px, 1px, 1px);
+    white-space: nowrap
+}
+
+
+/* header / nav toggle (restored behaviour & animated bars) */
 .nav-toggle {
-  display: none;
-  flex-direction: column;
-  gap: 4px;
-  background: transparent;
-  border: 0;
-  cursor: pointer;
-  padding: 8px;
-  margin-left: 4px
+    display: none;
+    flex-direction: column;
+    gap: 4px;
+    background: transparent;
+    border: 0;
+    cursor: pointer;
+    padding: 8px;
+    margin-left: 4px;
 }
 
 .nav-toggle .bar {
-  width: 26px;
-  height: 3px;
-  background: var(--text);
-  border-radius: 2px;
-  transition: .4s
+    width: 26px;
+    height: 3px;
+    background: var(--text);
+    border-radius: 2px;
+    transition: .4s;
 }
 
 .nav-open .nav-toggle .bar:nth-child(1) {
-  transform: translateY(7px) rotate(45deg)
+    transform: translateY(7px) rotate(45deg);
 }
 
 .nav-open .nav-toggle .bar:nth-child(2) {
-  opacity: 0
+    opacity: 0;
 }
 
 .nav-open .nav-toggle .bar:nth-child(3) {
-  transform: translateY(-7px) rotate(-45deg)
+    transform: translateY(-7px) rotate(-45deg);
 }
 
+/* small nav-indicator for compact header (keeps archive behaviour) */
+.nav-indicator {
+    display: none;
+}
+
+/* main-nav base & underline (restore original underline animation/presence) */
 .main-nav {
-  display: flex;
-  gap: 4px;
-  align-items: center;
-  font-family: "Inter", "Segoe UI", system-ui, -apple-system, sans-serif;
-  font-weight: 600;
+    display: flex;
+    gap: 4px;
+    align-items: center;
+    font-family: "Inter", "Segoe UI", system-ui, -apple-system, sans-serif;
+    font-weight: 600;
 }
 
 .main-nav a {
-  position: relative;
-  display: inline-block;
-  padding: .75rem .6rem;
-  font-weight: 500;
-  letter-spacing: .3px;
-  color: var(--text);
-  text-decoration: none
-}
-
-.nav-events-link{
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-}
-
-.nav-badge{
-  display: inline-flex;
-  min-width: 20px;
-  height: 20px;
-  padding: 0 6px;
-  border-radius: 999px;
-  background: #f35d2a;
-  color: #fff;
-  font-size: .7rem;
-  font-weight: 700;
-  align-items: center;
-  justify-content: center;
-  box-shadow: 0 2px 6px rgba(0,0,0,.25);
-  transform: translateY(-2px);
-  visibility: hidden;
-  opacity: 0;
-  transition: opacity .2s ease, visibility .2s ease;
-}
-
-.nav-badge[data-count="0"]{
-  visibility: hidden;
-  opacity: 0;
-}
-
-.nav-badge:not([data-count="0"]){
-  visibility: visible;
-  opacity: 1;
+    position: relative;
+    display: inline-block;
+    padding: .75rem .9rem;
+    font-weight: 500;
+    letter-spacing: .3px;
+    color: var(--text);
+    text-decoration: none;
 }
 
 .main-nav a::after {
-  content: "";
-  position: absolute;
-  left: 50%;
-  bottom: 6px;
-  width: 0;
-  height: 2px;
-  background: linear-gradient(90deg, var(--brand-primary), #f5c96e);
-  transition: .35s cubic-bezier(.4, .7, .2, 1);
-  transform: translateX(-50%)
+    content: "";
+    position: absolute;
+    left: 50%;
+    bottom: 6px;
+    width: 0;
+    height: 2px;
+    background: linear-gradient(90deg, var(--brand-primary), #f5c96e);
+    transition: .35s cubic-bezier(.4, .7, .2, 1);
+    transform: translateX(-50%);
 }
 
 .main-nav a:hover::after,
 .main-nav a.is-active::after {
-  width: 60%
+    width: 60%;
 }
 
-.lang-switch {
-  position: relative;
-  display: inline-flex;
-  align-items: center;
-  gap: 4px;
-  padding: 4px;
-  border-radius: 999px;
-  background: rgba(0,0,0,0.04);
-  border: 1px solid rgba(0,0,0,0.08);
-}
-
-.lang-switch button {
-  position: relative;
-  z-index: 2;
-  background: transparent;
-  border: 0;
-  color: var(--text);
-  font-weight: 600;
-  padding: .35rem .75rem;
-  border-radius: 999px;
-  cursor: pointer;
-  font-size: .75rem;
-  letter-spacing: .5px
-}
-
-.lang-switch select {
-  -webkit-appearance: none;
-  appearance: none;
-  background: transparent;
-  border: none;
-  padding: .35rem .6rem;
-  font-weight: 600;
-  cursor: pointer;
-  border-radius: 999px;
-  color: inherit;
-  font-family: inherit;
-  font-size: .85rem;
-}
-
-/* small dropdown arrow using a pseudo-element (keeps markup minimal) */
-.lang-switch {
-  padding-right: 36px; /* room for arrow */
-}
-.lang-switch::after {
-  content: "▾";
-  position: absolute;
-  right: 10px;
-  pointer-events: none;
-  font-size: .85rem;
-  color: rgba(0,0,0,.6);
-}
-
-/* keep older pill element safe (if still present) hidden */
-.lang-switch .pill { display: none !important; }
-
-#scrollbar {
-  position: fixed;
-  top: 0;
-  left: 0;
-  height: 3px;
-  background: linear-gradient(90deg, var(--brand-primary), #f5c96e);
-  width: 0;
-  z-index: 1500;
-  box-shadow: 0 0 0 1px rgba(0, 0, 0, .05)
-}
-
-@media (max-width:860px) {
-  .nav-indicator{
-    display: block;
-    flex: 1;
-    text-align: center;
-    font-size: .85rem;
-    letter-spacing: .12em;
-    text-transform: uppercase;
-    font-weight: 600;
-    margin: 0;
-    color: var(--muted);
-  }
-
-  .nav-toggle {
-    display: flex
-  }
-
-  .main-nav {
-    position: fixed; /* full-bleed dropdown */
-    top: 70px; /* sit just below sticky header */
-    right: 0;
-    left: 0;
-    flex-direction: column;
-    align-items: center;
-    background: rgba(255, 255, 255, .97);
-    /* closed-state: no padding/border so nothing peeks out */
-    padding: 0;
-    border: 0;
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
-    transform-origin: top center;
-    max-height: 0;
-    overflow: hidden;
-    opacity: 0;
-    visibility: hidden;
-    pointer-events: none;
-    transition: max-height .55s cubic-bezier(.6, .05, .3, 1), opacity .2s ease;
-    z-index: 1100; /* above content, below header */
-  }
-
-  .nav-open .main-nav {
-    max-height: 420px;
-    padding: 8px 12px 20px;
-    border-bottom: 1px solid rgba(0, 0, 0, .08);
-    opacity: 1;
-    visibility: visible;
-    pointer-events: auto;
-  }
-
-  .main-nav a {
-    padding: .85rem 4px;
-    width: 100%;
-    text-align: center;
-  }
-
-  .lang-switch {
-    margin-left: 8px
-  }
-}
-
-/* subtle section active color shift */
 .main-nav a.is-active {
-  color: var(--brand-primary)
-}
-.menu-carousel,
-.hof-carousel{
-  position: relative;
-  width: 100%;
-  height: 100%;
-  min-height: 320px;
-}
-#food-menu .menu-gallery,
-#hofladen .hof-gallery,
-.events-carousel{
-  width: 100%;
-  max-width: 1080px;
-  margin: 12px auto 0;
-  position: relative;
-  overflow: hidden;
-  border: 1px solid rgba(0,0,0,.08);
-  box-shadow: inset 0 0 0 1px rgba(255,255,255,.05), 0 30px 50px -36px rgba(0,0,0,.65);
-  background: #000;
-  cursor: pointer;
-  min-height: 280px;
-  max-height: 520px;
+    color: var(--brand-primary);
 }
 
-#food-menu .menu-gallery,
-#hofladen .hof-gallery{
-  border-radius: 0;
+/* ensure mobile dropdown restores original layout and transitions */
+@media (max-width: 860px) {
+    .nav-toggle {
+        display: flex;
+    }
+
+    .main-nav {
+        position: fixed;
+        top: 70px;
+        right: 0;
+        left: 0;
+        flex-direction: column;
+        align-items: center;
+        background: rgba(255, 255, 255, .97);
+        padding: 0;
+        border: 0;
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+        transform-origin: top center;
+        max-height: 0;
+        overflow: hidden;
+        opacity: 0;
+        visibility: hidden;
+        pointer-events: none;
+        transition: max-height .55s cubic-bezier(.6, .05, .3, 1), opacity .2s ease;
+        z-index: 1100;
+    }
+
+    .nav-open .main-nav {
+        max-height: 420px;
+        padding: 8px 12px 20px;
+        border-bottom: 1px solid rgba(0, 0, 0, .08);
+        opacity: 1;
+        visibility: visible;
+        pointer-events: auto;
+    }
+
+    .main-nav a {
+        padding: .85rem 4px;
+        width: 100%;
+        text-align: center;
+    }
+
+    .lang-switch {
+        margin-left: 8px;
+    }
 }
 
-#food-menu .menu-gallery img,
-#hofladen .hof-gallery img,
-.events-carousel img{
-  object-fit: cover;
-  width: 100%;
-  height: 100%;
-}
-#food-menu .menu-gallery,
-#hofladen .hof-gallery,
-.events-carousel{
-  width: 100%;
-  max-width: 1080px;
-  margin: 12px auto 0;
-  position: relative;
-  overflow: hidden;
-  border: 1px solid rgba(0,0,0,.08);
-  box-shadow: inset 0 0 0 1px rgba(255,255,255,.05), 0 30px 50px -36px rgba(0,0,0,.65);
-  background: #f3e8cc;
-  cursor: pointer;
-  min-height: 280px;
-  max-height: 520px;
+/* keep these overrides last so they win if earlier rules differ */
+.nav-open .nav-toggle .bar { /* ensure transform origin smoothness */
+    transform-origin: center;
 }
 
-#food-menu .menu-gallery,
-#hofladen .hof-gallery{
-  border-radius: 0;
-}
-#food-menu .menu-gallery,
-#hofladen .hof-gallery,
-.events-carousel{
-  width: 100%;
-  max-width: 1080px;
-  margin: 12px auto 0;
-  position: relative;
-  overflow: hidden;
-  border: 1px solid rgba(0,0,0,.08);
-  background: #f3e8cc;
-  cursor: pointer;
+/* Snow canvas overlay: sits above the page background but below section content
+   Sections already set their content z-index: 1 so the snow stays visually "behind" text */
+#snow {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 50; /* sits above hero slides (0) but below section content (200) and header (1500) */
+    overflow: hidden;
+    mix-blend-mode: screen; /* optional, gives a subtle brighter look against darker backgrounds */
 }
 
-/* Keep carousel height stable on small screens to avoid layout jumps when images vary.
-   Adjust values (360px / 36vh) if you prefer a different mobile height. */
-@media (max-width: 899px) {
-  #menuCarousel,
-  #hofladenCarousel,
-  #newsCarousel,
-  #food-menu .menu-gallery,
-  #hofladen .hof-gallery,
-  .events-carousel {
-    /*height: 36vh;       !* mobile-friendly viewport-based height *!*/
-    min-height: 420px;  /* ensure it's not too small on short viewports */
-    max-height: 420px;  /* cap to avoid excessive height on tall phones */
-  }
-
-  #menuCarousel .carousel-inner,
-  #hofladenCarousel .carousel-inner,
-  #newsCarousel .carousel-inner {
-    height: 100%;
-  }
-
-  #menuCarousel .carousel-item,
-  #hofladenCarousel .carousel-item,
-  #newsCarousel .carousel-item {
-    height: 100%;
-  }
-
-  #menuCarousel .carousel-item img,
-  #hofladenCarousel .carousel-item img,
-  #newsCarousel .carousel-item img {
+#snowCanvas {
     width: 100%;
     height: 100%;
-    object-fit: contain; /* show full image without cropping */
     display: block;
-  }
+    opacity: 0.95;
 }
+
+/* Respect reduced-motion preference: don't render/animate snow */
+@media (prefers-reduced-motion: reduce) {
+    #snow, #snowCanvas {
+        display: none !important;
+    }
+}
+
+/* Slightly reduce intensity on small screens */
+@media (max-width: 479px) {
+    #snowCanvas {
+        opacity: 0.9;
+    }
+}
+
+/* --- Kontakt: center everything inside the kontakt section --- */
+#kontakt .container {
+    text-align: left; /* center headings, paragraphs and inline content */
+    /*justify-items: center;*/
+    align-items: center;
+}
+
+#kontakt .kontakt-text {
+    text-align: left; /* center headings, paragraphs and inline content */
+    justify-items: left;
+    align-items: normal;
+}
+
+/* Ensure Bootstrap modals sit above the fixed header (header z-index: 1500) */
+.modal-backdrop {
+    z-index: 2000 !important; /* backdrop sits above header */
+}
+
+.modal {
+    z-index: 2100 !important; /* modal dialog sits above the backdrop & header */
+}
+
+/* guarantee the close button is on top of everything within the modal */
+.modal .btn-close {
+    z-index: 2150;
+    position: relative; /* ensure z-index applies inside modal stacking context */
+}
+
+/* --- Footer: center all items without affecting other layout --- */
+.footer .container.row {
+    display: flex;
+    align-items: center;
+    justify-content: center; /* center horizontally */
+    gap: 6px;
+    flex-wrap: wrap; /* allow wrapping on small screens */
+    padding: 16px 0;
+}
+
+/* Make the legal-links group center its internal items */
+.footer .footer-copyright {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+}
+
+/* Make the legal-links group center its internal items */
+.footer .legal-links {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+}
+
+/* Prevent the generic .spacer from pushing footer items apart */
+.footer .spacer {
+    display: none;
+}
+
+/* Ensure individual blocks take full width on very small screens and remain centered */
+@media (max-width: 560px) {
+    .footer .container.row > div,
+    .footer .container.row .legal-links {
+        width: 100%;
+        text-align: center;
+    }
+}
+

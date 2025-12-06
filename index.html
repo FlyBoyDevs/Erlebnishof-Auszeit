@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html lang="de">
 <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
     <title>Erlebnishof-Auszeit – Café & Hofladen</title>
     <link rel="icon" type="image/svg+xml" href="img/logo2.svg">
     <meta
@@ -14,211 +14,12 @@
           integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH"
           crossorigin="anonymous"/>
     <link rel="stylesheet" href="styles.css"/>
-    <style>
-        .hero__slide--1 {
-            background-image: url("img/home/home1.jpg");
-        }
-
-        .hero__slide--2 {
-            background-image: url("img/home/home2.jpg");
-        }
-
-        .hero__slide--3 {
-            background-image: url("img/home/home3.jpg");
-        }
-
-        #food-menu.section {
-            min-height: auto;
-            padding-top: 42px;
-            padding-bottom: 42px;
-        }
-
-        /* Replace the menu/hof gallery base rules with a responsive thumbnail-like grid.
-           Images will be slightly larger than typical thumbnails but capped with max-width
-           so they don't get too large on wide screens. */
-        .menu-gallery-simple,
-        .hof-gallery-simple {
-            display: grid;
-            grid-template-columns: 1fr;
-            gap: 12px;
-            margin-top: 16px;
-            justify-items: center;
-        }
-
-        /* Images: responsive, constrained width so they stay slightly larger than thumbnails */
-        .menu-gallery-simple img,
-        .hof-gallery-simple img {
-            width: 100%;
-            max-width: 220px; /* caps image size so it's not too large */
-            height: auto;
-            border-radius: 10px;
-            object-fit: cover;
-            display: block;
-        }
-
-        @media (min-width: 480px) {
-            /* On small tablets/large phones: try 2 items per row with a minimum size */
-            .menu-gallery-simple,
-            .hof-gallery-simple {
-                grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
-            }
-        }
-
-        @media (min-width: 768px) {
-            /* On desktop, allow more columns but images remain capped by max-width */
-            .menu-gallery-simple,
-            .hof-gallery-simple {
-                grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
-            }
-        }
-
-        .events-container {
-            max-width: 1100px;
-            margin: 0 auto;
-        }
-
-        .events-carousel {
-            position: relative;
-            background: #faf3e4;
-            border-radius: 14px;
-            padding: 16px;
-            overflow: hidden;
-        }
-
-        .event-slide {
-            min-height: 260px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            text-align: center;
-        }
-
-        /* center the intro slide both horizontally and vertically */
-        .event-slide--intro {
-            display: flex;
-            align-items: center;
-            justify-content: end;
-            text-align: center;
-            padding-left: 12px;
-            padding-right: 12px;
-        }
-
-        .event-slide__intro {
-            max-width: 680px; /* a bit wider so heading + copy can breathe */
-            margin: 0 auto;
-        }
-
-        .event-slide__intro-heading {
-            font-weight: 600;
-            font-size: 1.2rem;
-            margin-bottom: 0.5rem;
-        }
-
-        .event-slide__intro-copy {
-            font-size: 0.95rem;
-            line-height: 1.5;
-        }
-
-        .event-slide img {
-            width: 100%;
-            max-height: 320px;
-            object-fit: contain;
-            border-radius: 10px;
-        }
-
-        /* Events section: centered content, slightly larger list items with custom bullet */
-        .events-layout .events-text {
-            max-width: 820px;
-            margin: 0 auto;
-            text-align: left;
-            padding: 8px 16px;
-        }
-
-        .events-layout .events-text h2 {
-            font-size: 1.25rem;
-            font-weight: 600;
-            margin-bottom: 0.5rem;
-        }
-
-        .events-list {
-            list-style: none;
-            padding: 0;
-            margin: 0.5rem 0 1rem 0;
-        }
-
-        .events-list li {
-            position: relative;
-            padding-left: 28px;
-            margin-bottom: 8px;
-            line-height: 1.4;
-            font-size: 1rem;
-        }
-
-        .events-list li::before {
-            content: "•";
-            position: absolute;
-            left: 0;
-            top: 0;
-            color: #7a4b1e; /* warm accent color */
-            font-weight: 700;
-            font-size: 1.1rem;
-            line-height: 1;
-        }
-
-        @media (min-width: 768px) {
-            .events-layout .events-text h2 {
-                font-size: 1.4rem;
-            }
-
-            .events-list li {
-                font-size: 1.05rem;
-            }
-        }
-
-        /* Events images: responsive row, images slightly larger than thumbnails */
-        .events-images {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
-            gap: 12px;
-            align-items: center;
-            justify-items: center;
-            margin-top: 12px;
-        }
-
-        .events-images img {
-            width: 100%;
-            max-width: 300px; /* cap so images don't get too large */
-            height: auto;
-            border-radius: 8px;
-            object-fit: cover;
-            display: block;
-        }
-
-        /* Ensure carousel inners & items fill their parent and images scale to that box.
-           This keeps a consistent carousel height on mobile and desktop. */
-        #menuCarousel .carousel-inner,
-        #hofladenCarousel .carousel-inner,
-        #newsCarousel .carousel-inner {
-            height: 100%;
-        }
-        #menuCarousel .carousel-item,
-        #hofladenCarousel .carousel-item,
-        #newsCarousel .carousel-item {
-            height: 100%;
-        }
-        #menuCarousel .carousel-item img,
-        #hofladenCarousel .carousel-item img,
-        #newsCarousel .carousel-item img {
-            width: 100%;
-            height: 100%;
-            object-fit: contain;
-            display: block;
-        }
-    </style>
 </head>
 <body>
 <div id="scrollbar"></div>
+<div id="snow" aria-hidden="true">
+    <canvas id="snowCanvas"></canvas>
+</div>
 <header class="header">
     <div class="nav">
         <a href="#" class="brand brand-logo hero_logo" aria-label="Startseite">
@@ -255,6 +56,7 @@
         <div class="hero__slide hero__slide--2"></div>
         <div class="hero__slide hero__slide--3"></div>
     </div>
+
     <div class="hero__center">
         <h1 class="hero__title">
             <span class="hero__line1">Erlebnishof</span>
@@ -283,7 +85,7 @@
 </section>
 
 <section id="food-menu" class="section" aria-label="Speisekarte/Menu">
-    <div class="container menu-layout">
+    <div class="container layout container--dark menu-layout">
         <div class="menu-text">
             <h2 class="i18n-de">Speisekarte</h2>
             <h2 class="i18n-en">Menu</h2>
@@ -354,7 +156,7 @@
 </section>
 
 <section id="hofladen" class="section">
-    <div class="container hof-layout">
+    <div class="container layout container--dark hof-layout">
         <div class="hof-text">
             <h2 class="i18n-de">Hofladen</h2>
             <h2 class="i18n-en">Farm Shop</h2>
@@ -445,23 +247,11 @@
                 <span class="visually-hidden">Next</span>
             </button>
         </div>
-        <!--        <div class="hof-gallery-simple">-->
-        <!--            <img src="img/hofladen/IMG_3884.jpeg" alt="Hofladen mit regionalen Produkten">-->
-        <!--            <img src="img/hofladen/IMG_3952.jpeg" alt="Produkten Pasta">-->
-        <!--            <img src="img/hofladen/IMG_4030.jpeg" alt="Produkten Honig etc">-->
-        <!--            <img src="img/hofladen/IMG_4102.jpeg" alt="Paste">-->
-        <!--            <img src="img/hofladen/IMG_4103.jpeg" alt="Paste">-->
-        <!--            <img src="img/hofladen/IMG_4111.jpeg" alt="Geschenkkorb">-->
-        <!--            <img src="img/hofladen/IMG_4182.jpeg" alt="Kartoffeln">-->
-        <!--            <img src="img/hofladen/IMG_4528.jpeg" alt="Eier">-->
-        <!--            <img src="img/hofladen/IMG_4751.jpeg" alt="Mehl">-->
-        <!--            <img src="img/hofladen/IMG_4754.jpeg" alt="Öls">-->
-        <!--        </div>-->
     </div>
 </section>
 
 <section id="news" class="section" aria-label="Neuigkeiten & Termine">
-    <div class="container events-container">
+    <div class="container layout container--dark events-container">
         <div id="newsCarousel" class="carousel slide carousel-dark events-carousel" aria-label="Event-Fotos"
              data-bs-touch="true">
             <div class="carousel-indicators" data-events-indicators></div>
@@ -485,7 +275,7 @@
 </section>
 
 <section id="events" class="section" aria-label="Events & Termine">
-    <div class="container events-layout">
+    <div class="container layout container--dark events-layout">
         <div class="events-text">
             <h2 class="i18n-de">Private Feiern & Events</h2>
             <h2 class="i18n-en">Events & Bookings</h2>
@@ -537,17 +327,20 @@
 </div>
 
 <section id="kontakt" class="section">
-    <div class="container">
-        <h2 class="i18n-de">Kontakt & Öffnungszeiten</h2>
-        <h2 class="i18n-en">Contact & Hours</h2>
-        <p class="hours i18n-de">Freitag, Samstag und Sonntag · 08:30–17:00 Uhr</p>
-        <p class="hours i18n-en">Friday, Saturday and Sunday · 08:30–17:00</p>
+    <div class="container layout container--dark">
+        <div class="kontakt-title">
+            <h2 class="i18n-de">Kontakt & Öffnungszeiten</h2>
+            <h2 class="i18n-en">Contact & Hours</h2>
+            <p class="hours i18n-de">Freitag, Samstag und Sonntag · 08:30–17:00 Uhr</p>
+            <p class="hours i18n-en">Friday, Saturday and Sunday · 08:30–17:00</p>
+        </div>
         <div class="kv">
             <div>Adresse</div>
             <div>Bachhofweg 2a, 93170 Bernhardswald</div>
             <div>Telefon</div>
             <div><a href="tel:+4994077249620">09407 / 72 49 620</a></div>
             <div class="i18n-en">Mobile</div>
+            <div class="i18n-de">Mobile</div>
             <div><a href="tel:+4917664941923">0176 64941923</a></div>
             <div>E‑Mail</div>
             <div>
@@ -570,23 +363,21 @@
 
 <footer class="footer">
     <div class="container row">
-        <div>
-            © <span id="year"></span> Erlebnishof-Auszeit ·
-<!--        </div>-->
-<!--        <div class="legal-links">-->
+        <div class="footer-copyright">
+            © <span id="year"></span> Erlebnishof-Auszeit
+        </div>
+        <div class="legal-links">
             <button type="button" class="legal-link" data-open-modal="impressum">Impressum</button>
             <span aria-hidden="true">·</span>
             <button type="button" class="legal-link" data-open-modal="datenschutz">Datenschutz</button>
-            <div class="spacer"></div>
-<!--        <div class="lang-switch"  aria-label="Sprache" style="margin-left:16px;">-->
-            <!-- replaced the two-button switch with a dropdown -->
+            <span aria-hidden="true">·</span>
             <label for="lang-select" class="visually-hidden">Sprache</label>
             <select id="lang-select" data-lang-select aria-label="Sprache auswählen">
                 <option value="de">DE</option>
                 <option value="en">EN</option>
             </select>
         </div>
-<!--        </div>-->
+        <!--        </div>-->
     </div>
 </footer>
 
@@ -870,10 +661,22 @@
           </div>`;
                 return item;
             }
-            item.innerHTML = `
-        <div class="event-slide">
-          <img src="${slide.src}" alt="${slide.title}" loading="lazy"/>
-        </div>`;
+
+            // create DOM nodes so we can attach a click handler that marks the slide as seen
+            const slideWrap = document.createElement('div');
+            slideWrap.className = 'event-slide';
+
+            const img = document.createElement('img');
+            img.src = slide.src || '';
+            img.alt = slide.title || '';
+            img.loading = 'lazy';
+            // mark as seen only when the user explicitly clicks the slide
+            img.addEventListener('click', () => {
+                markSeen(slide);
+            });
+
+            slideWrap.appendChild(img);
+            item.appendChild(slideWrap);
             return item;
         };
         const buildIndicators = () => {
@@ -901,10 +704,12 @@
                 touch: true,
                 wrap: true
             });
-            carouselEl.addEventListener('slid.bs.carousel', (event) => {
-                const index = typeof event.to === 'number' ? event.to : 0;
-                markSeen(slides[index]);
-            });
+
+            // removed auto-marking on slide change so slides are only marked when clicked
+            // carouselEl.addEventListener('slid.bs.carousel', (event) => {
+            //     const index = typeof event.to === 'number' ? event.to : 0;
+            //     markSeen(slides[index]);
+            // });
         };
         const buildCarousel = () => {
             if (!inner) return;
@@ -914,9 +719,10 @@
             });
             buildIndicators();
             ensureBootstrapInstance();
-            if (slides.length) {
-                markSeen(slides[0]);
-            }
+            // do not auto-mark first slide as seen — user must click to acknowledge
+            // if (slides.length) {
+            //     markSeen(slides[0]);
+            // }
             updateBadge();
         };
         const applyData = (list) => {
@@ -1026,50 +832,50 @@
         const getHeaderHeight = () => (header && header.offsetHeight) ? header.offsetHeight : 72;
 
         const setActiveForId = (id) => {
-          // clear all first
-          navLinks.forEach(a => a.classList.remove('is-active'));
-          if (!id) return;
-          // set active on every nav link that targets this id (handles bilingual duplicates)
-          const matches = document.querySelectorAll(`.main-nav a[href="#${CSS.escape(id)}"]`);
-          matches.forEach(a => a.classList.add('is-active'));
+            // clear all first
+            navLinks.forEach(a => a.classList.remove('is-active'));
+            if (!id) return;
+            // set active on every nav link that targets this id (handles bilingual duplicates)
+            const matches = document.querySelectorAll(`.main-nav a[href="#${CSS.escape(id)}"]`);
+            matches.forEach(a => a.classList.add('is-active'));
         };
 
         let observer = null;
         const createObserver = () => {
-          if (observer) observer.disconnect();
-          const headerH = getHeaderHeight();
-          // rootMargin shifts the viewport so the observer treats the top of the section
-          // as if it's headerH pixels lower (accounting for sticky header), and the bottom
-          // margin biases selection towards sections taking more vertical space.
-          const rootMargin = `-${headerH}px 0px -35% 0px`;
-          observer = new IntersectionObserver((entries) => {
-            // choose the entry with the largest intersectionRatio (most visible)
-            const visible = entries
-              .filter(e => e.isIntersecting)
-              .sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0];
-            if (visible) {
-              setActiveForId(visible.target.id);
-            }
-          }, {root: null, rootMargin, threshold: [0, 0.15, 0.35, 0.6, 0.9]});
+            if (observer) observer.disconnect();
+            const headerH = getHeaderHeight();
+            // rootMargin shifts the viewport so the observer treats the top of the section
+            // as if it's headerH pixels lower (accounting for sticky header), and the bottom
+            // margin biases selection towards sections taking more vertical space.
+            const rootMargin = `-${headerH}px 0px -35% 0px`;
+            observer = new IntersectionObserver((entries) => {
+                // choose the entry with the largest intersectionRatio (most visible)
+                const visible = entries
+                    .filter(e => e.isIntersecting)
+                    .sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0];
+                if (visible) {
+                    setActiveForId(visible.target.id);
+                }
+            }, {root: null, rootMargin, threshold: [0, 0.15, 0.35, 0.6, 0.9]});
 
-          // observe current sections that have matching nav links
-          const sections = Array.from(new Set(navLinks.map(a => a.getAttribute('href').slice(1))))
-            .map(id => document.getElementById(id))
-            .filter(Boolean);
-          sections.forEach(s => observer.observe(s));
+            // observe current sections that have matching nav links
+            const sections = Array.from(new Set(navLinks.map(a => a.getAttribute('href').slice(1))))
+                .map(id => document.getElementById(id))
+                .filter(Boolean);
+            sections.forEach(s => observer.observe(s));
         };
 
         // re-create observer on resize because header height may change
         window.addEventListener('resize', () => {
-          createObserver();
+            createObserver();
         }, {passive: true});
 
         // immediately set active on nav clicks (so UI responds while smooth scroll runs)
         navLinks.forEach(a => {
-          a.addEventListener('click', (ev) => {
-            const id = a.getAttribute('href').slice(1);
-            setActiveForId(id);
-          });
+            a.addEventListener('click', (ev) => {
+                const id = a.getAttribute('href').slice(1);
+                setActiveForId(id);
+            });
         });
 
         // initialize
@@ -1077,19 +883,152 @@
         // also attempt to set initial active based on current scroll position
         // (in case intersection callbacks haven't fired yet)
         requestAnimationFrame(() => {
-          const sections = Array.from(new Set(navLinks.map(a => a.getAttribute('href').slice(1))))
-            .map(id => document.getElementById(id))
-            .filter(Boolean);
-          const headerH = getHeaderHeight();
-          let best = null;
-          sections.forEach(s => {
-            const rect = s.getBoundingClientRect();
-            // prefer section whose top is closest to header area but not too far below
-            const score = Math.max(0, (rect.top - headerH) * (rect.top <= headerH ? -1 : 1));
-            if (best === null || score < best.score) best = {id: s.id, score};
-          });
-          if (best && best.id) setActiveForId(best.id);
+            const sections = Array.from(new Set(navLinks.map(a => a.getAttribute('href').slice(1))))
+                .map(id => document.getElementById(id))
+                .filter(Boolean);
+            const headerH = getHeaderHeight();
+            let best = null;
+            sections.forEach(s => {
+                const rect = s.getBoundingClientRect();
+                // prefer section whose top is closest to header area but not too far below
+                const score = Math.max(0, (rect.top - headerH) * (rect.top <= headerH ? -1 : 1));
+                if (best === null || score < best.score) best = {id: s.id, score};
+            });
+            if (best && best.id) setActiveForId(best.id);
         });
+    })();
+
+    (function () {
+        if (matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+        const canvas = document.getElementById('snowCanvas');
+        if (!canvas) return;
+        const ctx = canvas.getContext('2d');
+        let w = 0, h = 0, flakes = [], raf = null;
+
+        const deviceRatio = Math.max(1, window.devicePixelRatio || 1);
+
+        function rand(min, max) {
+            return Math.random() * (max - min) + min;
+        }
+
+        function resize() {
+            w = window.innerWidth;
+            h = window.innerHeight;
+            canvas.width = Math.round(w * deviceRatio);
+            canvas.height = Math.round(h * deviceRatio);
+            canvas.style.width = w + 'px';
+            canvas.style.height = h + 'px';
+            ctx.setTransform(deviceRatio, 0, 0, deviceRatio, 0, 0);
+            initFlakes();
+        }
+
+        function initFlakes() {
+            const base = Math.max(24, Math.floor(w / 18)); // scale count with width
+            const count = (w < 480) ? Math.floor(base * 0.35) : (w < 900 ? Math.floor(base * 0.6) : base);
+            flakes.length = 0;
+            for (let i = 0; i < count; i++) {
+                flakes.push({
+                    x: rand(0, w),
+                    y: rand(-h, h),
+                    r: rand(0.9, 4.2),
+                    speed: rand(0.3, 1.8),
+                    drift: rand(-0.6, 0.6),
+                    rot: rand(0, Math.PI * 2),
+                    opacity: rand(0.35, 0.95)
+                });
+            }
+        }
+
+        function drawSnowflake(f) {
+            // draw a simple stylized snowflake centered at 0,0
+            ctx.save();
+            ctx.translate(f.x, f.y);
+            ctx.rotate(f.rot);
+            ctx.globalAlpha = f.opacity;
+            ctx.strokeStyle = '#ffffff';
+            ctx.fillStyle = '#ffffff';
+            ctx.lineWidth = Math.max(0.6, f.r * 0.35);
+            const arms = (f.r > 2.6) ? 6 : 4; // more arms for larger flakes
+            const armLen = f.r * 3.2;
+
+            // central dot
+            ctx.beginPath();
+            ctx.arc(0, 0, Math.max(0.6, f.r * 0.6), 0, Math.PI * 2);
+            ctx.fill();
+
+            for (let a = 0; a < arms; a++) {
+                // main arm
+                ctx.beginPath();
+                ctx.moveTo(0, 0);
+                ctx.lineTo(0, -armLen);
+                ctx.stroke();
+
+                // two small branches near the outer half
+                ctx.beginPath();
+                ctx.moveTo(0, -armLen * 0.45);
+                ctx.lineTo(armLen * 0.22, -armLen * 0.65);
+                ctx.moveTo(0, -armLen * 0.45);
+                ctx.lineTo(-armLen * 0.22, -armLen * 0.65);
+                ctx.stroke();
+
+                // tiny branch further out for larger flakes
+                if (f.r > 2.4) {
+                    ctx.beginPath();
+                    ctx.moveTo(0, -armLen * 0.75);
+                    ctx.lineTo(armLen * 0.12, -armLen * 0.9);
+                    ctx.moveTo(0, -armLen * 0.75);
+                    ctx.lineTo(-armLen * 0.12, -armLen * 0.9);
+                    ctx.stroke();
+                }
+
+                ctx.rotate((Math.PI * 2) / arms);
+            }
+
+            ctx.restore();
+        }
+
+        function step() {
+            ctx.clearRect(0, 0, w, h);
+            for (let i = 0; i < flakes.length; i++) {
+                const f = flakes[i];
+
+                // physics
+                f.y += f.speed;
+                f.x += Math.sin((f.y + f.rot) * 0.01) * (0.5 + f.drift);
+                f.rot += 0.01;
+
+                // recycle
+                if (f.y - f.r * 3 > h) {
+                    f.y = rand(-20, -5);
+                    f.x = rand(0, w);
+                }
+
+                // draw as snowflake
+                drawSnowflake(f);
+            }
+            ctx.globalAlpha = 1;
+            raf = requestAnimationFrame(step);
+        }
+
+        // pause when not visible
+        function onVisibility() {
+            if (document.visibilityState === 'visible') {
+                if (!raf) raf = requestAnimationFrame(step);
+            } else {
+                if (raf) {
+                    cancelAnimationFrame(raf);
+                    raf = null;
+                }
+            }
+        }
+
+        window.addEventListener('resize', resize, {passive: true});
+        document.addEventListener('visibilitychange', onVisibility);
+
+        // init
+        resize();
+        onVisibility();
     })();
 </script>
 </body>

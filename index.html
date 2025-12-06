@@ -3,12 +3,37 @@
 <head>
     <meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1"/>
-    <title>Erlebnishof-Auszeit – Café & Hofladen</title>
+    <link rel="canonical" href="https://erlebnishof-auszeit.de/">
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "CafeOrCoffeeShop",
+      "name": "Erlebnishof Auszeit",
+      "image": "https://erlebnishof-auszeit.de/img/logo2.svg",
+      "url": "https://erlebnishof-auszeit.de/",
+      "telephone": "+49-9407-7249620",
+      "address": {
+        "@type": "PostalAddress",
+        "streetAddress": "Bachhofweg 2a",
+        "addressLocality": "Bernhardswald",
+        "postalCode": "93170",
+        "addressCountry": "DE"
+      },
+      "geo": {
+        "@type": "GeoCoordinates",
+        "latitude": 49.091223,
+        "longitude": 12.239007
+      },
+      "openingHours": "Fr-Su 08:30-17:00",
+      "sameAs": [
+        "https://www.instagram.com/erlebnishof_auszeit/",
+        "https://www.facebook.com/profile.php?id=61581214677929"
+      ]
+    }
+    </script>
+    <title>Erlebnishof Auszeit – Café, Hofladen & Frühstück in Bernhardswald</title>
     <link rel="icon" type="image/svg+xml" href="img/logo2.svg">
-    <meta
-            name="description"
-            content="Tierisch gute Auszeit – Entdecke Café & Hofladen mit Herz! Frühstück, Kaffee & Kuchen, regionale Spezialitäten."
-    />
+    <meta name="description" content="Erlebnishof Auszeit – gemütliches Café & Hofladen in Bernhardswald. Frühstück, Kaffee & Kuchen, regionale Produkte und Events. Jetzt besuchen!"/>
     <link rel="stylesheet"
           href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
           integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH"
@@ -408,6 +433,7 @@
             <div class="modal-body p-0">
                 <div id="fullscreenCarousel" class="carousel slide" data-bs-interval="false">
                     <div class="carousel-inner" id="fullscreenCarouselInner"></div>
+                    <div class="carousel-indicators" id="fullscreenCarouselIndicators"></div>
                     <button class="carousel-control-prev" type="button" data-bs-target="#fullscreenCarousel" data-bs-slide="prev" aria-label="Vorheriges Bild">
                         <span class="carousel-control-prev-icon" aria-hidden="true"></span>
                         <span class="visually-hidden">Previous</span>
@@ -999,10 +1025,12 @@
         const modalEl = document.getElementById('carouselFullscreenModal');
         const fullscreenCarouselEl = document.getElementById('fullscreenCarousel');
         const inner = document.getElementById('fullscreenCarouselInner');
+        const indicatorsEl = document.getElementById('fullscreenCarouselIndicators');
         if (!modalEl || !fullscreenCarouselEl || !inner) return;
 
         // Clear previous items
         inner.innerHTML = '';
+        if (indicatorsEl) indicatorsEl.innerHTML = '';
 
         // Collect images from the source carousel in DOM order
         const items = Array.from(sourceCarouselEl.querySelectorAll('.carousel-item'));
@@ -1032,6 +1060,26 @@
             if (clickedSrc && src === clickedSrc) activeIndex = idx;
         });
 
+        // Build indicators for each slide
+        const buildIndicators = (count) => {
+            if (!indicatorsEl) return;
+            indicatorsEl.innerHTML = '';
+            for (let i = 0; i < count; i++) {
+                const btn = document.createElement('button');
+                btn.type = 'button';
+                btn.setAttribute('data-bs-target', '#fullscreenCarousel');
+                btn.setAttribute('data-bs-slide-to', String(i));
+                btn.setAttribute('aria-label', `Slide ${i + 1}`);
+                if (i === 0) {
+                    btn.classList.add('active');
+                    btn.setAttribute('aria-current', 'true');
+                }
+                indicatorsEl.appendChild(btn);
+            }
+        };
+
+        buildIndicators(inner.querySelectorAll('.carousel-item').length);
+
         // Initialize or get carousel instance
         const carouselInstance = bootstrap.Carousel.getOrCreateInstance(fullscreenCarouselEl, {
             interval: false,
@@ -1046,6 +1094,29 @@
         if (firstItem) firstItem.classList.add('active');
         if (activeIndex > 0) carouselInstance.to(activeIndex);
 
+        // Sync indicators with active slide
+        const updateIndicators = (idx) => {
+            if (!indicatorsEl) return;
+            const buttons = Array.from(indicatorsEl.querySelectorAll('button'));
+            buttons.forEach((b, i) => {
+                if (i === idx) {
+                    b.classList.add('active');
+                    b.setAttribute('aria-current', 'true');
+                } else {
+                    b.classList.remove('active');
+                    b.removeAttribute('aria-current');
+                }
+            });
+        };
+
+        // Ensure the indicators reflect the initially selected slide
+        updateIndicators(activeIndex);
+
+        fullscreenCarouselEl.addEventListener('slid.bs.carousel', (event) => {
+            const idx = typeof event.to === 'number' ? event.to : 0;
+            updateIndicators(idx);
+        }, {once: false});
+
         const modalInstance = bootstrap.Modal.getOrCreateInstance(modalEl, {backdrop: true, keyboard: true});
 
         // Pause the source carousel (if any) while fullscreen is open
@@ -1056,6 +1127,7 @@
         modalEl.addEventListener('hidden.bs.modal', () => {
             carouselInstance.pause();
             inner.innerHTML = '';
+            if (indicatorsEl) indicatorsEl.innerHTML = '';
             // unlock scroll and resume background carousel
             unlockScroll();
             if (sourceInstance && sourceInstance.cycle) sourceInstance.cycle();

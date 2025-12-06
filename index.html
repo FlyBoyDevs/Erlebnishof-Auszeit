@@ -974,6 +974,28 @@
         if (!sourceCarouselEl) return;
         if (typeof bootstrap === 'undefined' || !bootstrap.Modal || !bootstrap.Carousel) return;
 
+        // --- Scroll lock helpers (no-ops if already locked) ---
+        const body = document.body;
+        let scrollLocked = false;
+        const preventTouchMove = (e) => {
+            // allow inner carousel gestures but prevent page scroll
+            const withinModal = e.target.closest && e.target.closest('#carouselFullscreenModal');
+            if (!withinModal) e.preventDefault();
+        };
+        const lockScroll = () => {
+            if (scrollLocked) return;
+            scrollLocked = true;
+            body.style.overflow = 'hidden';
+            // iOS/Safari: block touchmove from scrolling the page behind
+            document.addEventListener('touchmove', preventTouchMove, {passive: false});
+        };
+        const unlockScroll = () => {
+            if (!scrollLocked) return;
+            scrollLocked = false;
+            body.style.overflow = '';
+            document.removeEventListener('touchmove', preventTouchMove);
+        };
+
         const modalEl = document.getElementById('carouselFullscreenModal');
         const fullscreenCarouselEl = document.getElementById('fullscreenCarousel');
         const inner = document.getElementById('fullscreenCarouselInner');
@@ -1026,10 +1048,22 @@
 
         const modalInstance = bootstrap.Modal.getOrCreateInstance(modalEl, {backdrop: true, keyboard: true});
 
+        // Pause the source carousel (if any) while fullscreen is open
+        const sourceInstance = bootstrap.Carousel.getInstance(sourceCarouselEl);
+        if (sourceInstance && sourceInstance.pause) sourceInstance.pause();
+
         // Clean up slides on hide to avoid piling up DOM
         modalEl.addEventListener('hidden.bs.modal', () => {
             carouselInstance.pause();
             inner.innerHTML = '';
+            // unlock scroll and resume background carousel
+            unlockScroll();
+            if (sourceInstance && sourceInstance.cycle) sourceInstance.cycle();
+        }, {once: true});
+
+        // Ensure scrolling is locked for the duration of the fullscreen modal
+        modalEl.addEventListener('shown.bs.modal', () => {
+            lockScroll();
         }, {once: true});
 
         modalInstance.show();
@@ -1062,6 +1096,33 @@
                 openFullscreenCarouselFrom(carousel, img);
             });
         });
+    })();
+
+    // Lock background scroll for simple image fullscreen modal as well
+    (function () {
+        if (typeof bootstrap === 'undefined' || !bootstrap.Modal) return;
+        const modalEl = document.getElementById('imageFullscreenModal');
+        if (!modalEl) return;
+        const body = document.body;
+        let locked = false;
+        const preventTouchMove = (e) => {
+            const within = e.target.closest && e.target.closest('#imageFullscreenModal');
+            if (!within) e.preventDefault();
+        };
+        const lock = () => {
+            if (locked) return;
+            locked = true;
+            body.style.overflow = 'hidden';
+            document.addEventListener('touchmove', preventTouchMove, {passive: false});
+        };
+        const unlock = () => {
+            if (!locked) return;
+            locked = false;
+            body.style.overflow = '';
+            document.removeEventListener('touchmove', preventTouchMove);
+        };
+        modalEl.addEventListener('shown.bs.modal', lock);
+        modalEl.addEventListener('hidden.bs.modal', unlock);
     })();
 
     (function () {
@@ -1167,7 +1228,7 @@
 
         function initFlakes() {
             const base = Math.max(24, Math.floor(w / 18)); // scale count with width
-            const count = (w < 480) ? Math.floor(base * 0.35) : (w < 900 ? Math.floor(base * 0.6) : base);
+            const count = (w < 480) ? Math.floor(base * 0.6) : (w < 900 ? Math.floor(base * 0.6) : base);
             flakes.length = 0;
             for (let i = 0; i < count; i++) {
                 flakes.push({

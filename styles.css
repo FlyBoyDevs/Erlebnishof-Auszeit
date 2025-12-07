@@ -625,6 +625,17 @@ body::before {
     justify-items: center;
 }
 
+/* --- News carousel: use as much space as possible (within viewport) --- */
+/* Make news images fill the container width and a large portion of the viewport height */
+#newsCarousel .carousel-item img {
+    width: 100%;
+    max-width: 100%;
+    height: 80vh; /* tall on desktop */
+    max-height: 85vh;
+    object-fit: contain;
+    margin: 0 auto;
+}
+
 /* --- Fullscreen carousel centering --- */
 /* Center slides vertically and horizontally only for the fullscreen modal carousel */
 #fullscreenCarousel,
@@ -665,6 +676,17 @@ body::before {
 
     #menuCarousel .carousel-item img, #hofladenCarousel .carousel-item img, #newsCarousel .carousel-item img, #eventsCarousel .carousel-item img {
         object-fit: contain;
+    }
+
+    /* Override the generic caps so the news carousel can grow taller on mobile */
+    #newsCarousel {
+        min-height: unset;
+        max-height: unset;
+    }
+    #newsCarousel .carousel-item img {
+        height: 75vh;
+        max-height: 80vh;
+        width: 100%;
     }
 }
 
@@ -827,6 +849,24 @@ body::before {
 .events-pagination-note:not([data-count="0"]) {
     visibility: visible;
     opacity: 1
+}
+
+/* position the notifications/pagination wrap at the top-right of the news carousel */
+#newsCarousel { position: relative; }
+#newsCarousel .events-pagination-wrap {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    z-index: 10; /* above images/indicators/controls */
+    display: inline-flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 8px;
+    pointer-events: none; /* let clicks pass through by default */
+}
+#newsCarousel .events-pagination-wrap .events-pagination,
+#newsCarousel .events-pagination-wrap .events-pagination-note {
+    pointer-events: auto; /* keep controls/badge interactive if needed */
 }
 
 /* events images grid used in events section */

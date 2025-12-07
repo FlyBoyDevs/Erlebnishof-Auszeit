@@ -156,7 +156,7 @@
         </div>
         <div class="menu-gallery">
             <div id="menuCarousel"
-                 class="carousel slide carousel-dark"
+                 class="carousel slide carousel"
                  data-bs-ride="carousel"
                  data-bs-touch="true">
                 <div class="carousel-inner">
@@ -251,7 +251,7 @@
             </p>
         </div>
         <div id="hofladenCarousel"
-             class="carousel slide carousel-dark"
+             class="carousel slide"
              data-bs-ride="carousel"
              data-bs-touch="true">
             <div class="carousel-inner">
@@ -329,7 +329,9 @@
 
 <section id="news" class="section" aria-label="Neuigkeiten & Termine">
     <div class="container layout container--dark events-container">
-        <div id="newsCarousel" class="carousel slide carousel-dark events-carousel" aria-label="Event-Fotos"
+        <h2>Events & Termine</h2>
+        <p>Neue Termine, Märkte und besondere Events.</p>
+        <div id="newsCarousel" class="carousel slide news-carousel" aria-label="Event-Fotos"
              data-bs-touch="true">
             <div class="carousel-indicators" data-events-indicators></div>
             <div class="carousel-inner" data-events-carousel></div>
@@ -343,11 +345,12 @@
                 <span class="carousel-control-next-icon" aria-hidden="true"></span>
                 <span class="visually-hidden">Next</span>
             </button>
+            <!-- Moved pagination note into the carousel so it can float at the top-right corner -->
+            <div class="events-pagination-wrap">
+                <span class="events-pagination-note" data-events-pagination-badge></span>
+            </div>
         </div>
         <p class="small events-empty-message" data-events-empty hidden>Noch keine Event-Fotos hinzugefügt.</p>
-        <div class="events-pagination-wrap">
-            <span class="events-pagination-note" data-events-pagination-badge></span>
-        </div>
     </div>
 </section>
 
@@ -376,7 +379,7 @@
                 E‑Mail.</p>
             <p class="small i18n-en">For individual enquiries please contact us by phone or email.</p>
 
-            <div id="eventsCarousel" class="carousel slide carousel-dark events-carousel" data-bs-touch="true" aria-label="Event Bilder Karussell">
+            <div id="eventsCarousel" class="carousel slide events-carousel" data-bs-touch="true" aria-label="Event Bilder Karussell">
                 <div class="carousel-inner">
                     <div class="carousel-item active">
                         <img src="img/events/events_1.JPG" class="d-block w-100" alt="Event 1">
@@ -762,8 +765,6 @@
         const emptyState = document.querySelector('[data-events-empty]');
         const newsManifestUrl = 'img/news/manifest.json';
         const storageKey = 'events_history';
-        // Always pin this image as the first slide (no intro slide)
-        const PINNED_FIRST_FILE = 'EventsUndTermine.png';
         const getBaseName = (value = '') => value.replace(/^.*\//, '');
         const toSrc = (value = '') => {
             if (!value) return '';
@@ -777,8 +778,7 @@
         } catch (err) {
             history = {};
         }
-        // do not track pinned first slide in the unseen counter
-        const isTrackable = (slide) => Boolean(slide && !slide.isPinned && slide.name);
+        const isTrackable = (slide) => Boolean(slide && slide.name);
         const persistHistory = () => {
             try {
                 localStorage.setItem(storageKey, JSON.stringify(history));
@@ -919,31 +919,23 @@
         const applyData = (list) => {
             const files = Array.isArray(list) ? list.filter(Boolean) : [];
             pruneHistory(files.map(getBaseName));
-            // Build pinned first slide
-            const pinned = {...parseFromName(PINNED_FIRST_FILE), isPinned: true};
-            // Build remaining slides from manifest, skipping the pinned file if present there
-            const rest = files
-                .map(parseFromName)
-                .filter(s => getBaseName(s.name || s.src) !== PINNED_FIRST_FILE);
-            slides = [pinned, ...rest];
+            slides = files.map(parseFromName);
             buildCarousel();
-            // Never show empty state because we always have the pinned slide
-            setEmptyState(false);
+            setEmptyState(slides.length === 0);
         };
 
-        // Initialize with pinned slide immediately, then enhance with manifest
-        slides = [{...parseFromName(PINNED_FIRST_FILE), isPinned: true}];
+        // Initialize empty until manifest loads
+        slides = [];
         buildCarousel();
-        setEmptyState(false);
+        setEmptyState(true);
 
         fetch(newsManifestUrl)
             .then(res => (res.ok ? res.json() : []))
             .then(applyData)
             .catch(() => {
-                // Keep only the pinned slide on error
-                slides = [{...parseFromName(PINNED_FIRST_FILE), isPinned: true}];
+                slides = [];
                 buildCarousel();
-                setEmptyState(false);
+                setEmptyState(true);
             });
     })();
 
@@ -1280,6 +1272,8 @@
         if (!canvas) return;
         const ctx = canvas.getContext('2d');
         let w = 0, h = 0, flakes = [], raf = null;
+        let lastW = 0, lastH = 0, lastOrientation = null;
+        let resizeTimer = null;
 
         const deviceRatio = Math.max(1, window.devicePixelRatio || 1);
 
@@ -1287,7 +1281,7 @@
             return Math.random() * (max - min) + min;
         }
 
-        function resize() {
+        function resizeCanvasToViewport() {
             w = window.innerWidth;
             h = window.innerHeight;
             canvas.width = Math.round(w * deviceRatio);
@@ -1295,7 +1289,6 @@
             canvas.style.width = w + 'px';
             canvas.style.height = h + 'px';
             ctx.setTransform(deviceRatio, 0, 0, deviceRatio, 0, 0);
-            initFlakes();
         }
 
         function initFlakes() {
@@ -1398,11 +1391,38 @@
             }
         }
 
-        window.addEventListener('resize', resize, {passive: true});
+        function handleResize(forceReseed = false) {
+            const newW = window.innerWidth;
+            const newH = window.innerHeight;
+            const newOrientation = newW > newH ? 'landscape' : 'portrait';
+
+            // Determine if we should reseed flakes:
+            // - Only on significant width changes (>15%) or orientation change
+            // - Ignore small height-only changes (e.g., iOS address bar show/hide)
+            const widthDeltaRel = lastW ? Math.abs(newW - lastW) / lastW : 1;
+            const shouldReseed = forceReseed || (newOrientation !== lastOrientation) || (widthDeltaRel > 0.15);
+
+            resizeCanvasToViewport();
+
+            if (shouldReseed) {
+                initFlakes();
+            }
+
+            lastW = newW;
+            lastH = newH;
+            lastOrientation = newOrientation;
+        }
+
+        function debouncedResize() {
+            if (resizeTimer) clearTimeout(resizeTimer);
+            resizeTimer = setTimeout(() => handleResize(false), 200);
+        }
+
+        window.addEventListener('resize', debouncedResize, {passive: true});
         document.addEventListener('visibilitychange', onVisibility);
 
         // init
-        resize();
+        handleResize(true);
         onVisibility();
     })();
 </script>

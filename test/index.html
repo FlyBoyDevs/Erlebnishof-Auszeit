@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <title>Erlebnishof Auszeit – Under Construction</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="icon" type="image/svg+xml" href="logo2.svg">
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+        body {
+            margin: 0;
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+            sans-serif;
+            background: #fdfaf5;
+            color: #333;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+        }
+        .wrapper {
+            text-align: center;
+            padding: 2rem;
+            max-width: 720px;
+        }
+        img {
+            max-width: 100%;
+            height: auto;
+            display: block;
+            margin: 0 auto 1.5rem;
+        }
+        h1 {
+            margin: 0;
+            font-size: clamp(2.2rem, 4.5vw, 2.8rem);
+        }
+        h2 {
+            margin: 0.3rem 0 1rem;
+            font-size: 1.2rem;
+            font-weight: 500;
+            opacity: 0.85;
+        }
+        p {
+            margin: 0.4rem 0;
+            font-size: 1rem;
+            line-height: 1.45;
+        }
+        .highlight {
+            margin-top: 1rem;
+            font-weight: 600;
+        }
+        .contact {
+            margin-top: 1.6rem;
+            font-size: 0.95rem;
+        }
+        .contact a {
+            color: inherit;
+            text-decoration: none;
+            border-bottom: 1px dotted #999;
+        }
+        .contact a:hover {
+            border-bottom-style: solid;
+        }
+    </style>
+</head>
+<body>
+<main class="wrapper">
+    <img
+            src="img.png"
+            alt="Alpaca, cow and chicken wearing hard hats at a construction site"
+    />
+
+    <h1>Erlebnishof Auszeit</h1>
+    <h2 data-i18n="tagline">WE HAVE MOVED</h2>
+
+    <p data-i18n="subtitle">
+        <span data-i18n="subtitle"></span>
+    </p>
+
+    <div class="contact">
+        <p>
+            📞 <a href="tel:+4994077249620">+49 9407 7249620</a>
+        </p>
+        <p>
+            ✉️ <a href="mailto:Erlebnishof-Auszeit@web.de">
+            Erlebnishof-Auszeit@web.de
+        </a>
+        </p>
+    </div>
+
+</main>
+
+<script>
+    (function () {
+        const messages = {
+            en: {
+                // tagline: "Site under construction",
+                subtitle: 'Oops! This page moved to the countryside. We’re now happily living at <a href="https://erlebnishof-auszeit.de">erlebnishof-auszeit.de</a>.',
+                info: "Please check back again soon!",
+                extra: "In the meantime, come and enjoy coffee and cake as well as our Christmas market, details below."
+            },
+            de: {
+                // tagline: "Seite im Aufbau",
+                subtitle: 'Ups! Diese Seite ist aufs Land gezogen. Sie wohnt jetzt hier: <a href="https://erlebnishof-auszeit.de">erlebnishof-auszeit.de</a>.',
+                info: "Bitte schauen Sie bald wieder vorbei!",
+                extra: "Und während wir fleißig sind, besuchen Sie uns gerne in unserem gemütlichen Café und auf unserem Weihnachtsmarkt. Details siehe unten - wir freuen uns auf Ihren Besuch!"
+            }
+        };
+
+        const lang =
+            (navigator.languages && navigator.languages[0]) ||
+            navigator.language ||
+            "en";
+
+        const selected = lang.toLowerCase().startsWith("de") ? "de" : "en";
+        const texts = messages[selected];
+
+        document.querySelectorAll("[data-i18n]").forEach((el) => {
+            const key = el.getAttribute("data-i18n");
+            if (texts[key]) el.innerHTML = texts[key];
+        });
+
+        document.documentElement.lang = selected;
+    })();
+</script>
+</body>
+</html>
+￼

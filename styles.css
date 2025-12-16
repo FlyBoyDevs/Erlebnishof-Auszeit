@@ -14,7 +14,7 @@
     --gold: #c79a70;
     --gold-light: #ecd2a7;
     --plate-text: #e8d3b8;
-    --header-h: 65px;
+    --header-h: 63px;
 }
 
 /* --- Base / Reset --- */
@@ -66,15 +66,17 @@ body::before {
     inset: 0;
     z-index: -1; /* sit behind all content */
     pointer-events: none;
-    background-image: url("img/background_erlebnishof.jpg");
+    background-image: url("img/background_erlebnishof.webp");
     background-repeat: no-repeat;
     background-size: cover;
     background-position: center top;
+    /* Add content-visibility to improve rendering performance */
+    content-visibility: auto;
 }
 
 @media (max-width: 800px) {
     body::before {
-        background-image: url("img/background_erlebnishof_mobile2.jpg");
+        background-image: url("img/background_erlebnishof_mobile2.webp");
         background-position: center top;
     }
 }
@@ -370,43 +372,8 @@ body::before {
     background-size: cover;
     background-position: center;
     position: relative;
-}
-
-.hero__center {
-    position: relative;
-    z-index: 300; /* keep hero content above the snow effect */
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: .25rem;
-    perspective: 900px
-}
-
-.hero__logo {
-    width: min(36vw, 260px);
-    max-width: 300px;
-    transform-style: preserve-3d;
-    will-change: transform, filter;
-    transition: filter .2s ease;
-    filter: drop-shadow(0 6px 12px rgba(0, 0, 0, .25)) brightness(0) invert(1)
-}
-
-.hero__title {
-    margin: .25rem 0 0;
-    text-align: center;
-    line-height: 1.05;
-    color: #fff;
-    -webkit-text-stroke: 1px rgba(59, 42, 26, .8);
-    paint-order: stroke fill;
-    text-shadow: 0 1px 0 rgba(0, 0, 0, .25), 0 0 3px rgba(59, 42, 26, .55), 0 3px 12px rgba(0, 0, 0, .4);
-    font-weight: 1000;
-    letter-spacing: .02em
-}
-
-.hero__line1, .hero__line2 {
-    font-size: clamp(3rem, 9vw, 6rem);
-    display: block;
-    letter-spacing: .05em
+    /* Improve rendering performance */
+    content-visibility: auto;
 }
 
 /* Ensure hero track and slides fill the hero area so background images display */
@@ -728,12 +695,10 @@ body::before {
 
 .events-carousel {
     width: 100%;
-    max-width: 1080px;
-    margin: 12px auto 0;
+    max-width: 100%; /* changed from 1080px to match other carousels */
+    margin: 12px 0 0; /* changed from "12px auto 0" to remove auto centering */
     position: relative;
     overflow: hidden;
-    /*border: 1px solid rgba(0, 0, 0, .08);*/
-    /*box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .05), 0 30px 50px -36px rgba(0, 0, 0, .65);*/
     cursor: pointer;
     min-height: 280px;
 }
@@ -816,76 +781,46 @@ body::before {
     background: var(--brand-primary)
 }
 
-.events-pagination-wrap {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 10px
+/* Envelope indicator for unread carousel items */
+/* Remove envelope from bottom indicators */
+.carousel-indicators button::after {
+    display: none;
 }
 
-.events-pagination-note {
-    display: inline-flex;
-    min-width: 24px;
-    height: 24px;
-    padding: 0 10px;
-    border-radius: 999px;
-    background: #f35d2a;
-    color: #fff;
-    font-size: .75rem;
-    font-weight: 700;
-    align-items: center;
-    justify-content: center;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, .25);
-    visibility: hidden;
-    opacity: 0;
-    transition: opacity .2s ease
+/* Add envelope to top-right of carousel slides */
+.carousel-item {
+    position: relative;
 }
 
-.events-pagination-note[data-count="0"], .events-pagination-note:not([data-count]) {
-    visibility: hidden;
-    opacity: 0
-}
-
-.events-pagination-note:not([data-count="0"]) {
-    visibility: visible;
-    opacity: 1
-}
-
-/* position the notifications/pagination wrap at the top-right of the news carousel */
-#newsCarousel { position: relative; }
-#newsCarousel .events-pagination-wrap {
+.carousel-item::before {
+    content: "✉";
     position: absolute;
-    top: 10px;
-    right: 10px;
-    z-index: 10; /* above images/indicators/controls */
-    display: inline-flex;
-    align-items: center;
-    justify-content: flex-end;
-    gap: 8px;
-    pointer-events: none; /* let clicks pass through by default */
-}
-#newsCarousel .events-pagination-wrap .events-pagination,
-#newsCarousel .events-pagination-wrap .events-pagination-note {
-    pointer-events: auto; /* keep controls/badge interactive if needed */
-}
-
-/* events images grid used in events section */
-.events-images {
-    display: grid;
-    grid-template-columns:repeat(auto-fit, minmax(160px, 1fr));
-    gap: 12px;
-    align-items: center;
-    justify-items: center;
-    margin-top: 12px
+    top: 1px;
+    right: 12px;
+    font-size: 28px;
+    color: #a0bcff;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease;
+    pointer-events: none;
+    z-index: 10;
+    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.5),
+                 0 0 12px rgba(255, 255, 255, 0.8);
+    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
 }
 
-.events-images img {
-    width: 100%;
-    max-width: 300px;
-    height: auto;
-    border-radius: 8px;
-    object-fit: cover;
-    display: block
+.carousel-item.unread::before {
+    opacity: 1;
+    visibility: visible;
+}
+
+/* Slightly larger on mobile for better visibility */
+@media (max-width: 768px) {
+    .carousel-item::before {
+        font-size: 32px;
+        top: 16px;
+        right: 16px;
+    }
 }
 
 /* --- Misc / cards / modals --- */
@@ -962,7 +897,7 @@ footer .container {
     display: grid;
     place-items: center;
     padding: 24px;
-    z-index: 5000
+    z-index: 9999; /* changed from 5000 to be above navbar (1500) */
 }
 
 .legal-modal[hidden] {
@@ -987,11 +922,14 @@ footer .container {
     right: 12px;
     border: none;
     background: rgba(0, 0, 0, .08);
-    width: 36px;
-    height: 36px;
+    width: 28px; /* changed from 36px */
+    height: 28px; /* changed from 36px */
     border-radius: 50%;
-    font-size: 1.5rem;
-    cursor: pointer
+    font-size: 1.2rem; /* changed from 1.5rem */
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 /* bilingual visibility */
@@ -1249,68 +1187,43 @@ footer .container {
 
 /* --- Kontakt: center everything inside the kontakt section --- */
 #kontakt .container {
-    text-align: left; /* center headings, paragraphs and inline content */
-    /*justify-items: center;*/
+    text-align: left;
     align-items: center;
 }
 
+.kontakt-grid {
+    display: grid;
+    grid-template-columns: 1fr; /* mobile: single column */
+    gap: 32px;
+    width: 100%;
+    align-items: start;
+}
+
+/* Desktop: two columns */
+@media (min-width: 900px) {
+    .kontakt-grid {
+        grid-template-columns: 1fr 1fr; /* two equal columns */
+        gap: 48px;
+    }
+}
+
+.kontakt-info {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}
+
 #kontakt .kontakt-text {
-    text-align: left; /* center headings, paragraphs and inline content */
+    text-align: left;
     justify-items: left;
     align-items: normal;
 }
 
-/* Ensure Bootstrap modals sit above the fixed header (header z-index: 1500) */
-.modal-backdrop {
-    z-index: 2000 !important; /* backdrop sits above header */
+.map-embed {
+    width: 100%;
 }
 
-.modal {
-    z-index: 2100 !important; /* modal dialog sits above the backdrop & header */
-}
-
-/* guarantee the close button is on top of everything within the modal */
-.modal .btn-close {
-    z-index: 2150;
-    position: relative; /* ensure z-index applies inside modal stacking context */
-}
-
-/* --- Footer: center all items without affecting other layout --- */
-.footer .container.row {
-    display: flex;
-    align-items: center;
-    justify-content: center; /* center horizontally */
-    gap: 6px;
-    flex-wrap: wrap; /* allow wrapping on small screens */
-    padding: 16px 0;
-}
-
-/* Make the legal-links group center its internal items */
-.footer .footer-copyright {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 10px;
-}
-
-/* Make the legal-links group center its internal items */
-.footer .legal-links {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 10px;
-}
-
-/* Prevent the generic .spacer from pushing footer items apart */
-.footer .spacer {
-    display: none;
-}
-
-/* Ensure individual blocks take full width on very small screens and remain centered */
-@media (max-width: 560px) {
-    .footer .container.row > div,
-    .footer .container.row .legal-links {
-        width: 100%;
-        text-align: center;
-    }
+.map-embed iframe {
+    border-radius: 12px;
+    box-shadow: 0 8px 24px -16px rgba(0, 0, 0, 0.6);
 }

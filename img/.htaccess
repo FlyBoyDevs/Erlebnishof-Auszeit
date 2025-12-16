@@ -1,0 +1,40 @@
+# Enable expires
+<IfModule mod_expires.c>
+  ExpiresActive On
+
+  # Images: cache 1 year
+  ExpiresByType image/jpeg "access plus 1 year"
+  ExpiresByType image/jpg  "access plus 1 year"
+  ExpiresByType image/png  "access plus 1 year"
+  ExpiresByType image/webp "access plus 1 year"
+  ExpiresByType image/avif "access plus 1 year"
+  ExpiresByType image/svg+xml "access plus 1 year"
+
+  # CSS/JS: cache 1 month
+  ExpiresByType text/css "access plus 1 month"
+  ExpiresByType application/javascript "access plus 1 month"
+</IfModule>
+
+<IfModule mod_headers.c>
+  # Public assets: cache 1 year + immutable
+  <FilesMatch "(?i)\.(jpg|jpeg|png|webp|avif|gif|svg)$">
+    Header set Cache-Control "public, max-age=31536000, immutable"
+  </FilesMatch>
+
+  # CSS/JS: cache 1 month
+  <FilesMatch "(?i)\.(css|js)$">
+    Header set Cache-Control "public, max-age=2592000"
+  </FilesMatch>
+
+  <FilesMatch "(?i)\.(woff2|woff|ttf|otf|eot)$">
+    Header set Cache-Control "public, max-age=15552000, immutable"
+  </FilesMatch>
+
+  <FilesMatch "(?i)manifest\.json$">
+    Header set Cache-Control "no-cache"
+  </FilesMatch>
+
+  <FilesMatch "(?i)\.(html|htm)$">
+    Header set Cache-Control "no-cache"
+  </FilesMatch>
+</IfModule>

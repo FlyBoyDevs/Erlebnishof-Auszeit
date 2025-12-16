@@ -3,13 +3,15 @@
 <head>
     <meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <meta name="description" content="Erlebnishof Auszeit – gemütliches Café & Hofladen in Bernhardswald. Frühstück, Kaffee & Kuchen, regionale Produkte und Events. Jetzt besuchen!"/>
+    <title>Erlebnishof Auszeit – Café, Hofladen & Frühstück in Bernhardswald</title>
     <link rel="canonical" href="https://erlebnishof-auszeit.de/">
     <script type="application/ld+json">
         {
             "@context": "https://schema.org",
-            "@type": "CafeOrCoffeeShopRestaurant",
+            "@type": "CafeOrCoffeeShopOrFarmStallOrRestaurant",
             "name": "Erlebnishof Auszeit",
-            "image": "https://erlebnishof-auszeit.de/img/logo1.webp",
+            "image": "https://erlebnishof-auszeit.de/img/background_erlebnishof.webp",
             "url": "https://erlebnishof-auszeit.de/",
             "telephone": "+49-9407-7249620",
             "address": {
@@ -33,16 +35,16 @@
     </script>
 
     <!-- Favicons -->
-    <link rel="icon" type="image/webp" href="img/logo1.webp">
-    <link rel="icon" type="image/png" sizes="32x32" href="img/logo1.webp">
-    <link rel="apple-touch-icon" href="img/logo1.webp">
+    <link rel="icon" type="image/webp" href="img/toon_logo.webp">
+    <link rel="icon" type="image/webp" sizes="32x32" href="img/toon_logo.webp">
+    <link rel="apple-touch-icon" href="img/toon_logo.webp">
 
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://erlebnishof-auszeit.de/">
     <meta property="og:title" content="Erlebnishof Auszeit – Café, Hofladen & Frühstück in Bernhardswald">
     <meta property="og:description" content="Erlebnishof Auszeit – gemütliches Café & Hofladen in Bernhardswald. Frühstück, Kaffee & Kuchen, regionale Produkte und Events. Jetzt besuchen!">
-    <meta property="og:image" content="https://erlebnishof-auszeit.de/img/logo1.webp">
+    <meta property="og:image" content="https://erlebnishof-auszeit.de/img/toon_logo.webp">
     <meta property="og:image:alt" content="Erlebnishof Auszeit Logo">
     <meta property="og:locale" content="de_DE">
     <meta property="og:site_name" content="Erlebnishof Auszeit">
@@ -52,7 +54,7 @@
     <meta name="twitter:url" content="https://erlebnishof-auszeit.de/">
     <meta name="twitter:title" content="Erlebnishof Auszeit – Café, Hofladen & Frühstück">
     <meta name="twitter:description" content="Gemütliches Café & Hofladen in Bernhardswald. Frühstück, Kaffee & Kuchen, regionale Produkte.">
-    <meta name="twitter:image" content="https://erlebnishof-auszeit.de/img/logo1.webp">
+    <meta name="twitter:image" content="https://erlebnishof-auszeit.de/img/toon_logo.webp">
 
     <!-- Theme color for mobile browsers -->
     <meta name="theme-color" content="#d98b33">
@@ -60,11 +62,10 @@
 
     <!-- Preload critical images for faster FCP/LCP -->
     <link rel="preload" as="image" href="img/home/home1.jpg" type="image/jpeg">
+    <link rel="preload" as="image" href="img/background_erlebnishof.webp" type="image/webp">
+    <link rel="preload" as="image" href="img/background_erlebnishof_mobile2.webp" type="image/webp">
     <link rel="preload" as="image" href="img/logo1.webp" type="image/webp">
 
-
-    <title>Erlebnishof Auszeit – Café, Hofladen & Frühstück in Bernhardswald</title>
-    <meta name="description" content="Erlebnishof Auszeit – gemütliches Café & Hofladen in Bernhardswald. Frühstück, Kaffee & Kuchen, regionale Produkte und Events. Jetzt besuchen!"/>
     <link rel="stylesheet"
           href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
           integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH"
@@ -399,8 +400,9 @@
 
 <section id="news" class="section" aria-label="Neuigkeiten & Termine">
     <div class="container layout container--dark events-container">
-        <h2>Events & Termine</h2>
-        <p>Neue Termine, Märkte und besondere Events.</p>
+        <div class="events-header">
+            <h2>Events & Termine</h2><p> - Neue Termine, Märkte und besondere Events.</p>
+        </div>
         <div id="newsCarousel" class="carousel slide news-carousel" aria-label="Event-Fotos"
              data-bs-touch="true">
             <div class="carousel-indicators" data-events-indicators></div>

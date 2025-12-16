@@ -1227,3 +1227,554 @@ footer .container {
     border-radius: 12px;
     box-shadow: 0 8px 24px -16px rgba(0, 0, 0, 0.6);
 }
+
+/* Make h2 and p appear on same line in events-container */
+.events-header {
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.events-header h2 {
+    margin: 0;
+}
+
+.events-header p {
+    margin: 0;
+}
+
+.events-carousel {
+    width: 100%;
+    max-width: 100%; /* changed from 1080px to match other carousels */
+    margin: 12px 0 0; /* changed from "12px auto 0" to remove auto centering */
+    position: relative;
+    overflow: hidden;
+    cursor: pointer;
+    min-height: 280px;
+}
+
+.events-track {
+    display: flex;
+    transition: transform .45s ease;
+    height: 100%;
+    min-height: 320px
+}
+
+.event-slide {
+    flex: 0 0 100%;
+    position: relative;
+    /*color: #fff;*/
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    height: 100%;
+}
+
+.event-slide img {
+    width: 100%;
+    max-height: 60vh;
+    object-fit: contain;
+    border-radius: 10px;
+}
+
+.event-slide--intro {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 36px 24px;
+    background: #f7f3ea;
+    color: #3b2a1a !important;
+    max-width: 60vw;
+    height: 100%;
+}
+
+.event-slide__intro {
+    max-width: 40vw;
+    width: 100%;
+    margin: 0 auto;
+    text-align: center
+}
+
+/* active slide: center its contents */
+#newsCarousel .carousel-item.active,
+.events-carousel .carousel-item.active {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0; /* keep centering exact */
+}
+
+#newsCarousel .carousel-item img {
+    height: 50vh;
+    width: 50vw;
+}
+
+/* events pagination & badges */
+.events-pagination {
+    display: flex;
+    justify-content: center;
+    gap: 8px
+}
+
+.events-pagination button {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    border: none;
+    background: rgba(0, 0, 0, .2);
+    cursor: pointer
+}
+
+.events-pagination button.is-active {
+    background: var(--brand-primary)
+}
+
+/* Envelope indicator for unread carousel items */
+/* Remove envelope from bottom indicators */
+.carousel-indicators button::after {
+    display: none;
+}
+
+/* Add envelope to top-right of carousel slides */
+.carousel-item {
+    position: relative;
+}
+
+.carousel-item::before {
+    content: "✉";
+    position: absolute;
+    top: 1px;
+    right: 12px;
+    font-size: 28px;
+    color: #a0bcff;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease;
+    pointer-events: none;
+    z-index: 10;
+    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.5),
+                 0 0 12px rgba(255, 255, 255, 0.8);
+    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
+}
+
+.carousel-item.unread::before {
+    opacity: 1;
+    visibility: visible;
+}
+
+/* Slightly larger on mobile for better visibility */
+@media (max-width: 768px) {
+    .carousel-item::before {
+        font-size: 32px;
+        top: 16px;
+        right: 16px;
+    }
+}
+
+/* --- Misc / cards / modals --- */
+.card {
+    background: var(--card);
+    border: 1px solid rgba(0, 0, 0, .06);
+    border-radius: var(--radius);
+    padding: 16px
+}
+
+.kv {
+    display: grid;
+    grid-template-columns:140px 1fr;
+    gap: 6px 12px
+}
+
+/* social links (icons in Kontakt section) */
+.social-link {
+    display: inline-flex;
+    align-items: center;
+    margin-right: 12px;
+    color: inherit;
+    text-decoration: none;
+}
+
+.social-link:last-child {
+    margin-right: 0;
+}
+
+.social-link:hover {
+    opacity: .9;
+}
+
+.social-icon {
+    font-size: 1.35rem; /* size of bootstrap icon */
+    line-height: 1;
+    vertical-align: middle;
+}
+
+.small {
+    /*color: var(--muted);*/
+    margin: 0.2em 0;
+    font-size: .95rem;
+    color: var(--text);
+}
+
+.footer {
+    background: var(--ink);
+    color: var(--text-on-dark)
+}
+
+footer .container {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    padding: 16px 0;
+    justify-content: center; /* <-- added to center-align footer content */
+}
+
+.legal-link {
+    background: none;
+    border: none;
+    color: var(--text-on-dark);
+    opacity: .9;
+    font: inherit;
+    cursor: pointer;
+    padding: 0
+}
+
+.legal-modal {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, .65);
+    display: grid;
+    place-items: center;
+    padding: 24px;
+    z-index: 9999; /* changed from 5000 to be above navbar (1500) */
+}
+
+.legal-modal[hidden] {
+    display: none
+}
+
+.legal-modal__content {
+    max-width: min(640px, 90vw);
+    background: #fffdf7;
+    color: #2f2013;
+    padding: 32px;
+    border-radius: 16px;
+    box-shadow: 0 40px 90px -40px rgba(0, 0, 0, .55);
+    position: relative;
+    overflow-y: auto;
+    max-height: 90vh
+}
+
+.legal-modal__close {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    border: none;
+    background: rgba(0, 0, 0, .08);
+    width: 28px; /* changed from 36px */
+    height: 28px; /* changed from 36px */
+    border-radius: 50%;
+    font-size: 1.2rem; /* changed from 1.5rem */
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* bilingual visibility */
+[data-lang="de"] .i18n-en {
+    display: none !important
+}
+
+[data-lang="en"] .i18n-de {
+    display: none !important
+}
+
+/* nav badge */
+.nav-badge {
+    display: inline-flex;
+    min-width: 20px;
+    height: 20px;
+    padding: 0 6px;
+    border-radius: 999px;
+    background: #f35d2a;
+    color: #fff;
+    font-size: .7rem;
+    font-weight: 700;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, .25);
+    transform: translateY(-2px);
+    visibility: hidden;
+    opacity: 0;
+    transition: opacity .2s ease, visibility .2s ease
+}
+
+.nav-badge[data-count="0"] {
+    visibility: hidden;
+    opacity: 0
+}
+
+.nav-badge:not([data-count="0"]) {
+    visibility: visible;
+    opacity: 1
+}
+
+/* scroll progress bar */
+#scrollbar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 3px;
+    background: linear-gradient(90deg, var(--brand-primary), #f5c96e);
+    width: 0;
+    z-index: 1500;
+    box-shadow: 0 0 0 1px rgba(0, 0, 0, .05)
+}
+
+/* responsive adjustments */
+@media (min-width: 768px) {
+    .events-layout .events-text h2 {
+        font-size: 1.4rem
+    }
+
+    .events-list li {
+        font-size: 1.05rem
+    }
+}
+
+@media (min-width: 900px) {
+    .events-carousel {
+        min-height: 420px;
+        max-height: none
+    }
+}
+
+@media (max-width: 899px) {
+    /* stabilize mobile carousel height to avoid jumping */
+    #menuCarousel, #hofladenCarousel, #newsCarousel, #food-menu .menu-gallery, #hofladen .hof-gallery, .events-carousel {
+        min-height: 360px;
+        max-height: 420px
+    }
+}
+
+/* small utility tweaks */
+.visually-hidden {
+    position: absolute !important;
+    height: 1px;
+    width: 1px;
+    overflow: hidden;
+    clip: rect(1px, 1px, 1px, 1px);
+    white-space: nowrap
+}
+
+
+/* header / nav toggle (restored behaviour & animated bars) */
+.nav-toggle {
+    display: none;
+    flex-direction: column;
+    gap: 4px;
+    background: transparent;
+    border: 0;
+    cursor: pointer;
+    padding: 8px;
+    margin-left: 4px;
+}
+
+.nav-toggle .bar {
+    width: 26px;
+    height: 3px;
+    background: var(--text);
+    border-radius: 2px;
+    transition: transform .35s ease, opacity .25s ease, background-color .25s ease;
+    transform-origin: center;
+}
+
+.nav-open .nav-toggle .bar:nth-child(1) {
+    transform: translateY(7px) rotate(45deg);
+}
+
+.nav-open .nav-toggle .bar:nth-child(2) {
+    opacity: 0; /* hide visually */
+    transform: scaleX(0); /* eliminate any anti-aliasing remnants */
+    background-color: transparent; /* prevent faint tint on some devices */
+}
+
+.nav-open .nav-toggle .bar:nth-child(3) {
+    transform: translateY(-7px) rotate(-45deg);
+}
+
+/* small nav-indicator for compact header (keeps archive behaviour) */
+.nav-indicator {
+    display: none;
+}
+
+/* main-nav base & underline (restore original underline animation/presence) */
+.main-nav {
+    display: flex;
+    gap: 4px;
+    align-items: center;
+    font-family: "Inter", "Segoe UI", system-ui, -apple-system, sans-serif;
+    font-weight: 600;
+}
+
+.main-nav a {
+    position: relative;
+    display: inline-block;
+    padding: .75rem .9rem;
+    font-weight: 500;
+    letter-spacing: .3px;
+    color: var(--text);
+    text-decoration: none;
+}
+
+.main-nav a::after {
+    content: "";
+    position: absolute;
+    left: 50%;
+    bottom: 6px;
+    width: 0;
+    height: 2px;
+    background: linear-gradient(90deg, var(--brand-primary), #f5c96e);
+    transition: .35s cubic-bezier(.4, .7, .2, 1);
+    transform: translateX(-50%);
+}
+
+.main-nav a:hover::after,
+.main-nav a.is-active::after {
+    width: 60%;
+}
+
+.main-nav a.is-active {
+    color: var(--brand-primary);
+}
+
+/* ensure mobile dropdown restores original layout and transitions */
+@media (max-width: 860px) {
+    .nav-toggle {
+        display: flex;
+    }
+
+    .main-nav {
+        position: fixed;
+        top: var(--header-h);
+        right: 0;
+        left: 0;
+        flex-direction: column;
+        align-items: center;
+        background: rgba(255, 255, 255, .97);
+        padding: 0;
+        border: 0;
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+        transform-origin: top center;
+        max-height: 0;
+        overflow: hidden;
+        opacity: 0;
+        visibility: hidden;
+        pointer-events: none;
+        transition: max-height .55s cubic-bezier(.6, .05, .3, 1), opacity .2s ease;
+        z-index: 1100;
+    }
+
+    .nav-open .main-nav {
+        max-height: 420px;
+        padding: 8px 12px 20px;
+        border-bottom: 1px solid rgba(0, 0, 0, .08);
+        opacity: 1;
+        visibility: visible;
+        pointer-events: auto;
+    }
+
+    .main-nav a {
+        padding: .85rem 4px;
+        width: 100%;
+        text-align: center;
+    }
+
+    .lang-switch {
+        margin-left: 8px;
+    }
+}
+
+/* keep these overrides last so they win if earlier rules differ */
+.nav-open .nav-toggle .bar { /* ensure transform origin smoothness */
+    transform-origin: center;
+}
+
+/* Snow canvas overlay: sits above the page background but below section content
+   Sections already set their content z-index: 1 so the snow stays visually "behind" text */
+#snow {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 50; /* sits above hero slides (0) but below section content (200) and header (1500) */
+    overflow: hidden;
+    mix-blend-mode: screen; /* optional, gives a subtle brighter look against darker backgrounds */
+}
+
+#snowCanvas {
+    width: 100%;
+    height: 100%;
+    display: block;
+    opacity: 0.95;
+}
+
+/* Respect reduced-motion preference: don't render/animate snow */
+@media (prefers-reduced-motion: reduce) {
+    #snow, #snowCanvas {
+        display: none !important;
+    }
+}
+
+/* Slightly reduce intensity on small screens */
+@media (max-width: 479px) {
+    #snowCanvas {
+        opacity: 0.9;
+    }
+}
+
+/* --- Kontakt: center everything inside the kontakt section --- */
+#kontakt .container {
+    text-align: left;
+    align-items: center;
+}
+
+.kontakt-grid {
+    display: grid;
+    grid-template-columns: 1fr; /* mobile: single column */
+    gap: 32px;
+    width: 100%;
+    align-items: start;
+}
+
+/* Desktop: two columns */
+@media (min-width: 900px) {
+    .kontakt-grid {
+        grid-template-columns: 1fr 1fr; /* two equal columns */
+        gap: 48px;
+    }
+}
+
+.kontakt-info {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}
+
+#kontakt .kontakt-text {
+    text-align: left;
+    justify-items: left;
+    align-items: normal;
+}
+
+.map-embed {
+    width: 100%;
+}
+
+.map-embed iframe {
+    border-radius: 12px;
+    box-shadow: 0 8px 24px -16px rgba(0, 0, 0, 0.6);
+}

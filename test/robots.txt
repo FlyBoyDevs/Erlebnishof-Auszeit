@@ -1,0 +1,5 @@
+User-agent: *
+Disallow: /
+
+# Optional, if you later add a sitemap on test (usually you shouldn't)
+# Sitemap: https://test.erlebnishof-auszeit.de/sitemap.xml

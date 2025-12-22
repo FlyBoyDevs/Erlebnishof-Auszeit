@@ -1,0 +1,6 @@
+- Fix menu scrolling issue on mobile devices
+- Update snow function to general purpose canvas so function can run snow or other theme
+- in admin add option to select theme for canvas (snow, NewYearFireworks, Spring, AutumnLeaves)
+- add NewYearFireworks canvas theme
+- add AutumnLeaves canvas theme
+- add Spring canvas theme

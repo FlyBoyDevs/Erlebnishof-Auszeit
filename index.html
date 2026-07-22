@@ -82,6 +82,10 @@
 <div id="snow" aria-hidden="true">
     <canvas id="snowCanvas"></canvas>
 </div>
+<!-- Snow toggle button (only visible during winter months Dec-Feb) -->
+<button id="snowToggle" class="snow-toggle" aria-label="Schnee ein/ausschalten" title="Schnee ein/ausschalten" style="display:none;">
+    ❄️
+</button>
 <header class="header">
     <div class="nav">
         <a href="#" class="brand brand-logo hero_logo" aria-label="Startseite">
@@ -1487,8 +1491,53 @@
     (function () {
         if (matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches) return;
 
+        // Seasonal snow: only show during winter months (December, January, February)
+        const currentMonth = new Date().getMonth(); // 0-indexed: 0=Jan, 11=Dec
+        const isWinterMonth = (currentMonth === 11 || currentMonth === 0 || currentMonth === 1); // Dec, Jan, Feb
+
+        // Check if snow is manually disabled via localStorage
+        const snowDisabledStored = localStorage.getItem('snowDisabled') === 'true';
+
+        const snowContainer = document.getElementById('snow');
         const canvas = document.getElementById('snowCanvas');
-        if (!canvas) return;
+        const toggleBtn = document.getElementById('snowToggle');
+        if (!canvas || !snowContainer) return;
+
+        // Only show snow controls during winter months
+        if (!isWinterMonth) {
+            snowContainer.style.display = 'none';
+            if (toggleBtn) toggleBtn.style.display = 'none';
+            return;
+        }
+
+        // Show toggle button during winter
+        if (toggleBtn) {
+            toggleBtn.style.display = 'block';
+            if (snowDisabledStored) {
+                toggleBtn.classList.add('snow-off');
+            }
+
+            toggleBtn.addEventListener('click', function() {
+                const isCurrentlyDisabled = localStorage.getItem('snowDisabled') === 'true';
+                if (isCurrentlyDisabled) {
+                    // Enable snow - reload to restart animation
+                    localStorage.setItem('snowDisabled', 'false');
+                    location.reload();
+                } else {
+                    // Disable snow
+                    localStorage.setItem('snowDisabled', 'true');
+                    snowContainer.style.display = 'none';
+                    toggleBtn.classList.add('snow-off');
+                }
+            });
+        }
+
+        // If snow is disabled, hide it and exit
+        if (snowDisabledStored) {
+            snowContainer.style.display = 'none';
+            return;
+        }
+
         const ctx = canvas.getContext('2d');
         let w = 0, h = 0, flakes = [], raf = null;
         let lastW = 0, lastH = 0, lastOrientation = null;

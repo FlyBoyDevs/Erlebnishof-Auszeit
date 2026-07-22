@@ -1299,6 +1299,43 @@ footer .container {
     }
 }
 
+/* Snow toggle button */
+.snow-toggle {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    z-index: 1600;
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    border: 2px solid rgba(255, 255, 255, 0.5);
+    background: rgba(0, 0, 0, 0.4);
+    color: #fff;
+    font-size: 1.25rem;
+    cursor: pointer;
+    transition: background 0.2s ease, transform 0.2s ease, opacity 0.2s ease;
+    backdrop-filter: blur(4px);
+}
+
+.snow-toggle:hover {
+    background: rgba(0, 0, 0, 0.6);
+    transform: scale(1.1);
+}
+
+.snow-toggle.snow-off {
+    opacity: 0.5;
+}
+
+.snow-toggle.snow-off:hover {
+    opacity: 0.8;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .snow-toggle {
+        display: none !important;
+    }
+}
+
 /* --- Kontakt: center everything inside the kontakt section --- */
 #kontakt .container {
     text-align: left;

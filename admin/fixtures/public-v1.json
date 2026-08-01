@@ -1,0 +1,25 @@
+{
+  "schemaVersion": 1,
+  "releaseVersion": "fixture-v1",
+  "effectCapabilityVersion": "4444444444444444",
+  "generatedAt": "2030-06-01T09:00:00+02:00",
+  "nextTransitionAt": "2030-06-30T22:00:00+02:00",
+  "snapshotRevision": "22222222222222222222222222222222",
+  "cacheValidator": "22222222222222222222222222222222",
+  "newsVersion": {"generation": "33333333333333333333333333333333", "sequence": 1},
+  "entries": [
+    {
+      "id": "11111111111111111111111111111111",
+      "type": "news",
+      "title": "Beispiel-Neuigkeit",
+      "body": "Dieser bereinigte Inhalt enthält keine Produktionsdaten.",
+      "publishedAt": "2030-06-01T09:00:00+02:00",
+      "eventStart": null,
+      "eventEnd": null,
+      "image": null,
+      "changeVersion": {"generation": "33333333333333333333333333333333", "sequence": 1}
+    }
+  ],
+  "exceptions": [],
+  "theme": {"name": null, "effect": null}
+}

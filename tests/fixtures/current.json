@@ -1,0 +1,58 @@
+{
+  "schemaVersion": 1,
+  "releaseVersion": "local-preview-v1",
+  "effectCapabilityVersion": "winter-only-v1",
+  "generatedAt": "2026-07-23T12:00:00+02:00",
+  "nextTransitionAt": null,
+  "snapshotRevision": "sanitized-fixture-1",
+  "cacheValidator": "sanitized-fixture-1",
+  "newsVersion": {
+    "generation": "sanitized-local-preview",
+    "sequence": 3
+  },
+  "entries": [
+    {
+      "id": "news-hofmoment",
+      "type": "news",
+      "title": "Ein kleiner Hofmoment",
+      "body": "Diese vollständig erfundene Meldung zeigt, wie eine Neuigkeit ohne Bild auf der lokalen Vorschau aussieht.",
+      "publishedAt": "2026-07-23T09:00:00+02:00",
+      "eventStart": null,
+      "eventEnd": null,
+      "image": {
+        "url": "/img/opt/menu/food-1-jpg-i02a85a7b2321-c39b277d22e586a88a625-r38a14a30fdc4-1024.jpg",
+        "width": 1024,
+        "height": 768,
+        "alt": "Herzhafter Teller aus dem Hofcafé"
+      },
+      "changeVersion": {
+        "generation": "sanitized-local-preview",
+        "sequence": 3
+      }
+    },
+    {
+      "id": "event-beispiel",
+      "type": "event",
+      "title": "Beispieltermin für die Vorschau",
+      "body": "Auch dieser Termin ist erfunden und enthält keine echten Gäste-, Betriebs- oder Veranstaltungsdaten.",
+      "publishedAt": "2026-07-22T10:00:00+02:00",
+      "eventStart": "2099-09-12T14:00:00+02:00",
+      "eventEnd": "2099-09-12T17:00:00+02:00",
+      "image": {
+        "url": "/img/opt/events/events-1-jpg-id352ece2529f-c8f024df212ed03f9d29c-r38a14a30fdc4-1024.jpg",
+        "width": 1024,
+        "height": 768,
+        "alt": "Heller Raum mit gedeckten Tischen für eine Gruppe"
+      },
+      "changeVersion": {
+        "generation": "sanitized-local-preview",
+        "sequence": 2
+      }
+    }
+  ],
+  "exceptions": [],
+  "theme": {
+    "name": null,
+    "effect": null
+  }
+}

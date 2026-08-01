@@ -1,0 +1,160 @@
+{
+  "schemaVersion": 1,
+  "selectionStatus": "provisional-owner-review-required",
+  "provenance": {
+    "suppliedBy": "owner-and-site-maintainer",
+    "publicationRights": "owner-confirmation-required-before-production",
+    "recognizablePeople": "confirm-consent-before-production"
+  },
+  "socialPreview": {
+    "status": "owner-image-and-focal-point-required",
+    "requiredWidth": 1200,
+    "requiredHeight": 630
+  },
+  "assets": [
+    {
+      "id": "hero-weide",
+      "source": "img/home/home1.jpg",
+      "slots": ["hero"],
+      "widths": [640, 1024, 1600],
+      "maximumVariantBytes": 700000,
+      "alt": ""
+    },
+    {
+      "id": "hero-hof",
+      "source": "img/home/home2.jpg",
+      "slots": ["hero"],
+      "widths": [640, 1024, 1200],
+      "maximumVariantBytes": 700000,
+      "alt": ""
+    },
+    {
+      "id": "hero-tiere",
+      "source": "img/home/home3.jpg",
+      "slots": ["hero"],
+      "widths": [640, 1024, 1600],
+      "maximumVariantBytes": 700000,
+      "alt": ""
+    },
+    {
+      "id": "cafe-brotzeit",
+      "source": "img/menu/food_1.JPG",
+      "slots": ["hofcafe-gallery"],
+      "widths": [320, 640, 1024],
+      "maximumVariantBytes": 300000,
+      "alt": "Herzhafter Teller mit Rührei, Käse, Aufstrichen und Obst"
+    },
+    {
+      "id": "cafe-weisse-torte",
+      "source": "img/menu/cake_4.JPG",
+      "slots": ["hofcafe-gallery"],
+      "widths": [320, 640, 1024],
+      "maximumVariantBytes": 300000,
+      "alt": "Weiße Torte aus unserer Kuchenauswahl"
+    },
+    {
+      "id": "cafe-kuchentheke",
+      "source": "img/menu/cake_1.JPG",
+      "slots": ["hofcafe-gallery"],
+      "widths": [320, 640, 1024],
+      "maximumVariantBytes": 300000,
+      "alt": "Torte in der Kuchentheke des Hofcafés"
+    },
+    {
+      "id": "cafe-brotzeit-zwei",
+      "source": "img/menu/food_2.JPG",
+      "slots": ["hofcafe-gallery"],
+      "widths": [320, 640, 1024],
+      "maximumVariantBytes": 300000,
+      "alt": "Brotzeit mit Wurst, Käse und frischem Gemüse"
+    },
+    {
+      "id": "cafe-kuchen",
+      "source": "img/menu/cake_6.JPG",
+      "slots": ["hofcafe-gallery"],
+      "widths": [320, 640, 1024],
+      "maximumVariantBytes": 300000,
+      "alt": "Hausgemachter Kuchen auf einem Teller"
+    },
+    {
+      "id": "hofladen-eingang",
+      "source": "img/hofladen/IMG_3884.jpeg",
+      "slots": ["hofladen-gallery"],
+      "widths": [320, 640, 1024],
+      "maximumVariantBytes": 300000,
+      "alt": "Eingang des Selbstbedienungs-Hofladens"
+    },
+    {
+      "id": "hofladen-nudeln",
+      "source": "img/hofladen/IMG_3952.jpeg",
+      "slots": ["hofladen-gallery"],
+      "widths": [320, 640, 1024],
+      "maximumVariantBytes": 300000,
+      "alt": "Regionale Nudeln im Hofladen"
+    },
+    {
+      "id": "hofladen-glaeser",
+      "source": "img/hofladen/IMG_4030.jpeg",
+      "slots": ["hofladen-gallery"],
+      "widths": [320, 640, 1024],
+      "maximumVariantBytes": 300000,
+      "alt": "Honig, Marmeladen und Sirup im Hofladen"
+    },
+    {
+      "id": "hofladen-geschenkkorb",
+      "source": "img/hofladen/IMG_4111.jpeg",
+      "slots": ["hofladen-gallery"],
+      "widths": [320, 640, 1024],
+      "maximumVariantBytes": 300000,
+      "alt": "Liebevoll zusammengestellter Geschenkkorb"
+    },
+    {
+      "id": "hofladen-eier",
+      "source": "img/hofladen/IMG_4528.jpeg",
+      "slots": ["hofladen-gallery"],
+      "widths": [320, 640, 1024],
+      "maximumVariantBytes": 300000,
+      "alt": "Frische Eier im Hofladen"
+    },
+    {
+      "id": "feiern-raum",
+      "source": "img/events/events_1.JPG",
+      "slots": ["feiern-gallery"],
+      "widths": [320, 640, 1024],
+      "maximumVariantBytes": 300000,
+      "alt": "Heller Raum mit gedeckten Tischen für eine Gruppe"
+    },
+    {
+      "id": "feiern-buffet",
+      "source": "img/events/events_2.JPG",
+      "slots": ["feiern-gallery"],
+      "widths": [320, 640, 1024],
+      "maximumVariantBytes": 300000,
+      "alt": "Buntes Buffet für eine Feier"
+    },
+    {
+      "id": "feiern-tisch",
+      "source": "img/events/events_3.JPG",
+      "slots": ["feiern-gallery"],
+      "widths": [320, 640, 1024],
+      "maximumVariantBytes": 300000,
+      "alt": "Festlich vorbereiteter Tisch im Erlebnishof"
+    },
+    {
+      "id": "feiern-tafel",
+      "source": "img/events/events_4.JPG",
+      "slots": ["feiern-gallery"],
+      "widths": [320, 640, 1024],
+      "maximumVariantBytes": 300000,
+      "alt": "Liebevoll dekorierte Tafel für eine Familienfeier"
+    },
+    {
+      "id": "feiern-langer-tisch",
+      "source": "img/events/events_5.JPG",
+      "slots": ["feiern-gallery"],
+      "widths": [320, 640, 1024],
+      "maximumVariantBytes": 300000,
+      "alt": "Langer Tisch für eine gemeinsame Feier"
+    }
+  ]
+}

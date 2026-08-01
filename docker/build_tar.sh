@@ -9,7 +9,8 @@ REMOTE_HOST="192.168.2.129"
 REMOTE_PATH="/tmp/${TAR_NAME}"
 
 echo "[1/4] Building Docker image for linux/amd64: ${IMAGE_NAME}"
-docker build --platform linux/amd64 -t "${IMAGE_NAME}" .
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+docker build --platform linux/amd64 -f "${SCRIPT_DIR}/Dockerfile" -t "${IMAGE_NAME}" "${SCRIPT_DIR}/.."
 
 echo "[2/4] Saving image to tarball: ${TAR_NAME}"
 docker save -o "${TAR_NAME}" "${IMAGE_NAME}"

@@ -1,78 +1,66 @@
 <?php
-require __DIR__ . '/config.php';
+declare(strict_types=1);
 
-// Ensure config variables exist (map constants to variables if config defines constants)
-if (!isset($NEWS_DIR) && defined('NEWS_DIR')) {
-    $NEWS_DIR = NEWS_DIR;
-}
-if (!isset($ALLOWED_EXTENSIONS) && defined('ALLOWED_EXTENSIONS')) {
-    $ALLOWED_EXTENSIONS = ALLOWED_EXTENSIONS;
-}
-$ALLOWED_EXTENSIONS = $ALLOWED_EXTENSIONS ?? ['jpg','jpeg','png','gif','webp'];
-
-// Basic validation
-$name = $_GET['file'] ?? '';
-if ($name === '') {
-    http_response_code(400);
-    echo 'Ungültige Anfrage';
-    exit;
+if (function_exists('ini_set')) {
+    @ini_set('display_errors', '0');
+    @ini_set('display_startup_errors', '0');
 }
 
-// Disallow directory traversal
-$baseName = basename($name);
-if ($baseName !== $name) {
-    http_response_code(400);
-    echo 'Ungültiger Dateiname';
-    exit;
-}
+use Hofladen\Editorial\Config;
+use Hofladen\Editorial\Domain;
+use Hofladen\Editorial\Images;
+use Hofladen\Editorial\Repository;
+use Hofladen\Editorial\Security;
+require_once __DIR__ . '/lib/bootstrap.php';
 
-// Resolve real path and ensure it's inside NEWS_DIR
-$newsDirReal = realpath($NEWS_DIR);
-if ($newsDirReal === false) {
-    http_response_code(500);
-    echo 'Serverkonfiguration fehlerhaft';
-    exit;
-}
+try {
+    $config = Config::load(__DIR__);
+    Config::prepareStorage($config);
+    $security = new Security($config);
+    $security->sendAdminHeaders('application/octet-stream');
+    $security->startSession();
+    $security->requireAuthentication();
 
-$fullPath = realpath($newsDirReal . DIRECTORY_SEPARATOR . $baseName);
-if ($fullPath === false || strpos($fullPath, $newsDirReal) !== 0 || !is_file($fullPath)) {
+    $id = $_GET['id'] ?? null;
+    if (!is_string($id) || !preg_match('/\A[a-f0-9]{32}\z/', $id)) {
+        throw new RuntimeException('not found');
+    }
+    $repository = new Repository($config);
+    $document = $repository->readDocument();
+    Domain::validateDocument($document);
+    $asset = null;
+    foreach ($document['assets'] as $candidate) {
+        if (is_array($candidate) && ($candidate['id'] ?? null) === $id) {
+            $asset = $candidate;
+            break;
+        }
+    }
+    if (!is_array($asset)) {
+        throw new RuntimeException('not found');
+    }
+    $images = new Images($config);
+    if (($_GET['source'] ?? null) === '1') {
+        $path = $images->sourcePath($asset);
+        $mime = (string)$asset['sourceMime'];
+    } else {
+        $preview = $images->thumbnailPath($asset);
+        $path = $preview['path'];
+        $mime = $preview['mime'];
+    }
+    $size = filesize($path);
+    if ($size === false) {
+        throw new RuntimeException('not found');
+    }
+    header('Content-Type: ' . $mime);
+    header('Content-Length: ' . $size);
+    header('Content-Disposition: inline; filename="preview"');
+    $handle = fopen($path, 'rb');
+    if ($handle === false) {
+        throw new RuntimeException('not found');
+    }
+    fpassthru($handle);
+    fclose($handle);
+} catch (Throwable) {
+    header('Cache-Control: no-store');
     http_response_code(404);
-    echo 'Nicht gefunden';
-    exit;
 }
-
-// Check allowed extension
-$ext = strtolower(pathinfo($fullPath, PATHINFO_EXTENSION));
-if (!in_array($ext, $ALLOWED_EXTENSIONS, true)) {
-    http_response_code(403);
-    echo 'Verboten';
-    exit;
-}
-
-// Determine mime type
-$finfo = new finfo(FILEINFO_MIME_TYPE);
-$mime = $finfo->file($fullPath) ?: 'application/octet-stream';
-
-// Send headers and file
-header_remove(); // remove any previously set headers
-header('Content-Type: ' . $mime);
-header('Content-Length: ' . filesize($fullPath));
-header('Cache-Control: public, max-age=86400');
-header('Expires: ' . gmdate('D, d M Y H:i:s', time() + 86400) . ' GMT');
-
-// Stream the file
-$fp = fopen($fullPath, 'rb');
-if ($fp === false) {
-    http_response_code(500);
-    echo 'Datei konnte nicht gelesen werden';
-    exit;
-}
-while (!feof($fp)) {
-    echo fread($fp, 8192);
-    // flush to client
-    @ob_flush();
-    @flush();
-}
-fclose($fp);
-exit;
-

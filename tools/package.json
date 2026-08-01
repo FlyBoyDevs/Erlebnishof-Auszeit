@@ -1,0 +1,23 @@
+{
+  "name": "tools",
+  "version": "1.0.0",
+  "description": "Pinned local build tools for Erlebnishof Auszeit",
+  "private": true,
+  "scripts": {
+    "images:build": "node ./optimize-images.mjs",
+    "images:check": "node ./optimize-images.mjs --check",
+    "images:orphans": "node ./optimize-images.mjs --orphans",
+    "images:prune": "node ./optimize-images.mjs --prune",
+    "test": "npm run images:check"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "module",
+  "engines": {
+    "node": ">=20.9.0"
+  },
+  "dependencies": {
+    "sharp": "0.35.3"
+  }
+}

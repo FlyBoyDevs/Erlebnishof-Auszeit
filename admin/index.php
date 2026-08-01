@@ -1,832 +1,540 @@
 <?php
-require __DIR__ . '/config.php';
+declare(strict_types=1);
 
-// Ensure config variables exist (map constants to variables if config defines constants)
-// and provide safe defaults for static analysis and runtime.
-if (!isset($NEWS_DIR) && defined('NEWS_DIR')) {
-    $NEWS_DIR = NEWS_DIR;
+if (function_exists('ini_set')) {
+    @ini_set('display_errors', '0');
+    @ini_set('display_startup_errors', '0');
 }
-if (!isset($ALLOWED_EXTENSIONS) && defined('ALLOWED_EXTENSIONS')) {
-    $ALLOWED_EXTENSIONS = ALLOWED_EXTENSIONS;
-}
-if (!isset($MANIFEST_FILE) && defined('MANIFEST_FILE')) {
-    $MANIFEST_FILE = MANIFEST_FILE;
-}
-$ALLOWED_EXTENSIONS = $ALLOWED_EXTENSIONS ?? ['jpg','jpeg','png','gif','webp'];
+header('Cache-Control: no-store, max-age=0');
+header('X-Robots-Tag: noindex, nofollow, noarchive', true);
+header('X-Content-Type-Options: nosniff');
+header('X-Frame-Options: DENY');
 
-// Add translations (German) and helper early so login flow can use t()
-$TRANSLATIONS = [
-    'News Admin Login' => 'News Admin – Anmeldung',
-    'News Admin' => 'News Admin',
-    'Username' => 'Benutzername',
-    'Password' => 'Passwort',
-    'Login' => 'Anmelden',
-    'Invalid username or password.' => 'Ungültiger Benutzername oder Passwort.',
-    'Logout' => 'Abmelden',
-    'Upload new image' => 'Neues Bild hochladen',
-    'Upload' => 'Hochladen',
-    'Images in <code>news</code> folder' => 'Bilder im Ordner <code>news</code>',
-    'No images found in the <code>news</code> folder.' => 'Keine Bilder im Ordner <code>news</code> gefunden.',
-    'Deleted %s' => 'Gelöscht: %s',
-    'Could not delete %s' => 'Konnte %s nicht löschen.',
-    'File type not allowed.' => 'Dateityp nicht erlaubt.',
-    'Upload failed: %s' => 'Hochladen fehlgeschlagen: %s',
-    'Upload failed: destination directory not found.' => 'Hochladen fehlgeschlagen: Zielverzeichnis nicht gefunden.',
-    'Upload failed: destination directory is not writable.' => 'Hochladen fehlgeschlagen: Zielverzeichnis ist nicht beschreibbar.',
-    'Upload failed: move_uploaded_file returned false. Target: %s' => 'Hochladen fehlgeschlagen: move_uploaded_file gab false zurück. Ziel: %s',
-    'No file selected.' => 'Keine Datei ausgewählt.',
-    'Uploaded %s' => 'Hochgeladen: %s',
-    'Manifest saved.' => 'Manifest gespeichert.',
-    'Could not save manifest.' => 'Manifest konnte nicht gespeichert werden.',
-    'In manifest.json' => 'Im Manifest',
-    'Delete' => 'Löschen',
-    'Save' => 'Speichern',
-    'Move left' => 'Nach links verschieben',
-    'Move right' => 'Nach rechts verschieben',
-    'Click or tap anywhere to close' => 'Klicken oder tippen, um zu schließen',
-    'Delete %s?' => 'Wirklich löschen %s?'
-];
+use Hofladen\Editorial\AuthenticationException;
+use Hofladen\Editorial\Config;
+use Hofladen\Editorial\ConflictException;
+use Hofladen\Editorial\Domain;
+use Hofladen\Editorial\Images;
+use Hofladen\Editorial\Preflight;
+use Hofladen\Editorial\Repository;
+use Hofladen\Editorial\Security;
+use Hofladen\Editorial\Support;
+use Hofladen\Editorial\ValidationException;
+require_once __DIR__ . '/lib/bootstrap.php';
 
-function t(string $key, ...$args): string {
-    global $TRANSLATIONS;
-    $s = $TRANSLATIONS[$key] ?? $key;
-    if ($args) {
-        return vsprintf($s, $args);
-    }
-    return $s;
-}
-
-// --- HANDLE LOGIN / LOGOUT ---
-
-if (isset($_GET['logout'])) {
-    $_SESSION = [];
-    session_destroy();
-    header('Location: ?login');
+/** @return never */
+function hof_redirect(string $location): void
+{
+    header('Location: ' . $location, true, 303);
     exit;
 }
 
-if (isset($_GET['login'])) {
-    // Show login form (simple)
-    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-        $user = $_POST['username'] ?? '';
-        $pass = $_POST['password'] ?? '';
-        if ($user === ADMIN_USERNAME && ADMIN_PASSWORD_HASH !== '' && password_verify($pass, ADMIN_PASSWORD_HASH)) {
-            $_SESSION['logged_in'] = true;
-            header('Location: ./');
-            exit;
-        }
-        $error = t('Invalid username or password.');
+function hof_h(mixed $value): string
+{
+    return Support::html(is_scalar($value) ? (string)$value : '');
+}
+
+function hof_post(string $key, string $fallback = ''): string
+{
+    $value = $_POST[$key] ?? $fallback;
+    return is_string($value) ? $value : $fallback;
+}
+
+function hof_expected_revision(): int
+{
+    $value = hof_post('expectedRevision');
+    if (!preg_match('/\A\d+\z/', $value)) {
+        throw new ValidationException(['Der erwartete Bearbeitungsstand fehlt. Bitte neu laden.']);
     }
-    ?>
-    <!DOCTYPE html>
-    <html lang="en">
-    <head>
-        <meta charset="utf-8">
-        <title><?= htmlspecialchars(t('News Admin Login'), ENT_QUOTES) ?></title>
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <style>
-            body {
-                margin: 0;
-                font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                min-height: 100vh;
-                background: #f3f4f6;
-            }
-            .login-box {
-                background: #fff;
-                padding: 2rem;
-                border-radius: 0.75rem;
-                box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-                max-width: 320px;
-                width: 100%;
-            }
-            h1 {
-                margin-top: 0;
-                font-size: 1.4rem;
-                margin-bottom: 1rem;
-            }
-            label {
-                display: block;
-                margin-top: 0.75rem;
-                font-size: 0.9rem;
-            }
-            input[type="text"],
-            input[type="password"] {
-                width: 100%;
-                padding: 0.5rem;
-                margin-top: 0.25rem;
-                border-radius: 0.4rem;
-                border: 1px solid #d1d5db;
-                font-size: 0.95rem;
-            }
-            button {
-                margin-top: 1rem;
-                width: 100%;
-                padding: 0.6rem;
-                border-radius: 0.5rem;
-                border: none;
-                background: #16a34a;
-                color: #fff;
-                font-weight: 600;
-                cursor: pointer;
-            }
-            button:hover {
-                background: #15803d;
-            }
-            .error {
-                margin-top: 0.75rem;
-                color: #b91c1c;
-                font-size: 0.85rem;
-            }
-        </style>
-    </head>
-    <body>
-    <div class="login-box">
-        <h1><?= htmlspecialchars(t('News Admin'), ENT_QUOTES) ?></h1>
-        <form method="post">
-            <label><?= htmlspecialchars(t('Username'), ENT_QUOTES) ?>
-                <input type="text" name="username" required>
-            </label>
-            <label><?= htmlspecialchars(t('Password'), ENT_QUOTES) ?>
-                <input type="password" name="password" required>
-            </label>
-            <button type="submit"><?= htmlspecialchars(t('Login'), ENT_QUOTES) ?></button>
-            <?php if (!empty($error)): ?>
-                <div class="error"><?= htmlspecialchars($error, ENT_QUOTES) ?></div>
-            <?php endif; ?>
-        </form>
-    </div>
-    </body>
-    </html>
-    <?php
+    return (int)$value;
+}
+
+/** @return never */
+function hof_storage_unavailable(Throwable $error): void
+{
+    $reference = Support::randomId(4);
+    if (function_exists('error_log')) {
+        @error_log('[hofladen-admin ' . $reference . '] ' . get_class($error));
+    }
+    http_response_code(503);
+    ?><!doctype html>
+<html lang="de"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Redaktionsdaten nicht verfügbar</title><link rel="stylesheet" href="admin.css"></head>
+<body><main class="login-shell"><section class="panel"><h1>Redaktionsdaten nicht verfügbar</h1><p>Der Redaktionsbereich hat keine verifizierbaren Daten geladen und nimmt keine Änderung vor. Bitte die Server-Vorprüfung ausführen und bei Bedarf eine geprüfte Sicherung wiederherstellen.</p><p>Fehlerkennung: <?= hof_h($reference) ?></p></section></main></body></html>
+<?php
     exit;
 }
 
-// All other routes require login
-require_login();
-
-// --- BASIC VARS ---
-
-if (!$NEWS_DIR || !is_dir($NEWS_DIR)) {
-    die('NEWS_DIR not found or invalid. Please check config.php.');
-}
-
-$imagesOnDisk = array_values(
-    array_filter(scandir($NEWS_DIR), function ($file) use ($NEWS_DIR, $ALLOWED_EXTENSIONS) {
-        if ($file[0] === '.') return false;
-        $path = $NEWS_DIR . DIRECTORY_SEPARATOR . $file;
-        if (!is_file($path)) return false;
-        $ext = strtolower(pathinfo($file, PATHINFO_EXTENSION));
-        return in_array($ext, $ALLOWED_EXTENSIONS, true);
-    })
-);
-
-$manifestImages = load_manifest($MANIFEST_FILE);
-
-// Order images: first those in manifest (in manifest order), then the rest
-$orderedImages = [];
-if (!empty($manifestImages)) {
-    foreach ($manifestImages as $m) {
-        if (in_array($m, $imagesOnDisk, true)) {
-            $orderedImages[] = $m;
-        }
-    }
-}
-foreach ($imagesOnDisk as $img) {
-    if (!in_array($img, $orderedImages, true)) {
-        $orderedImages[] = $img;
-    }
-}
-$displayImages = $orderedImages;
-
-// --- HANDLE ACTIONS (upload, delete, save manifest) ---
-
-$message = null;
-$errorMsg = null;
-
-// Delete image
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['delete_file'])) {
-    $file = $_POST['delete_file'] ?? '';
-    if ($file && in_array($file, $imagesOnDisk, true)) {
-        $fullPath = $NEWS_DIR . DIRECTORY_SEPARATOR . $file;
-        if (@unlink($fullPath)) {
-            // Remove from manifest as well
-            $manifestImages = array_values(array_filter($manifestImages, fn($f) => $f !== $file));
-            save_manifest($MANIFEST_FILE, $manifestImages);
-            $message = t('Deleted %s', $file);
-            // Re-scan images
-            $imagesOnDisk = array_values(
-                array_filter(scandir($NEWS_DIR), function ($file) use ($NEWS_DIR, $ALLOWED_EXTENSIONS) {
-                    if ($file[0] === '.') return false;
-                    $path = $NEWS_DIR . DIRECTORY_SEPARATOR . $file;
-                    if (!is_file($path)) return false;
-                    $ext = strtolower(pathinfo($file, PATHINFO_EXTENSION));
-                    return in_array($ext, $ALLOWED_EXTENSIONS, true);
-                })
-            );
-        } else {
-            $errorMsg = t('Could not delete %s', $file);
-        }
+/** @return array<string,mixed> */
+function hof_read_document_or_fail(Repository $repository): array
+{
+    try {
+        return $repository->readDocument();
+    } catch (Throwable $error) {
+        hof_storage_unavailable($error);
     }
 }
 
-// Upload image
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && ($_POST['action'] ?? '') === 'upload') {
-    if (!empty($_FILES['image']['name'])) {
-        // Original uploaded filename
-        $origName = basename($_FILES['image']['name']);
-        $ext = strtolower(pathinfo($origName, PATHINFO_EXTENSION));
-        // Normalize filename (replace spaces/special chars with underscore)
-        $base = pathinfo($origName, PATHINFO_FILENAME);
-        // Replace any character that is not a letter, number, underscore or hyphen with underscore.
-        // Use Unicode-aware character classes to preserve letters from other languages.
-        $base = preg_replace('/[^\p{L}\p{N}_-]+/u', '_', $base);
-        // Collapse multiple underscores and trim
-        $base = preg_replace('/_+/', '_', $base);
-        $base = trim($base, '_');
-        if ($base === '') {
-            $base = 'file';
-        }
-        // Reconstruct sanitized filename
-        $name = $base . ($ext !== '' ? '.' . $ext : '');
-        // Avoid overwriting existing files: append -1, -2, ... if needed
-        $finalName = $name;
-        $i = 1;
-        while (file_exists($NEWS_DIR . DIRECTORY_SEPARATOR . $finalName)) {
-            $finalName = $base . '-' . $i . ($ext !== '' ? '.' . $ext : '');
-            $i++;
-        }
-        $name = $finalName;
-        if (!in_array($ext, $ALLOWED_EXTENSIONS, true)) {
-            $errorMsg = t('File type not allowed.');
-        } else {
-            $target = $NEWS_DIR . DIRECTORY_SEPARATOR . $name;
-            // Diagnostics: check PHP upload error codes and dir writability before moving
-            $uploadErr = (int)($_FILES['image']['error'] ?? UPLOAD_ERR_OK);
-            if ($uploadErr !== UPLOAD_ERR_OK) {
-                $errMap = [
-                    UPLOAD_ERR_INI_SIZE   => 'Die hochgeladene Datei überschreitet upload_max_filesize in php.ini',
-                    UPLOAD_ERR_FORM_SIZE  => 'Die hochgeladene Datei überschreitet die MAX_FILE_SIZE-Vorgabe',
-                    UPLOAD_ERR_PARTIAL    => 'Die hochgeladene Datei wurde nur teilweise hochgeladen',
-                    UPLOAD_ERR_NO_FILE    => 'Keine Datei hochgeladen',
-                    UPLOAD_ERR_NO_TMP_DIR => 'Temporärer Ordner fehlt',
-                    UPLOAD_ERR_CANT_WRITE => 'Fehler beim Schreiben der Datei auf die Festplatte',
-                    UPLOAD_ERR_EXTENSION  => 'Eine PHP-Erweiterung hat den Upload gestoppt',
-                ];
-                $reason = $errMap[$uploadErr] ?? ('Unknown upload error code ' . $uploadErr);
-                $errorMsg = t('Upload failed: %s', $reason);
-                echo '<script>console.error(' . json_encode($errorMsg) . ');</script>';
-            } elseif (!is_dir($NEWS_DIR)) {
-                $errorMsg = t('Upload failed: destination directory not found.');
-                echo '<script>console.error(' . json_encode($errorMsg) . ');</script>';
-            } elseif (!is_writable($NEWS_DIR)) {
-                $errorMsg = t('Upload failed: destination directory is not writable.');
-                echo '<script>console.error(' . json_encode($errorMsg) . ');</script>';
-            } elseif (move_uploaded_file($_FILES['image']['tmp_name'], $target)) {
-                // $name is already the final (sanitized + possibly suffixed) filename
-                $message = t('Uploaded %s', $name);
-                // Reload disk list
-                $imagesOnDisk[] = $name;
-                $imagesOnDisk = array_values(array_unique($imagesOnDisk));
-            } else {
-                $errorMsg = t('Upload failed: move_uploaded_file returned false. Target: %s', $target);
-                echo '<script>console.error(' . json_encode($errorMsg) . ');</script>';
+/** @return list<array{name:string,modifiedAt:string,bytes:int}> */
+function hof_list_backups_or_fail(Repository $repository): array
+{
+    try {
+        return $repository->listBackups();
+    } catch (Throwable $error) {
+        hof_storage_unavailable($error);
+    }
+}
+
+function hof_local_instant(string $value, bool $nullable, string $label): ?string
+{
+    if ($value === '' && $nullable) {
+        return null;
+    }
+    if (!preg_match('/\A\d{4}-\d{2}-\d{2}T\d{2}:\d{2}\z/', $value)) {
+        throw new ValidationException([$label . ' ist ungültig.']);
+    }
+    $zone = new DateTimeZone(Support::TIMEZONE);
+    $date = DateTimeImmutable::createFromFormat('!Y-m-d\TH:i', $value, $zone);
+    $parseErrors = DateTimeImmutable::getLastErrors();
+    if ($date === false
+        || ($parseErrors !== false && ($parseErrors['warning_count'] > 0 || $parseErrors['error_count'] > 0))
+        || $date->format('Y-m-d\TH:i') !== $value) {
+        throw new ValidationException([$label . ' ist wegen Zeitumstellung oder Eingabefehler nicht eindeutig gültig.']);
+    }
+    // Reject the repeated wall-clock interval at the autumn DST transition.
+    $wall = (int)(DateTimeImmutable::createFromFormat('!Y-m-d\TH:i', $value, new DateTimeZone('UTC'))?->getTimestamp() ?? 0);
+    $transitions = $zone->getTransitions($date->getTimestamp() - 10800, $date->getTimestamp() + 10800);
+    $previousOffset = null;
+    foreach ($transitions as $transition) {
+        $offset = (int)$transition['offset'];
+        if ($previousOffset !== null && $offset < $previousOffset) {
+            $repeatedStart = (int)$transition['ts'] + $offset;
+            $repeatedEnd = (int)$transition['ts'] + $previousOffset;
+            if ($wall >= $repeatedStart && $wall < $repeatedEnd) {
+                throw new ValidationException([$label . ' liegt in einer doppelt vorkommenden Stunde der Zeitumstellung. Bitte eine andere Uhrzeit wählen.']);
             }
         }
-    } else {
-        $errorMsg = t('No file selected.');
-        echo '<script>console.warn(' . json_encode($errorMsg) . ');</script>';
+        $previousOffset = $offset;
+    }
+    return $date->format(DateTimeInterface::RFC3339);
+}
+
+function hof_datetime_local(mixed $value): string
+{
+    if (!is_string($value) || $value === '') {
+        return '';
+    }
+    if (preg_match('/\A\d{4}-\d{2}-\d{2}T\d{2}:\d{2}\z/', $value)) {
+        return $value;
+    }
+    try {
+        return (new DateTimeImmutable($value))->setTimezone(new DateTimeZone(Support::TIMEZONE))->format('Y-m-d\TH:i');
+    } catch (Throwable) {
+        return '';
     }
 }
 
-// Save manifest (checkboxes)
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['save_manifest'])) {
-    $checked = $_POST['in_manifest'] ?? [];
-    $checked = array_values(array_filter($checked, fn($x) => in_array($x, $imagesOnDisk, true)));
-    if (save_manifest($MANIFEST_FILE, $checked)) {
-        $manifestImages = $checked;
-        $message = t('Manifest saved.');
-    } else {
-        $errorMsg = t('Could not save manifest.');
-    }
-}
-
-// Rebuild display order after any changes above
-$orderedImages = [];
-if (!empty($manifestImages)) {
-    foreach ($manifestImages as $m) {
-        if (in_array($m, $imagesOnDisk, true)) {
-            $orderedImages[] = $m;
+/** @param list<array<string,mixed>> $items @return array<string,mixed>|null */
+function hof_find(array $items, string $id): ?array
+{
+    foreach ($items as $item) {
+        if (is_array($item) && ($item['id'] ?? null) === $id) {
+            return $item;
         }
     }
+    return null;
 }
-foreach ($imagesOnDisk as $img) {
-    if (!in_array($img, $orderedImages, true)) {
-        $orderedImages[] = $img;
+
+/** @param array<string,mixed> $document @param array<string,mixed>|null $preserved @return array<string,mixed> */
+function hof_posted_entry(array $document, ?array &$preserved = null): array
+{
+    $id = hof_post('id');
+    $existing = preg_match('/\A[a-f0-9]{32}\z/', $id) ? hof_find($document['entries'], $id) : null;
+    if ($existing === null) {
+        $id = Support::randomId(16);
     }
+    $type = hof_post('type');
+    $intent = hof_post('intent');
+    // Preserve raw browser values before timezone parsing can reject a DST gap
+    // or repeated hour. The conflict/error page must not lose the owner's text.
+    $preserved = [
+        'id' => $id,
+        'type' => $type,
+        'intent' => $intent,
+        'title' => hof_post('title'),
+        'body' => hof_post('body'),
+        'imageId' => hof_post('imageId') === '' ? null : hof_post('imageId'),
+        'imageAlt' => hof_post('imageAlt'),
+        'displayStart' => hof_post('displayStart'),
+        'expiry' => hof_post('expiry'),
+        'eventStart' => hof_post('eventStart'),
+        'eventEnd' => hof_post('eventEnd'),
+    ];
+    if (!in_array($type, ['news', 'event'], true) || !in_array($intent, ['draft', 'approved', 'archived', 'trashed'], true)) {
+        throw new ValidationException(['Typ oder redaktionelle Absicht ist ungültig.']);
+    }
+    $now = Support::now()->format(DateTimeInterface::RFC3339);
+    $wasApproved = is_array($existing) && ($existing['intent'] ?? null) === 'approved';
+    $entry = [
+        'id' => $id,
+        'type' => $type,
+        'intent' => $intent,
+        'title' => trim(hof_post('title')),
+        'body' => trim(hof_post('body')),
+        'imageId' => hof_post('imageId') === '' ? null : hof_post('imageId'),
+        'imageAlt' => trim(hof_post('imageAlt')),
+        'displayStart' => hof_local_instant(hof_post('displayStart'), true, 'Sichtbar ab'),
+        'approvedAt' => $intent === 'approved' ? ($wasApproved ? $existing['approvedAt'] : $now) : ($existing['approvedAt'] ?? null),
+        'createdAt' => $existing['createdAt'] ?? $now,
+        'updatedAt' => $now,
+    ];
+    if ($type === 'news') {
+        $entry['expiry'] = hof_local_instant(hof_post('expiry'), true, 'Ablauf');
+    } else {
+        $entry['eventStart'] = hof_local_instant(hof_post('eventStart'), false, 'Terminbeginn');
+        $entry['eventEnd'] = hof_local_instant(hof_post('eventEnd'), true, 'Terminende');
+    }
+    return $entry;
 }
-$displayImages = $orderedImages;
 
-// Helper: is in manifest
-function in_manifest(string $file, array $manifest): bool {
-    return in_array($file, $manifest, true);
+/** @param array<string,mixed> $document @return array<string,mixed> */
+function hof_posted_exception(array $document): array
+{
+    $id = hof_post('id');
+    $existing = preg_match('/\A[a-f0-9]{32}\z/', $id) ? hof_find($document['exceptions'], $id) : null;
+    if ($existing === null) {
+        $id = Support::randomId(16);
+    }
+    $intent = hof_post('intent');
+    $target = hof_post('target');
+    if (!in_array($intent, ['draft', 'approved', 'archived', 'trashed'], true) || !in_array($target, ['cafe', 'shop', 'both'], true)) {
+        throw new ValidationException(['Absicht oder Ziel der Ausnahme ist ungültig.']);
+    }
+    $closed = hof_post('closed') === '1';
+    $now = Support::now()->format(DateTimeInterface::RFC3339);
+    return [
+        'id' => $id,
+        'intent' => $intent,
+        'target' => $target,
+        'startDate' => hof_post('startDate'),
+        'endDate' => hof_post('endDate'),
+        'closed' => $closed,
+        'opens' => $closed ? null : hof_post('opens'),
+        'closes' => $closed ? null : hof_post('closes'),
+        'note' => trim(hof_post('note')),
+        'createdAt' => $existing['createdAt'] ?? $now,
+        'updatedAt' => $now,
+    ];
 }
 
+$fatalConfiguration = false;
+$errors = [];
+$notice = null;
+$preservedEntry = null;
+$preservedException = null;
 
-?>
-<!DOCTYPE html>
+try {
+    $config = Config::load(__DIR__);
+    Config::prepareStorage($config);
+    $security = new Security($config);
+    $security->sendAdminHeaders();
+    $security->startSession();
+    $repository = new Repository($config);
+    $images = new Images($config);
+} catch (Throwable) {
+    $fatalConfiguration = true;
+}
+
+if ($fatalConfiguration):
+    http_response_code(503);
+?><!doctype html>
+<html lang="de"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Redaktionsbereich nicht verfügbar</title><link rel="stylesheet" href="admin.css"></head>
+<body><main class="login-shell"><section class="panel"><h1>Redaktionsbereich nicht verfügbar</h1><p>Die private Konfiguration oder ein Speicherpfad ist noch nicht sicher eingerichtet. Bitte die Server-Vorprüfung über die Kommandozeile ausführen.</p></section></main></body></html>
+<?php exit; endif;
+
+if (!$security->isAuthenticated()) {
+    if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST' && hof_post('action') === 'login') {
+        try {
+            if ($security->attemptLogin(hof_post('username'), hof_post('password'))) {
+                hof_redirect('index.php');
+            }
+            $errors[] = 'Anmeldung nicht möglich. Zugangsdaten prüfen und gegebenenfalls später erneut versuchen.';
+        } catch (Throwable) {
+            $errors[] = 'Anmeldung vorübergehend nicht möglich. Bitte später erneut versuchen.';
+        }
+    }
+?><!doctype html>
 <html lang="de">
-<head>
-    <meta charset="utf-8">
-    <title>News Admin – Erlebnishof Auszeit</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <style>
-        :root {
-            --bg: #f9fafb;
-            --card: #ffffff;
-            --border: #e5e7eb;
-            --accent: #16a34a;
-            --accent-soft: #bbf7d0;
-            --danger: #dc2626;
-        }
-        * { box-sizing: border-box; }
-        body {
-            margin: 0;
-            font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-            background: var(--bg);
-            color: #111827;
-        }
-        header {
-            padding: 1rem 1.5rem;
-            background: #111827;
-            color: #f9fafb;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        header h1 {
-            margin: 0;
-            font-size: 1.1rem;
-        }
-        header a.logout {
-            color: #f9fafb;
-            text-decoration: none;
-            font-size: 0.9rem;
-            border: 1px solid rgba(249,250,251,0.4);
-            padding: 0.25rem 0.6rem;
-            border-radius: 999px;
-        }
-        header a.logout:hover {
-            background: rgba(249,250,251,0.12);
-        }
-        main {
-            max-width: 1100px;
-            margin: 1.5rem auto;
-            padding: 0 1rem 1.5rem;
-        }
-        .card {
-            background: var(--card);
-            border-radius: 0.75rem;
-            border: 1px solid var(--border);
-            padding: 1.25rem;
-            margin-bottom: 1rem;
-        }
-        h2 {
-            margin: 0 0 0.75rem;
-            font-size: 1rem;
-        }
-        .status {
-            margin-bottom: 1rem;
-            font-size: 0.9rem;
-        }
-        .status .ok {
-            color: #166534;
-            background: var(--accent-soft);
-            padding: 0.25rem 0.5rem;
-            border-radius: 999px;
-        }
-        .status .err {
-            color: #b91c1c;
-            background: #fee2e2;
-            padding: 0.25rem 0.5rem;
-            border-radius: 999px;
-        }
-        .upload-form input[type="file"] {
-            font-size: 0.9rem;
-        }
-        .upload-form button,
-        .save-btn {
-            margin-top: 0.5rem;
-            padding: 0.4rem 0.9rem;
-            border-radius: 999px;
-            border: none;
-            background: var(--accent);
-            color: #fff;
-            font-size: 0.9rem;
-            font-weight: 600;
-            cursor: pointer;
-        }
-        .save-btn {
-            margin-top: 0.75rem;
-        }
-        .upload-form button:hover,
-        .save-btn:hover {
-            background: #15803d;
-        }
-        .images-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
-            gap: 1rem;
-        }
-        .img-card {
-            border: 1px solid var(--border);
-            border-radius: 0.75rem;
-            padding: 0.5rem;
-            background: #fefefe;
-            display: flex;
-            flex-direction: column;
-            gap: 0.3rem;
-        }
-        .thumb-wrapper {
-            position: relative;
-            overflow: hidden;
-            border-radius: 0.5rem;
-            cursor: zoom-in;
-        }
-        .thumb-wrapper img {
-            width: 100%;
-            height: 110px;
-            object-fit: cover;
-            display: block;
-        }
-        .filename {
-            font-size: 0.8rem;
-            word-break: break-all;
-        }
-        .move-controls {
-            display: flex;
-            justify-content: center;
-            gap: 0.5rem;
-            margin-top: 0.25rem;
-        }
-        .move-btn {
-            width: 44px;
-            height: 44px;
-            border-radius: 0.5rem;
-            border: 1px solid var(--border);
-            background: #fff;
-            font-size: 1.1rem;
-            cursor: pointer;
-        }
-        .move-btn:hover {
-            background: #f3f4f6;
-        }
-        .move-btn:disabled,
-        .move-btn[aria-disabled="true"] {
-            opacity: 0.45;
-            cursor: not-allowed;
-            background: #f9fafb;
-        }
-        .manifest-row {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            font-size: 0.8rem;
-            margin-top: 0.25rem;
-        }
-        .manifest-row label {
-            display: flex;
-            align-items: center;
-            gap: 0.25rem;
-            cursor: pointer;
-        }
-        .manifest-row input[type="checkbox"] {
-            transform: scale(1.1);
-        }
-        .delete-btn {
-            background: none;
-            border: none;
-            color: var(--danger);
-            font-size: 0.8rem;
-            cursor: pointer;
-            padding: 0.15rem 0.4rem;
-            border-radius: 999px;
-            border: 1px solid #fecaca;
-        }
-        .delete-btn:hover {
-            background: #fee2e2;
-        }
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Anmeldung · Redaktionsbereich</title><link rel="stylesheet" href="admin.css"></head>
+<body><main class="login-shell"><section class="panel login-panel"><p class="eyebrow">Erlebnishof Auszeit</p><h1>Redaktionsbereich</h1>
+<?php if ($errors !== []): ?><div class="error-summary" role="alert"><h2>Anmeldung fehlgeschlagen</h2><p><?= hof_h($errors[0]) ?></p></div><?php endif; ?>
+<form method="post" autocomplete="on"><input type="hidden" name="action" value="login"><label>Benutzername<input name="username" autocomplete="username" required maxlength="200"></label><label>Passwort<input type="password" name="password" autocomplete="current-password" required maxlength="4096"></label><button type="submit">Anmelden</button></form>
+</section></main></body></html>
+<?php exit;
+}
 
-        /* Fullscreen overlay */
-        .overlay {
-            position: fixed;
-            inset: 0;
-            background: rgba(15,23,42,0.85);
-            display: none;
-            align-items: center;
-            justify-content: center;
-            z-index: 50;
+$csrf = $security->csrfToken();
+if (isset($_SESSION['notice']) && is_string($_SESSION['notice'])) {
+    $notice = $_SESSION['notice'];
+    unset($_SESSION['notice']);
+}
+
+try {
+    $document = hof_read_document_or_fail($repository);
+    if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST') {
+        $contentLength = filter_var($_SERVER['CONTENT_LENGTH'] ?? null, FILTER_VALIDATE_INT);
+        $postLimit = Preflight::iniBytes((string)ini_get('post_max_size'));
+        if (is_int($contentLength) && $contentLength > 0 && $contentLength > $postLimit) {
+            throw new ValidationException(['Die Anfrage war größer als das serverseitige POST-Limit. Das Bild wurde nicht gespeichert.']);
         }
-        .overlay img {
-            max-width: 95vw;
-            max-height: 95vh;
-            border-radius: 0.75rem;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.5);
+        $security->assertPostWithCsrf($_POST['csrf'] ?? null);
+        $action = hof_post('action');
+        if ($action === 'logout') {
+            $security->logout();
+            hof_redirect('index.php');
         }
-        .overlay-close {
-            position: fixed;
-            top: 10px;
-            right: 18px;
-            color: #e5e7eb;
-            font-size: 2rem;
-            cursor: pointer;
+        if (!Preflight::allPassed($config)) {
+            throw new ValidationException(['Änderungen sind gesperrt, bis alle Server-Prüfungen erfolgreich sind.']);
         }
-        .overlay-hint {
-            position: fixed;
-            bottom: 10px;
-            left: 50%;
-            transform: translateX(-50%);
-            color: #e5e7eb;
-            font-size: 0.8rem;
-            text-align: center;
-        }
-    </style>
-</head>
-<body>
-<header>
-    <h1>News Admin – Erlebnishof Auszeit</h1>
-    <a class="logout" href="?logout"><?= htmlspecialchars(t('Logout'), ENT_QUOTES) ?></a>
-</header>
-<main>
-    <div class="card">
-        <h2><?= htmlspecialchars(t('Upload new image'), ENT_QUOTES) ?></h2>
-        <form id="uploadForm" method="post" enctype="multipart/form-data" class="upload-form">
-            <input type="hidden" name="action" value="upload">
-            <input id="imageInput" type="file" name="image" accept="image/*" required>
-            <br>
-            <!-- always enabled; clicking it will open picker if nothing selected -->
-            <button id="uploadBtn" type="submit"><?= htmlspecialchars(t('Upload'), ENT_QUOTES) ?></button>
-        </form>
-    </div>
-
-    <div class="card">
-        <h2><?= t('Images in <code>news</code> folder') ?></h2>
-        <div class="status">
-            <?php if ($message): ?>
-                <span class="ok"><?= htmlspecialchars($message, ENT_QUOTES) ?></span>
-            <?php endif; ?>
-            <?php if ($errorMsg): ?>
-                <span class="err"><?= htmlspecialchars($errorMsg, ENT_QUOTES) ?></span>
-            <?php endif; ?>
-        </div>
-
-        <?php if (empty($imagesOnDisk)): ?>
-            <p><?= t('No images found in the <code>news</code> folder.') ?></p>
-        <?php else: ?>
-            <form method="post">
-                <div class="images-grid">
-                    <?php foreach ($displayImages as $file): ?>
-                        <?php
-                        $isInManifest = in_manifest($file, $manifestImages);
-                        // Serve images via local proxy so the browser loads them from /admin
-                        // even when the real images live outside the document root.
-                        $src = 'img.php?file=' . rawurlencode($file);
-                        ?>
-                        <div class="img-card" draggable="true" tabindex="0">
-                            <div class="thumb-wrapper" data-full="<?= htmlspecialchars($src, ENT_QUOTES) ?>">
-                                <img src="<?= htmlspecialchars($src, ENT_QUOTES) ?>" alt="">
-                            </div>
-                            <div class="filename"><?= htmlspecialchars($file, ENT_QUOTES) ?></div>
-                            <div class="move-controls">
-                                <button type="button" class="move-btn" data-direction="left" aria-label="<?= htmlspecialchars(t('Move left'), ENT_QUOTES) ?>">&larr;</button>
-                                <button type="button" class="move-btn" data-direction="right" aria-label="<?= htmlspecialchars(t('Move right'), ENT_QUOTES) ?>">&rarr;</button>
-                            </div>
-                            <div class="manifest-row">
-                                <label>
-                                    <input
-                                        type="checkbox"
-                                        name="in_manifest[]"
-                                        value="<?= htmlspecialchars($file, ENT_QUOTES) ?>"
-                                        <?= $isInManifest ? 'checked' : '' ?>
-                                    >
-                                    <?= htmlspecialchars(t('In manifest.json'), ENT_QUOTES) ?>
-                                </label>
-                                <button type="submit" class="delete-btn"
-                                        name="delete_file"
-                                        value="<?= htmlspecialchars($file, ENT_QUOTES) ?>"
-                                        onclick="return confirm('<?= htmlspecialchars(t('Delete %s?', $file), ENT_QUOTES) ?>');">
-                                    <?= htmlspecialchars(t('Delete'), ENT_QUOTES) ?>
-                                </button>
-                            </div>
-                        </div>
-                    <?php endforeach; ?>
-                </div>
-                <button type="submit" class="save-btn" name="save_manifest" value="1"><?= htmlspecialchars(t('Save'), ENT_QUOTES) ?></button>
-            </form>
-        <?php endif; ?>
-    </div>
-</main>
-
-<!-- Fullscreen overlay -->
-<div class="overlay" id="overlay">
-    <div class="overlay-close" id="overlayClose">&times;</div>
-    <img id="overlayImg" src="" alt="">
-    <div class="overlay-hint"><?= htmlspecialchars(t('Click or tap anywhere to close'), ENT_QUOTES) ?></div>
-</div>
-
-<script>
-    // Fullscreen preview on click or long-press
-    const overlay = document.getElementById('overlay');
-    const overlayImg = document.getElementById('overlayImg');
-    const overlayClose = document.getElementById('overlayClose');
-
-    function openOverlay(src) {
-        overlayImg.src = src;
-        overlay.style.display = 'flex';
-    }
-
-    function closeOverlay() {
-        overlay.style.display = 'none';
-        overlayImg.src = '';
-    }
-
-    overlay.addEventListener('click', closeOverlay);
-    overlayClose.addEventListener('click', closeOverlay);
-
-    const thumbs = document.querySelectorAll('.thumb-wrapper');
-    thumbs.forEach(t => {
-        const src = t.getAttribute('data-full');
-        let pressTimer;
-
-        // Click = open
-        t.addEventListener('click', () => openOverlay(src));
-
-        // Long-press (touch)
-        t.addEventListener('touchstart', (e) => {
-            pressTimer = setTimeout(() => openOverlay(src), 400);
-        }, {passive: true});
-        t.addEventListener('touchend', () => clearTimeout(pressTimer));
-        t.addEventListener('touchmove', () => clearTimeout(pressTimer));
-
-        // Long-press (mouse)
-        t.addEventListener('mousedown', () => {
-            pressTimer = setTimeout(() => openOverlay(src), 400);
-        });
-        t.addEventListener('mouseup', () => clearTimeout(pressTimer));
-        t.addEventListener('mouseleave', () => clearTimeout(pressTimer));
-    });
-
-    // --- Open file picker when upload clicked and no file selected ---
-    (function () {
-        const fileInput = document.getElementById('imageInput');
-        const uploadBtn = document.getElementById('uploadBtn');
-        const uploadForm = document.getElementById('uploadForm');
-        if (!fileInput || !uploadBtn || !uploadForm) return;
-
-        // If user clicks Upload but no file chosen, open the file picker instead of submitting.
-        uploadBtn.addEventListener('click', function (e) {
-            if (!(fileInput.files && fileInput.files.length > 0)) {
-                e.preventDefault(); // prevent form submit
-                // Open native file picker
-                fileInput.click();
-            }
-            // if a file is selected, allow normal submit
-        });
-
-        // Optional: after user selects a file, you can auto-submit the form.
-        // Uncomment the following line if you want to auto-submit immediately after selection:
-        // fileInput.addEventListener('change', () => { if (fileInput.files.length) uploadForm.submit(); });
-    })();
-
-    // --- Drag-and-drop reordering of cards and checkbox behavior ---
-    const grid = document.querySelector('.images-grid');
-    if (grid) {
-        // Helper: is a card selected (its checkbox checked)?
-        const isCardSelected = (card) => !!card?.querySelector('.manifest-row input[type="checkbox"]').checked;
-
-        // Helper: find previous/next selected sibling card
-        const findPrevSelected = (card) => {
-            let p = card.previousElementSibling;
-            while (p) {
-                if (isCardSelected(p)) return p;
-                p = p.previousElementSibling;
-            }
-            return null;
-        };
-        const findNextSelected = (card) => {
-            let n = card.nextElementSibling;
-            while (n) {
-                if (isCardSelected(n)) return n;
-                n = n.nextElementSibling;
-            }
-            return null;
-        };
-
-        grid.addEventListener('dragstart', (e) => {
-            const card = e.target.closest('.img-card');
-            if (!card) return;
-            card.classList.add('dragging');
-            if (e.dataTransfer) {
-                e.dataTransfer.effectAllowed = 'move';
-                e.dataTransfer.setData('text/plain', '');
-            }
-        });
-
-        grid.addEventListener('dragend', (e) => {
-            const card = e.target.closest('.img-card');
-            if (!card) return;
-            card.classList.remove('dragging');
-        });
-
-        grid.addEventListener('dragover', (e) => {
-            e.preventDefault();
-            const dragging = grid.querySelector('.img-card.dragging');
-            if (!dragging) return;
-            const targetCard = e.target.closest('.img-card');
-            if (!targetCard || targetCard === dragging) return;
-            const rect = targetCard.getBoundingClientRect();
-            const before = e.clientY < rect.top + rect.height / 2;
-            if (before) {
-                grid.insertBefore(dragging, targetCard);
-            } else {
-                grid.insertBefore(dragging, targetCard.nextElementSibling);
-            }
-        });
-
-        // Enable/disable move buttons based on selection
-        const refreshMoveButtons = () => {
-            grid.querySelectorAll('.img-card').forEach(card => {
-                const selected = isCardSelected(card);
-                card.querySelectorAll('.move-btn').forEach(btn => {
-                    btn.disabled = !selected;
-                    btn.setAttribute('aria-disabled', String(!selected));
-                    btn.tabIndex = selected ? 0 : -1;
-                });
-            });
-        };
-
-        // Initial state
-        refreshMoveButtons();
-
-        grid.querySelectorAll('.move-btn').forEach(btn => {
-            btn.addEventListener('click', () => {
-                const card = btn.closest('.img-card');
-                if (!card) return;
-                // Only allow moving selected cards
-                if (!isCardSelected(card)) return;
-                const direction = btn.dataset.direction;
-                if (direction === 'left') {
-                    const prev = findPrevSelected(card);
-                    if (prev) grid.insertBefore(card, prev);
-                } else if (direction === 'right') {
-                    const next = findNextSelected(card);
-                    if (next) grid.insertBefore(card, next.nextElementSibling);
-                }
-            });
-        });
-
-        // When a checkbox is checked, move its card to the end of the selected group
-        grid.querySelectorAll('.manifest-row input[type="checkbox"]').forEach(cb => {
-            cb.addEventListener('change', () => {
-                const card = cb.closest('.img-card');
-                if (!card) return;
-
-                if (cb.checked) {
-                    const cards = Array.from(grid.querySelectorAll('.img-card'));
-                    const lastSelected = cards
-                        .filter(c => c.querySelector('.manifest-row input[type="checkbox"]').checked && c !== card)
-                        .pop();
-
-                    if (lastSelected) {
-                        lastSelected.after(card);
-                    } else {
-                        grid.prepend(card);
+        $result = null;
+        $cleanupWarning = false;
+        $redirect = 'index.php';
+        if ($action === 'save_entry') {
+            $entry = hof_posted_entry($document, $preservedEntry);
+            $result = $repository->mutate(hof_expected_revision(), static function (array $candidate) use ($entry): array {
+                $found = false;
+                foreach ($candidate['entries'] as $position => $existing) {
+                    if (($existing['id'] ?? null) === $entry['id']) {
+                        $candidate['entries'][$position] = $entry;
+                        $found = true;
+                        break;
                     }
                 }
-                // Update move buttons availability
-                refreshMoveButtons();
-                // If unchecked, card remains where it is; PHP will drop it from manifest on Save.
+                if (!$found) {
+                    $candidate['entries'][] = $entry;
+                }
+                return $candidate;
             });
-        });
-
-        // Keyboard support: allow Left/Right to move only selected (focused) card among selected group
-        grid.addEventListener('keydown', (e) => {
-            if (e.key !== 'ArrowLeft' && e.key !== 'ArrowRight') return;
-            const focused = document.activeElement?.closest?.('.img-card');
-            if (!focused || !grid.contains(focused)) return;
-            if (!isCardSelected(focused)) return; // only for selected
-            e.preventDefault();
-            if (e.key === 'ArrowLeft') {
-                const prev = findPrevSelected(focused);
-                if (prev) grid.insertBefore(focused, prev);
-            } else if (e.key === 'ArrowRight') {
-                const next = findNextSelected(focused);
-                if (next) grid.insertBefore(focused, next.nextElementSibling);
+            $redirect = 'index.php?edit_entry=' . rawurlencode((string)$entry['id']) . '#eintrag-editor';
+        } elseif ($action === 'entry_intent') {
+            $id = hof_post('id');
+            $intent = hof_post('intent');
+            if (!preg_match('/\A[a-f0-9]{32}\z/', $id) || !in_array($intent, ['draft', 'approved', 'archived', 'trashed'], true)) {
+                throw new ValidationException(['Ungültige Eintragsaktion.']);
             }
-        });
+            $result = $repository->mutate(hof_expected_revision(), static function (array $candidate) use ($id, $intent): array {
+                foreach ($candidate['entries'] as $position => $entry) {
+                    if (($entry['id'] ?? null) !== $id) {
+                        continue;
+                    }
+                    if ($intent === 'approved' && ($entry['intent'] ?? null) !== 'approved') {
+                        $candidate['entries'][$position]['approvedAt'] = Support::now()->format(DateTimeInterface::RFC3339);
+                    }
+                    $candidate['entries'][$position]['intent'] = $intent;
+                    $candidate['entries'][$position]['updatedAt'] = Support::now()->format(DateTimeInterface::RFC3339);
+                    return $candidate;
+                }
+                throw new ValidationException(['Der Eintrag wurde nicht gefunden.']);
+            });
+            $redirect = 'index.php#eintraege';
+        } elseif ($action === 'save_exception') {
+            $preservedException = hof_posted_exception($document);
+            $exception = $preservedException;
+            $result = $repository->mutate(hof_expected_revision(), static function (array $candidate) use ($exception): array {
+                $found = false;
+                foreach ($candidate['exceptions'] as $position => $existing) {
+                    if (($existing['id'] ?? null) === $exception['id']) {
+                        $candidate['exceptions'][$position] = $exception;
+                        $found = true;
+                        break;
+                    }
+                }
+                if (!$found) {
+                    $candidate['exceptions'][] = $exception;
+                }
+                return $candidate;
+            });
+            $redirect = 'index.php?edit_exception=' . rawurlencode((string)$exception['id']) . '#ausnahme-editor';
+        } elseif ($action === 'exception_intent') {
+            $id = hof_post('id');
+            $intent = hof_post('intent');
+            if (!preg_match('/\A[a-f0-9]{32}\z/', $id) || !in_array($intent, ['draft', 'approved', 'archived', 'trashed'], true)) {
+                throw new ValidationException(['Ungültige Ausnahmeaktion.']);
+            }
+            $result = $repository->mutate(hof_expected_revision(), static function (array $candidate) use ($id, $intent): array {
+                foreach ($candidate['exceptions'] as $position => $exception) {
+                    if (($exception['id'] ?? null) === $id) {
+                        $candidate['exceptions'][$position]['intent'] = $intent;
+                        $candidate['exceptions'][$position]['updatedAt'] = Support::now()->format(DateTimeInterface::RFC3339);
+                        return $candidate;
+                    }
+                }
+                throw new ValidationException(['Die Ausnahme wurde nicht gefunden.']);
+            });
+            $redirect = 'index.php#ausnahmen';
+        } elseif ($action === 'save_theme') {
+            $mode = hof_post('themeMode');
+            if (!in_array($mode, ['automatic', 'off', 'spring', 'summer', 'autumn', 'christmas', 'winter'], true)) {
+                throw new ValidationException(['Ungültiger Themenmodus.']);
+            }
+            $themes = ['mode' => $mode, 'windows' => [
+                'spring' => hof_post('spring') === '' ? null : hof_post('spring'),
+                'summer' => hof_post('summer') === '' ? null : hof_post('summer'),
+                'autumn' => hof_post('autumn') === '' ? null : hof_post('autumn'),
+            ]];
+            $result = $repository->mutate(hof_expected_revision(), static function (array $candidate) use ($themes): array {
+                $candidate['themes'] = $themes;
+                return $candidate;
+            });
+            $redirect = 'index.php#themen';
+        } elseif ($action === 'upload_asset') {
+            $asset = $images->createFromUpload(is_array($_FILES['image'] ?? null) ? $_FILES['image'] : []);
+            try {
+                $result = $repository->mutate(hof_expected_revision(), static function (array $candidate) use ($asset): array {
+                    $candidate['assets'][] = $asset;
+                    return $candidate;
+                });
+            } catch (Throwable $error) {
+                $images->discardCreated($asset);
+                throw $error;
+            }
+            $redirect = 'index.php#bilder';
+        } elseif ($action === 'asset_intent') {
+            $id = hof_post('id');
+            $targetStatus = hof_post('status');
+            $asset = hof_find($document['assets'], $id);
+            if ($asset === null || !in_array($targetStatus, ['active', 'trashed'], true) || $targetStatus === ($asset['status'] ?? null)) {
+                throw new ValidationException(['Ungültige Bildaktion.']);
+            }
+            if ($targetStatus === 'trashed') {
+                foreach ($document['entries'] as $entry) {
+                    if (($entry['imageId'] ?? null) === $id) {
+                        throw new ValidationException(['Das Bild wird noch von einem Eintrag verwendet und kann nicht gelöscht werden.']);
+                    }
+                }
+            }
+            $expectedRevision = hof_expected_revision();
+            [$result, $cleanupWarning] = $images->withStatusLock(static function () use ($images, $repository, $asset, $targetStatus, $expectedRevision, $id): array {
+                $fileTransaction = $images->stageStatusChange($asset, $targetStatus === 'trashed');
+                try {
+                    $result = $repository->mutate($expectedRevision, static function (array $candidate) use ($id, $targetStatus): array {
+                        foreach ($candidate['assets'] as $position => $existing) {
+                            if (($existing['id'] ?? null) === $id) {
+                                $candidate['assets'][$position]['status'] = $targetStatus;
+                                $candidate['assets'][$position]['trashedAt'] = $targetStatus === 'trashed' ? Support::now()->format(DateTimeInterface::RFC3339) : null;
+                                return $candidate;
+                            }
+                        }
+                        throw new ValidationException(['Das Bild wurde nicht gefunden.']);
+                    });
+                } catch (Throwable $error) {
+                    $images->rollbackStatusChange($fileTransaction);
+                    throw $error;
+                }
+                return [$result, !$images->commitStatusChange($fileTransaction)];
+            });
+            $redirect = 'index.php#bilder';
+        } elseif ($action === 'restore_backup') {
+            $result = $repository->restoreBackup(hof_post('backup'), hof_expected_revision());
+            $redirect = 'index.php#wiederherstellung';
+        } else {
+            throw new ValidationException(['Unbekannte Aktion.']);
+        }
+        $_SESSION['notice'] = is_array($result) && ($result['publicationComplete'] ?? false)
+            ? 'Änderung gespeichert und veröffentlicht.'
+            : 'Änderung gespeichert. Die Veröffentlichung ist unvollständig und wird automatisch erneut versucht.';
+        if ($cleanupWarning) {
+            $_SESSION['notice'] .= ' Eine alte Bildkopie konnte nicht entfernt werden; der aktive Stand bleibt dennoch vollständig.';
+        }
+        hof_redirect($redirect);
     }
-</script>
-</body>
-</html>
+} catch (ValidationException $error) {
+    $errors = $error->errors;
+    $document = hof_read_document_or_fail($repository);
+} catch (ConflictException $error) {
+    $errors = [$error->getMessage()];
+    $document = hof_read_document_or_fail($repository);
+} catch (AuthenticationException) {
+    $errors = ['Die Sicherheitsprüfung ist abgelaufen. Es wurde nichts geändert; bitte die Seite neu laden.'];
+    $document = hof_read_document_or_fail($repository);
+} catch (Throwable) {
+    $errors = ['Die Aktion ist sicher fehlgeschlagen. Der vorherige gültige Stand bleibt erhalten.'];
+    $document = hof_read_document_or_fail($repository);
+}
+
+$revision = (int)$document['writeRevision'];
+$now = Support::now();
+$entryId = is_string($_GET['edit_entry'] ?? null) ? $_GET['edit_entry'] : '';
+$entry = $preservedEntry ?? hof_find($document['entries'], $entryId) ?? [
+    'id' => '', 'type' => 'news', 'intent' => 'draft', 'title' => '', 'body' => '', 'imageId' => null,
+    'imageAlt' => '', 'displayStart' => null, 'expiry' => null, 'eventStart' => null, 'eventEnd' => null,
+];
+$exceptionId = is_string($_GET['edit_exception'] ?? null) ? $_GET['edit_exception'] : '';
+$exception = $preservedException ?? hof_find($document['exceptions'], $exceptionId) ?? [
+    'id' => '', 'intent' => 'draft', 'target' => 'both', 'startDate' => '', 'endDate' => '', 'closed' => true,
+    'opens' => '09:00', 'closes' => '18:00', 'note' => '',
+];
+$checks = Preflight::checks($config);
+$backups = hof_list_backups_or_fail($repository);
+$activeAssets = array_values(array_filter($document['assets'], static fn(mixed $asset): bool => is_array($asset) && ($asset['status'] ?? null) === 'active'));
+$allAssets = $document['assets'];
+usort($allAssets, static fn(array $a, array $b): int => (string)$b['createdAt'] <=> (string)$a['createdAt']);
+$assetPageSize = 20;
+$assetPages = max(1, (int)ceil(count($allAssets) / $assetPageSize));
+$assetPage = max(1, min($assetPages, filter_input(INPUT_GET, 'asset_page', FILTER_VALIDATE_INT) ?: 1));
+$visibleAssets = array_slice($allAssets, ($assetPage - 1) * $assetPageSize, $assetPageSize);
+?><!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Redaktionsbereich · Erlebnishof Auszeit</title>
+  <link rel="stylesheet" href="admin.css">
+  <script src="admin.js" defer></script>
+</head>
+<body>
+<header class="topbar"><div><p class="eyebrow">Erlebnishof Auszeit</p><h1>Redaktionsbereich</h1><p>Bearbeitungsstand <?= $revision ?></p></div>
+<form method="post"><input type="hidden" name="action" value="logout"><input type="hidden" name="csrf" value="<?= hof_h($csrf) ?>"><button class="secondary" type="submit">Abmelden</button></form></header>
+<nav class="section-nav" aria-label="Bereiche"><a href="#eintraege">Aktuelles</a><a href="#ausnahmen">Öffnungszeiten</a><a href="#themen">Themen</a><a href="#bilder">Bilder</a><a href="#system">System</a></nav>
+<main class="admin-shell">
+<?php if ($notice !== null): ?><div class="notice" role="status"><?= hof_h($notice) ?></div><?php endif; ?>
+<?php if ($errors !== []): ?><section id="error-summary" class="error-summary" role="alert" tabindex="-1"><h2>Bitte prüfen</h2><ul><?php foreach ($errors as $error): ?><li><?= hof_h($error) ?></li><?php endforeach; ?></ul><p>Bei einem veralteten Stand: Text kopieren, Seite neu laden und Änderungen abgleichen.</p></section><?php endif; ?>
+
+<section id="eintraege" class="panel"><div class="section-heading"><div><p class="eyebrow">Neuigkeiten und Termine</p><h2>Aktuelles</h2></div><a class="button secondary" href="index.php#eintrag-editor">Neuer Eintrag</a></div>
+<?php if ($document['entries'] === []): ?><p>Noch keine Einträge.</p><?php else: ?><div class="item-list">
+<?php foreach ($document['entries'] as $item): ?><article class="item-row"><div><strong><?= hof_h($item['title'] !== '' ? $item['title'] : 'Ohne Titel') ?></strong><span><?= hof_h($item['type'] === 'event' ? 'Termin' : 'Neuigkeit') ?> · <?= hof_h(Domain::derivedEntryState($item, $now)) ?></span></div><div class="row-actions"><a class="button secondary" href="?edit_entry=<?= hof_h($item['id']) ?>#eintrag-editor">Bearbeiten</a>
+<form method="post"><input type="hidden" name="action" value="entry_intent"><input type="hidden" name="csrf" value="<?= hof_h($csrf) ?>"><input type="hidden" name="expectedRevision" value="<?= $revision ?>"><input type="hidden" name="id" value="<?= hof_h($item['id']) ?>">
+<?php if ($item['intent'] === 'trashed'): ?><button name="intent" value="draft" class="secondary">Wiederherstellen</button><?php elseif ($item['intent'] === 'archived'): ?><button name="intent" value="approved" class="secondary">Erneut freigeben</button><button name="intent" value="trashed" class="danger" data-confirm="In den Papierkorb verschieben?">Papierkorb</button><?php else: ?><button name="intent" value="archived" class="secondary">Archivieren</button><button name="intent" value="trashed" class="danger" data-confirm="In den Papierkorb verschieben?">Papierkorb</button><?php endif; ?>
+</form></div></article><?php endforeach; ?></div><?php endif; ?>
+</section>
+
+<section id="eintrag-editor" class="panel"><p class="eyebrow">Bearbeiten</p><h2><?= $entry['id'] === '' ? 'Neuer Eintrag' : 'Eintrag bearbeiten' ?></h2>
+<form method="post" class="editor-form" data-dirty-form><input type="hidden" name="action" value="save_entry"><input type="hidden" name="csrf" value="<?= hof_h($csrf) ?>"><input type="hidden" name="expectedRevision" value="<?= $revision ?>"><input type="hidden" name="id" value="<?= hof_h($entry['id']) ?>">
+<div class="form-grid"><label>Art<select name="type" data-entry-type><option value="news"<?= $entry['type'] === 'news' ? ' selected' : '' ?>>Neuigkeit</option><option value="event"<?= $entry['type'] === 'event' ? ' selected' : '' ?>>Öffentlicher Termin</option></select></label><label>Redaktionelle Absicht<select name="intent" data-entry-intent><option value="draft"<?= $entry['intent'] === 'draft' ? ' selected' : '' ?>>Entwurf</option><option value="approved"<?= $entry['intent'] === 'approved' ? ' selected' : '' ?>>Freigegeben</option><option value="archived"<?= $entry['intent'] === 'archived' ? ' selected' : '' ?>>Archiviert</option><option value="trashed"<?= $entry['intent'] === 'trashed' ? ' selected' : '' ?>>Papierkorb</option></select></label></div>
+<label>Titel <span class="hint">Für Entwürfe optional; vor Freigabe erforderlich. Maximal 120 Zeichen.</span><input name="title" maxlength="120" value="<?= hof_h($entry['title']) ?>" data-preview-title-source></label>
+<label>Text <span class="hint">Für Entwürfe optional; vor Freigabe erforderlich. Nur Text, maximal 3.000 Zeichen.</span><textarea name="body" maxlength="3000" rows="8" data-preview-body-source><?= hof_h($entry['body']) ?></textarea></label>
+<div class="form-grid"><label>Sichtbar ab <span class="hint">optional</span><input type="datetime-local" name="displayStart" value="<?= hof_h(hof_datetime_local($entry['displayStart'])) ?>"></label><label data-news-field>Ablauf <span class="hint">optional, exklusiv</span><input type="datetime-local" name="expiry" value="<?= hof_h(hof_datetime_local($entry['expiry'] ?? null)) ?>"></label><label data-event-field>Terminbeginn<input type="datetime-local" name="eventStart" value="<?= hof_h(hof_datetime_local($entry['eventStart'] ?? null)) ?>"></label><label data-event-field>Terminende <span class="hint">optional; sonst nächste lokale Mitternacht</span><input type="datetime-local" name="eventEnd" value="<?= hof_h(hof_datetime_local($entry['eventEnd'] ?? null)) ?>"></label></div>
+<div class="form-grid"><label>Beitragsbild<select name="imageId" data-entry-image><option value="">Kein Bild</option><?php foreach ($activeAssets as $asset): ?><option value="<?= hof_h($asset['id']) ?>"<?= $entry['imageId'] === $asset['id'] ? ' selected' : '' ?>>Bild <?= hof_h(substr($asset['id'], 0, 8)) ?> · <?= (int)$asset['width'] ?>×<?= (int)$asset['height'] ?></option><?php endforeach; ?></select></label><label>Bildbeschreibung <span class="hint">für Gäste mit Screenreader</span><input name="imageAlt" maxlength="300" value="<?= hof_h($entry['imageAlt']) ?>" data-entry-image-alt></label></div>
+<button type="submit">Eintrag speichern</button></form>
+<aside class="preview" aria-label="Sichere Textvorschau"><p class="eyebrow">Mobile Karten-Vorschau</p><h3 data-preview-title><?= hof_h($entry['title'] !== '' ? $entry['title'] : 'Titel') ?></h3><p data-preview-body><?= hof_h($entry['body'] !== '' ? $entry['body'] : 'Der Text erscheint hier als reiner Text.') ?></p></aside>
+</section>
+
+<section id="ausnahmen" class="panel"><div class="section-heading"><div><p class="eyebrow">Abweichende Zeiten</p><h2>Öffnungs-Ausnahmen</h2></div><a class="button secondary" href="index.php#ausnahme-editor">Neue Ausnahme</a></div>
+<?php if ($document['exceptions'] === []): ?><p>Noch keine Ausnahmen.</p><?php else: ?><div class="item-list"><?php foreach ($document['exceptions'] as $item): ?><article class="item-row"><div><strong><?= hof_h($item['startDate']) ?> bis <?= hof_h($item['endDate']) ?></strong><span><?= hof_h(['cafe' => 'Hofcafé', 'shop' => 'Hofladen', 'both' => 'Beide'][$item['target']] ?? '') ?> · <?= hof_h($item['intent']) ?> · <?= $item['closed'] ? 'geschlossen' : hof_h($item['opens'] . '–' . $item['closes']) ?></span></div><div class="row-actions"><a class="button secondary" href="?edit_exception=<?= hof_h($item['id']) ?>#ausnahme-editor">Bearbeiten</a><form method="post"><input type="hidden" name="action" value="exception_intent"><input type="hidden" name="csrf" value="<?= hof_h($csrf) ?>"><input type="hidden" name="expectedRevision" value="<?= $revision ?>"><input type="hidden" name="id" value="<?= hof_h($item['id']) ?>"><?php if ($item['intent'] === 'trashed'): ?><button name="intent" value="draft" class="secondary">Wiederherstellen</button><?php else: ?><button name="intent" value="archived" class="secondary">Archivieren</button><button name="intent" value="trashed" class="danger" data-confirm="In den Papierkorb verschieben?">Papierkorb</button><?php endif; ?></form></div></article><?php endforeach; ?></div><?php endif; ?>
+</section>
+
+<section id="ausnahme-editor" class="panel"><p class="eyebrow">Bearbeiten</p><h2><?= $exception['id'] === '' ? 'Neue Ausnahme' : 'Ausnahme bearbeiten' ?></h2><form method="post" class="editor-form" data-dirty-form><input type="hidden" name="action" value="save_exception"><input type="hidden" name="csrf" value="<?= hof_h($csrf) ?>"><input type="hidden" name="expectedRevision" value="<?= $revision ?>"><input type="hidden" name="id" value="<?= hof_h($exception['id']) ?>">
+<div class="form-grid"><label>Ziel<select name="target"><option value="cafe"<?= $exception['target'] === 'cafe' ? ' selected' : '' ?>>Hofcafé</option><option value="shop"<?= $exception['target'] === 'shop' ? ' selected' : '' ?>>Hofladen</option><option value="both"<?= $exception['target'] === 'both' ? ' selected' : '' ?>>Beide</option></select></label><label>Absicht<select name="intent"><option value="draft"<?= $exception['intent'] === 'draft' ? ' selected' : '' ?>>Entwurf</option><option value="approved"<?= $exception['intent'] === 'approved' ? ' selected' : '' ?>>Freigegeben</option><option value="archived"<?= $exception['intent'] === 'archived' ? ' selected' : '' ?>>Archiviert</option><option value="trashed"<?= $exception['intent'] === 'trashed' ? ' selected' : '' ?>>Papierkorb</option></select></label><label>Erster Tag<input type="date" name="startDate" value="<?= hof_h($exception['startDate']) ?>" required></label><label>Letzter Tag <span class="hint">einschließlich</span><input type="date" name="endDate" value="<?= hof_h($exception['endDate']) ?>" required></label></div>
+<fieldset><legend>Regel</legend><label class="inline-choice"><input type="radio" name="closed" value="1"<?= $exception['closed'] ? ' checked' : '' ?> data-closed-choice> Ganztägig geschlossen</label><label class="inline-choice"><input type="radio" name="closed" value="0"<?= !$exception['closed'] ? ' checked' : '' ?> data-closed-choice> Ersatzöffnungszeit</label><div class="form-grid" data-replacement-hours><label>Öffnet<input type="time" name="opens" value="<?= hof_h($exception['opens'] ?? '09:00') ?>"></label><label>Schließt<input type="time" name="closes" value="<?= hof_h($exception['closes'] ?? '18:00') ?>"></label></div></fieldset>
+<label>Hinweis <span class="hint">optional, maximal 120 Zeichen</span><input name="note" maxlength="120" value="<?= hof_h($exception['note']) ?>"></label><button type="submit">Ausnahme speichern</button></form></section>
+
+<section id="themen" class="panel"><p class="eyebrow">Saisonale Gestaltung</p><h2>Themen</h2><?php if ($document['themes']['mode'] !== 'automatic' && $document['themes']['mode'] !== 'off'): ?><div class="warning" role="status">Ein Thema ist derzeit manuell erzwungen.</div><?php endif; ?><form method="post" class="editor-form" data-dirty-form><input type="hidden" name="action" value="save_theme"><input type="hidden" name="csrf" value="<?= hof_h($csrf) ?>"><input type="hidden" name="expectedRevision" value="<?= $revision ?>"><label>Modus<select name="themeMode"><option value="automatic"<?= $document['themes']['mode'] === 'automatic' ? ' selected' : '' ?>>Automatisch</option><option value="off"<?= $document['themes']['mode'] === 'off' ? ' selected' : '' ?>>Aus</option><?php foreach (['spring' => 'Frühling', 'summer' => 'Sommer', 'autumn' => 'Herbst', 'christmas' => 'Weihnachten', 'winter' => 'Winter'] as $value => $label): ?><option value="<?= $value ?>"<?= $document['themes']['mode'] === $value ? ' selected' : '' ?>>Manuell: <?= $label ?></option><?php endforeach; ?></select></label><p class="hint">Weihnachten (1.12.–6.1.) und Winter (7.1.–Ende Februar) sind fest. Jedes bearbeitbare Fenster dauert 14 Tage.</p><div class="form-grid"><?php foreach (['spring' => 'Frühling ab', 'summer' => 'Sommer ab', 'autumn' => 'Herbst ab'] as $name => $label): ?><label><?= $label ?><input type="date" name="<?= $name ?>" value="<?= hof_h($document['themes']['windows'][$name] ?? '') ?>"></label><?php endforeach; ?></div><button type="submit">Themen speichern</button></form></section>
+
+<section id="bilder" class="panel"><p class="eyebrow">Ein Beitragsbild pro Eintrag</p><h2>Bilder</h2><form method="post" enctype="multipart/form-data" class="editor-form"><input type="hidden" name="action" value="upload_asset"><input type="hidden" name="csrf" value="<?= hof_h($csrf) ?>"><input type="hidden" name="expectedRevision" value="<?= $revision ?>"><input type="hidden" name="MAX_FILE_SIZE" value="<?= (int)$config['max_upload_bytes'] ?>"><label>JPEG, PNG oder WebP <span class="hint">maximal <?= hof_h(rtrim(rtrim(number_format((int)$config['max_upload_bytes'] / 1048576, 2, ',', ''), '0'), ',')) ?> MiB, <?= hof_h(number_format((int)$config['max_image_dimension'], 0, ',', '.')) ?> px je Seite und <?= hof_h(number_format((int)$config['max_image_pixels'] / 1000000, 1, ',', '.')) ?> Megapixel</span><input type="file" name="image" accept="image/jpeg,image/png,image/webp" required></label><button type="submit">Bild sicher verarbeiten</button></form>
+<div class="asset-grid"><?php foreach ($visibleAssets as $asset): ?><article class="asset"><img src="img.php?id=<?= hof_h($asset['id']) ?>" alt="Privates Vorschaubild" loading="lazy" width="320" height="240"><p><strong>Bild <?= hof_h(substr($asset['id'], 0, 8)) ?></strong><br><?= (int)$asset['width'] ?>×<?= (int)$asset['height'] ?> · <?= hof_h($asset['status'] === 'active' ? 'Aktiv' : 'Papierkorb') ?></p><form method="post"><input type="hidden" name="action" value="asset_intent"><input type="hidden" name="csrf" value="<?= hof_h($csrf) ?>"><input type="hidden" name="expectedRevision" value="<?= $revision ?>"><input type="hidden" name="id" value="<?= hof_h($asset['id']) ?>"><?php if ($asset['status'] === 'active'): ?><button name="status" value="trashed" class="danger" data-confirm="Unbenutztes Bild in den Papierkorb verschieben?">Papierkorb</button><?php else: ?><button name="status" value="active" class="secondary">Wiederherstellen</button><?php endif; ?></form></article><?php endforeach; ?></div><?php if ($assetPages > 1): ?><nav class="pagination" aria-label="Bilderseiten"><?php if ($assetPage > 1): ?><a class="button secondary" href="?asset_page=<?= $assetPage - 1 ?>#bilder">Zurück</a><?php endif; ?><span>Seite <?= $assetPage ?> von <?= $assetPages ?></span><?php if ($assetPage < $assetPages): ?><a class="button secondary" href="?asset_page=<?= $assetPage + 1 ?>#bilder">Weiter</a><?php endif; ?></nav><?php endif; ?></section>
+
+<section id="system" class="panel"><p class="eyebrow">Nur für Angemeldete</p><h2>Server-Prüfung</h2><ul class="check-list"><?php foreach ($checks as $check): ?><li class="<?= $check['status'] === 'ok' ? 'check-ok' : 'check-error' ?>"><strong><?= $check['status'] === 'ok' ? 'OK' : 'Fehlt' ?>: <?= hof_h($check['label']) ?></strong><span><?= hof_h($check['message']) ?></span></li><?php endforeach; ?></ul></section>
+
+<section id="wiederherstellung" class="panel"><p class="eyebrow">Gemeinsames Betreiberkonto, kein Personen-Audit</p><h2>Wiederherstellung</h2><p>Eine Sicherung ersetzt strukturierte Inhalte, niemals den unabhängigen Neuigkeiten-Revisionszähler. Vorher aktuelle Texte extern sichern.</p><?php if ($backups === []): ?><p>Noch keine Sicherungen.</p><?php else: ?><div class="item-list"><?php foreach (array_slice($backups, 0, 30) as $backup): ?><article class="item-row"><div><strong><?= hof_h($backup['modifiedAt']) ?></strong><span><?= (int)$backup['bytes'] ?> Byte</span></div><form method="post"><input type="hidden" name="action" value="restore_backup"><input type="hidden" name="csrf" value="<?= hof_h($csrf) ?>"><input type="hidden" name="expectedRevision" value="<?= $revision ?>"><input type="hidden" name="backup" value="<?= hof_h($backup['name']) ?>"><button class="danger" data-confirm="Diese Sicherung wirklich als neuen Stand wiederherstellen?">Wiederherstellen</button></form></article><?php endforeach; ?></div><?php endif; ?></section>
+</main>
+<footer><p>Zeiten werden in Europe/Berlin interpretiert. Abgeleitete Zustände werden nicht gespeichert.</p></footer>
+</body></html>

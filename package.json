@@ -1,0 +1,17 @@
+{
+  "name": "erlebnishof-auszeit",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=20.9.0"
+  },
+  "scripts": {
+    "images": "npm --prefix tools run images:build",
+    "images:check": "npm --prefix tools run images:check",
+    "test": "node --test tests/*.test.mjs && npm run verify && npm run images:check",
+    "test:php": "./scripts/test-php.sh",
+    "verify": "node scripts/verify-site.mjs",
+    "release": "./scripts/build-release.sh"
+  }
+}

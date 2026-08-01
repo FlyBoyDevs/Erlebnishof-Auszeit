@@ -1,12 +1,5 @@
 User-agent: *
 Disallow: /admin/
 Disallow: /private/
-Disallow: /tmp/
-Disallow: /cgi-bin/
-
-# Let Google et al fetch your assets normally
-Allow: /img/
-Allow: /styles.css
-Allow: /script.js
 
 Sitemap: https://erlebnishof-auszeit.de/sitemap.xml

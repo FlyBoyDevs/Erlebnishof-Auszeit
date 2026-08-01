@@ -1,0 +1,1813 @@
+{
+  "schemaVersion": 1,
+  "generator": {
+    "name": "tools/optimize-images.mjs",
+    "pipelineVersion": 2,
+    "runtime": {
+      "node": "26.3.0",
+      "platform": "darwin",
+      "architecture": "arm64"
+    },
+    "sharpVersions": {
+      "aom": "3.14.1",
+      "archive": "3.8.8",
+      "cairo": "1.18.4",
+      "cgif": "0.5.3",
+      "exif": "0.6.26",
+      "expat": "2.8.2",
+      "ffi": "3.6.0",
+      "fontconfig": "2.18.1",
+      "freetype": "2.14.3",
+      "fribidi": "1.0.16",
+      "glib": "2.89.1",
+      "harfbuzz": "14.2.1",
+      "heif": "1.23.1",
+      "highway": "1.4.0",
+      "imagequant": "2.4.1",
+      "lcms": "2.19.1",
+      "mozjpeg": "0826579",
+      "pango": "1.58.0",
+      "pixman": "0.46.4",
+      "png": "1.6.58",
+      "proxy-libintl": "0.5",
+      "rsvg": "2.62.90",
+      "sharp": "0.35.3",
+      "tiff": "d01a94b",
+      "uhdr": "1acdbed",
+      "vips": "8.18.3",
+      "webp": "1.6.0",
+      "xml2": "2.15.3",
+      "zlib-ng": "2.3.3"
+    },
+    "widths": [
+      320,
+      640,
+      1024,
+      1600
+    ],
+    "widthMode": "media-config",
+    "mediaConfig": "data/media.json",
+    "mediaConfigHash": "e264246040df9bacadc3de2525808f38be6588430e7f5fff814341703ba78ffb",
+    "formats": [
+      {
+        "format": "avif",
+        "extension": "avif",
+        "options": {
+          "quality": 50,
+          "effort": 3
+        }
+      },
+      {
+        "format": "webp",
+        "extension": "webp",
+        "options": {
+          "quality": 80,
+          "effort": 4,
+          "smartSubsample": true
+        }
+      },
+      {
+        "format": "jpeg",
+        "extension": "jpg",
+        "options": {
+          "quality": 78,
+          "mozjpeg": true,
+          "progressive": true,
+          "chromaSubsampling": "4:2:0"
+        }
+      }
+    ],
+    "recipeHash": "38a14a30fdc4",
+    "maximumVariantBytes": 1500000
+  },
+  "sources": [
+    {
+      "source": {
+        "path": "img/events/events_1.JPG",
+        "identityHash": "d352ece2529f",
+        "contentHash": "8f024df212ed03f9d29c4de3dbaaadbef0e3f257bcae78dd8db32452dccf199d",
+        "bytes": 241705,
+        "format": "jpeg",
+        "width": 1600,
+        "height": 1200,
+        "orientedWidth": 1600,
+        "orientedHeight": 1200,
+        "orientation": 1,
+        "usage": {
+          "id": "feiern-raum",
+          "slots": [
+            "feiern-gallery"
+          ],
+          "alt": "Heller Raum mit gedeckten Tischen für eine Gruppe",
+          "maximumVariantBytes": 300000
+        }
+      },
+      "variants": [
+        {
+          "path": "img/opt/events/events-1-jpg-id352ece2529f-c8f024df212ed03f9d29c-r38a14a30fdc4-320.avif",
+          "format": "avif",
+          "width": 320,
+          "height": 240,
+          "bytes": 5959,
+          "sha256": "2fc5feeef06b767151c708ec76c799662319538846e9f92765fcd87691fca0a0"
+        },
+        {
+          "path": "img/opt/events/events-1-jpg-id352ece2529f-c8f024df212ed03f9d29c-r38a14a30fdc4-320.webp",
+          "format": "webp",
+          "width": 320,
+          "height": 240,
+          "bytes": 10838,
+          "sha256": "2a880569213be74f0c1c833b633bebea901a068d84c3dfea41e3b619ca197b1a"
+        },
+        {
+          "path": "img/opt/events/events-1-jpg-id352ece2529f-c8f024df212ed03f9d29c-r38a14a30fdc4-320.jpg",
+          "format": "jpeg",
+          "width": 320,
+          "height": 240,
+          "bytes": 11403,
+          "sha256": "b5b766e915fc300567444937813276446bb76e16593a745a88e412ed680a9b9b"
+        },
+        {
+          "path": "img/opt/events/events-1-jpg-id352ece2529f-c8f024df212ed03f9d29c-r38a14a30fdc4-640.avif",
+          "format": "avif",
+          "width": 640,
+          "height": 480,
+          "bytes": 17246,
+          "sha256": "cf9ab5c419aee2c3a20e0064a75713fdc347a695a0a2720774e61043197c7cb5"
+        },
+        {
+          "path": "img/opt/events/events-1-jpg-id352ece2529f-c8f024df212ed03f9d29c-r38a14a30fdc4-640.webp",
+          "format": "webp",
+          "width": 640,
+          "height": 480,
+          "bytes": 30684,
+          "sha256": "7710b95a27e254c99b2c1ce4ca1ce81d69d3fb10a285951f23322007b12713ec"
+        },
+        {
+          "path": "img/opt/events/events-1-jpg-id352ece2529f-c8f024df212ed03f9d29c-r38a14a30fdc4-640.jpg",
+          "format": "jpeg",
+          "width": 640,
+          "height": 480,
+          "bytes": 34568,
+          "sha256": "97c3bd33f6ba37c7ae478ee295c15402cb551d2834c033b836ce714369552593"
+        },
+        {
+          "path": "img/opt/events/events-1-jpg-id352ece2529f-c8f024df212ed03f9d29c-r38a14a30fdc4-1024.avif",
+          "format": "avif",
+          "width": 1024,
+          "height": 768,
+          "bytes": 37041,
+          "sha256": "fd45b9f20950315110fda03fd197ea1699bf50cf5c66e588d86cd105c9f43d5d"
+        },
+        {
+          "path": "img/opt/events/events-1-jpg-id352ece2529f-c8f024df212ed03f9d29c-r38a14a30fdc4-1024.webp",
+          "format": "webp",
+          "width": 1024,
+          "height": 768,
+          "bytes": 60792,
+          "sha256": "3d493de383e0ce6504b56c5de4ae330f090f87ee681d236dc83a729f70e2e863"
+        },
+        {
+          "path": "img/opt/events/events-1-jpg-id352ece2529f-c8f024df212ed03f9d29c-r38a14a30fdc4-1024.jpg",
+          "format": "jpeg",
+          "width": 1024,
+          "height": 768,
+          "bytes": 73741,
+          "sha256": "332982a62a8cc7ded09b7f4c4628d6c9b4d7e44835a784fc32e942befc52535b"
+        }
+      ]
+    },
+    {
+      "source": {
+        "path": "img/events/events_2.JPG",
+        "identityHash": "f47f6d8894bc",
+        "contentHash": "60ed1349cd80b766dad160ff11d4c0cc73cf762e1883cf23d4f8dcc8f442f85d",
+        "bytes": 296388,
+        "format": "jpeg",
+        "width": 1600,
+        "height": 1200,
+        "orientedWidth": 1600,
+        "orientedHeight": 1200,
+        "orientation": 1,
+        "usage": {
+          "id": "feiern-buffet",
+          "slots": [
+            "feiern-gallery"
+          ],
+          "alt": "Buntes Buffet für eine Feier",
+          "maximumVariantBytes": 300000
+        }
+      },
+      "variants": [
+        {
+          "path": "img/opt/events/events-2-jpg-if47f6d8894bc-c60ed1349cd80b766dad1-r38a14a30fdc4-320.avif",
+          "format": "avif",
+          "width": 320,
+          "height": 240,
+          "bytes": 7729,
+          "sha256": "6c138b2dbae30a5d977bc308e3db77b1204a7cd0e48c1ec45f8a2bcfa87e5c36"
+        },
+        {
+          "path": "img/opt/events/events-2-jpg-if47f6d8894bc-c60ed1349cd80b766dad1-r38a14a30fdc4-320.webp",
+          "format": "webp",
+          "width": 320,
+          "height": 240,
+          "bytes": 14592,
+          "sha256": "83dcefa6941895977916d5aeb0c5d488ac01f1c0d62e36f4e53590787f09d6f6"
+        },
+        {
+          "path": "img/opt/events/events-2-jpg-if47f6d8894bc-c60ed1349cd80b766dad1-r38a14a30fdc4-320.jpg",
+          "format": "jpeg",
+          "width": 320,
+          "height": 240,
+          "bytes": 13769,
+          "sha256": "86b2dc0f0deef527f961b58c3fe86143bee51457ad27ec9dcde0f799c76b687b"
+        },
+        {
+          "path": "img/opt/events/events-2-jpg-if47f6d8894bc-c60ed1349cd80b766dad1-r38a14a30fdc4-640.avif",
+          "format": "avif",
+          "width": 640,
+          "height": 480,
+          "bytes": 24102,
+          "sha256": "df70f13e206af41e5f195fd6835f27c1e73382f574118f00a4791271d3c7eb86"
+        },
+        {
+          "path": "img/opt/events/events-2-jpg-if47f6d8894bc-c60ed1349cd80b766dad1-r38a14a30fdc4-640.webp",
+          "format": "webp",
+          "width": 640,
+          "height": 480,
+          "bytes": 46032,
+          "sha256": "07e12fbb58b014445970f00c03ad806c6c038b2f849d60b325340648e109a0b0"
+        },
+        {
+          "path": "img/opt/events/events-2-jpg-if47f6d8894bc-c60ed1349cd80b766dad1-r38a14a30fdc4-640.jpg",
+          "format": "jpeg",
+          "width": 640,
+          "height": 480,
+          "bytes": 44802,
+          "sha256": "fc024d80ad40dd6855279c99afb06c18ea943e0bf0b8516ce2f8bc5d76fb8eee"
+        },
+        {
+          "path": "img/opt/events/events-2-jpg-if47f6d8894bc-c60ed1349cd80b766dad1-r38a14a30fdc4-1024.avif",
+          "format": "avif",
+          "width": 1024,
+          "height": 768,
+          "bytes": 49569,
+          "sha256": "256ceaffca3a369314e595be4db3b5746743e8c4d119bdba8381b62c35f4c63f"
+        },
+        {
+          "path": "img/opt/events/events-2-jpg-if47f6d8894bc-c60ed1349cd80b766dad1-r38a14a30fdc4-1024.webp",
+          "format": "webp",
+          "width": 1024,
+          "height": 768,
+          "bytes": 93404,
+          "sha256": "d9cda905d4d8b2cf7d3b6d56169376fa96c9f4b693dd433a290197784033cd50"
+        },
+        {
+          "path": "img/opt/events/events-2-jpg-if47f6d8894bc-c60ed1349cd80b766dad1-r38a14a30fdc4-1024.jpg",
+          "format": "jpeg",
+          "width": 1024,
+          "height": 768,
+          "bytes": 97021,
+          "sha256": "1b62a4a6420c3f08f1714b9fb63d86e11ece6609b0191b41edffc2f2380c0f8b"
+        }
+      ]
+    },
+    {
+      "source": {
+        "path": "img/events/events_3.JPG",
+        "identityHash": "3195b6beb083",
+        "contentHash": "5e878238c126b9675031a966be186892d2a2e574a3f1b1fa39e93ba4c04600e7",
+        "bytes": 186465,
+        "format": "jpeg",
+        "width": 1600,
+        "height": 1200,
+        "orientedWidth": 1600,
+        "orientedHeight": 1200,
+        "orientation": 1,
+        "usage": {
+          "id": "feiern-tisch",
+          "slots": [
+            "feiern-gallery"
+          ],
+          "alt": "Festlich vorbereiteter Tisch im Erlebnishof",
+          "maximumVariantBytes": 300000
+        }
+      },
+      "variants": [
+        {
+          "path": "img/opt/events/events-3-jpg-i3195b6beb083-c5e878238c126b9675031-r38a14a30fdc4-320.avif",
+          "format": "avif",
+          "width": 320,
+          "height": 240,
+          "bytes": 4545,
+          "sha256": "402807c1fb134d76e196ecde7772af7d75139a9e7099765e8584ba1092d83cc0"
+        },
+        {
+          "path": "img/opt/events/events-3-jpg-i3195b6beb083-c5e878238c126b9675031-r38a14a30fdc4-320.webp",
+          "format": "webp",
+          "width": 320,
+          "height": 240,
+          "bytes": 8302,
+          "sha256": "b1fcc54c24b72345967dc6e0755c88d75f23bbb0dd06dd12b39de3bf5d55398f"
+        },
+        {
+          "path": "img/opt/events/events-3-jpg-i3195b6beb083-c5e878238c126b9675031-r38a14a30fdc4-320.jpg",
+          "format": "jpeg",
+          "width": 320,
+          "height": 240,
+          "bytes": 8744,
+          "sha256": "f8bfdb4644bfa791bc04c33da48a285ec94a1a6acad88a470e47e7588ed189f0"
+        },
+        {
+          "path": "img/opt/events/events-3-jpg-i3195b6beb083-c5e878238c126b9675031-r38a14a30fdc4-640.avif",
+          "format": "avif",
+          "width": 640,
+          "height": 480,
+          "bytes": 13795,
+          "sha256": "1a00b0629f00b0352a701aa678a7851f813f2fad402e4b6c621903211c16d7b7"
+        },
+        {
+          "path": "img/opt/events/events-3-jpg-i3195b6beb083-c5e878238c126b9675031-r38a14a30fdc4-640.webp",
+          "format": "webp",
+          "width": 640,
+          "height": 480,
+          "bytes": 24110,
+          "sha256": "187db7929068c14ae94950f2dc6cf4f1036cceabbdf19f0997514bf554c60f8f"
+        },
+        {
+          "path": "img/opt/events/events-3-jpg-i3195b6beb083-c5e878238c126b9675031-r38a14a30fdc4-640.jpg",
+          "format": "jpeg",
+          "width": 640,
+          "height": 480,
+          "bytes": 26363,
+          "sha256": "a023a9c1ed8304d1fbd1b55606052c7fac207b1679f3d5ce3dce1fa2a014154a"
+        },
+        {
+          "path": "img/opt/events/events-3-jpg-i3195b6beb083-c5e878238c126b9675031-r38a14a30fdc4-1024.avif",
+          "format": "avif",
+          "width": 1024,
+          "height": 768,
+          "bytes": 28163,
+          "sha256": "d3517133043f47846aa832e4ea8f9dd95adfd05b93579ade5aa64dcc30f5b04c"
+        },
+        {
+          "path": "img/opt/events/events-3-jpg-i3195b6beb083-c5e878238c126b9675031-r38a14a30fdc4-1024.webp",
+          "format": "webp",
+          "width": 1024,
+          "height": 768,
+          "bytes": 49018,
+          "sha256": "b50df619bdcbf6087a941470e43e9662be78ff05f3d0db273cde182641c00dd3"
+        },
+        {
+          "path": "img/opt/events/events-3-jpg-i3195b6beb083-c5e878238c126b9675031-r38a14a30fdc4-1024.jpg",
+          "format": "jpeg",
+          "width": 1024,
+          "height": 768,
+          "bytes": 56023,
+          "sha256": "6af8eb4d99e47150bb08e136f1a7161cf05ede4b4bdf8257ac7ed6a2993970c4"
+        }
+      ]
+    },
+    {
+      "source": {
+        "path": "img/events/events_4.JPG",
+        "identityHash": "638dfe269548",
+        "contentHash": "9f69c29aa0ed367ba994232e5cff518ee03c748a62113437de4b1335f6cf970e",
+        "bytes": 615191,
+        "format": "jpeg",
+        "width": 1536,
+        "height": 2048,
+        "orientedWidth": 1536,
+        "orientedHeight": 2048,
+        "orientation": 1,
+        "usage": {
+          "id": "feiern-tafel",
+          "slots": [
+            "feiern-gallery"
+          ],
+          "alt": "Liebevoll dekorierte Tafel für eine Familienfeier",
+          "maximumVariantBytes": 300000
+        }
+      },
+      "variants": [
+        {
+          "path": "img/opt/events/events-4-jpg-i638dfe269548-c9f69c29aa0ed367ba994-r38a14a30fdc4-320.avif",
+          "format": "avif",
+          "width": 320,
+          "height": 427,
+          "bytes": 10440,
+          "sha256": "91e6a3a65a44cdac1f0d75719dd7133344edfb2b95a42476a7921e8b911b4866"
+        },
+        {
+          "path": "img/opt/events/events-4-jpg-i638dfe269548-c9f69c29aa0ed367ba994-r38a14a30fdc4-320.webp",
+          "format": "webp",
+          "width": 320,
+          "height": 427,
+          "bytes": 20684,
+          "sha256": "5ed9f6f9d4248b668dd56cea7980a356b09cd3296ac6412a8192fb3e2d968e6b"
+        },
+        {
+          "path": "img/opt/events/events-4-jpg-i638dfe269548-c9f69c29aa0ed367ba994-r38a14a30fdc4-320.jpg",
+          "format": "jpeg",
+          "width": 320,
+          "height": 427,
+          "bytes": 19148,
+          "sha256": "d49cdda25786a463fa5f406c8143db6d38ef365f5e3045ae996cb4aa71d47b4f"
+        },
+        {
+          "path": "img/opt/events/events-4-jpg-i638dfe269548-c9f69c29aa0ed367ba994-r38a14a30fdc4-640.avif",
+          "format": "avif",
+          "width": 640,
+          "height": 853,
+          "bytes": 37229,
+          "sha256": "97bc55bdef2b6badb88adf4379a2ef65af6ea2404260e5770f1d4ac286681fd0"
+        },
+        {
+          "path": "img/opt/events/events-4-jpg-i638dfe269548-c9f69c29aa0ed367ba994-r38a14a30fdc4-640.webp",
+          "format": "webp",
+          "width": 640,
+          "height": 853,
+          "bytes": 78174,
+          "sha256": "7b8201c2ca7c4dc69beadf00ab3b4b12f4616351244d7ade58e7edc7bb13be3b"
+        },
+        {
+          "path": "img/opt/events/events-4-jpg-i638dfe269548-c9f69c29aa0ed367ba994-r38a14a30fdc4-640.jpg",
+          "format": "jpeg",
+          "width": 640,
+          "height": 853,
+          "bytes": 70531,
+          "sha256": "4b4855b821cd8b86ab2136607420203d9b4ade12848cddc84171efa1b5095714"
+        },
+        {
+          "path": "img/opt/events/events-4-jpg-i638dfe269548-c9f69c29aa0ed367ba994-r38a14a30fdc4-1024.avif",
+          "format": "avif",
+          "width": 1024,
+          "height": 1365,
+          "bytes": 89882,
+          "sha256": "6c06d5be7d2e3b42baf46654ab83f70c85355a6b8cff2680633ac9924330100f"
+        },
+        {
+          "path": "img/opt/events/events-4-jpg-i638dfe269548-c9f69c29aa0ed367ba994-r38a14a30fdc4-1024.webp",
+          "format": "webp",
+          "width": 1024,
+          "height": 1365,
+          "bytes": 185258,
+          "sha256": "27869006bcfd2f2ff60d6de4c684506d4e3a4b1073df7fb2987cf9b07636fc32"
+        },
+        {
+          "path": "img/opt/events/events-4-jpg-i638dfe269548-c9f69c29aa0ed367ba994-r38a14a30fdc4-1024.jpg",
+          "format": "jpeg",
+          "width": 1024,
+          "height": 1365,
+          "bytes": 173065,
+          "sha256": "d7e7d5a5879efdd8cc1753c87df4a6d793e1a5b57ef064fb9f711b83589cfd4a"
+        }
+      ]
+    },
+    {
+      "source": {
+        "path": "img/events/events_5.JPG",
+        "identityHash": "59531a3ed81e",
+        "contentHash": "461548b99c196214e944d5a2af593ac034aa3a1ae63e718a32851ded40a3d17a",
+        "bytes": 170142,
+        "format": "jpeg",
+        "width": 1600,
+        "height": 1200,
+        "orientedWidth": 1600,
+        "orientedHeight": 1200,
+        "orientation": 1,
+        "usage": {
+          "id": "feiern-langer-tisch",
+          "slots": [
+            "feiern-gallery"
+          ],
+          "alt": "Langer Tisch für eine gemeinsame Feier",
+          "maximumVariantBytes": 300000
+        }
+      },
+      "variants": [
+        {
+          "path": "img/opt/events/events-5-jpg-i59531a3ed81e-c461548b99c196214e944-r38a14a30fdc4-320.avif",
+          "format": "avif",
+          "width": 320,
+          "height": 240,
+          "bytes": 4971,
+          "sha256": "b49634edf19a7f156e63e03dcb941f40c45f90ecc75b8e66d4fe0c14a45a187e"
+        },
+        {
+          "path": "img/opt/events/events-5-jpg-i59531a3ed81e-c461548b99c196214e944-r38a14a30fdc4-320.webp",
+          "format": "webp",
+          "width": 320,
+          "height": 240,
+          "bytes": 7908,
+          "sha256": "3d5dca193cf5be882896b3c3fb696d6948e24e67a549b34c8266e9b17719c5a9"
+        },
+        {
+          "path": "img/opt/events/events-5-jpg-i59531a3ed81e-c461548b99c196214e944-r38a14a30fdc4-320.jpg",
+          "format": "jpeg",
+          "width": 320,
+          "height": 240,
+          "bytes": 8428,
+          "sha256": "415c663df5757d0cf344288c70554b157f665999ef34955d18dbc4890147646a"
+        },
+        {
+          "path": "img/opt/events/events-5-jpg-i59531a3ed81e-c461548b99c196214e944-r38a14a30fdc4-640.avif",
+          "format": "avif",
+          "width": 640,
+          "height": 480,
+          "bytes": 14132,
+          "sha256": "386d56f587e221e25e82dc424e2faf187a920e86aa38afe1066235a71990cef7"
+        },
+        {
+          "path": "img/opt/events/events-5-jpg-i59531a3ed81e-c461548b99c196214e944-r38a14a30fdc4-640.webp",
+          "format": "webp",
+          "width": 640,
+          "height": 480,
+          "bytes": 23790,
+          "sha256": "c07722ad14822ec24412315fb8fb58b6fc451487e2498dcc1a999e827c6fbde1"
+        },
+        {
+          "path": "img/opt/events/events-5-jpg-i59531a3ed81e-c461548b99c196214e944-r38a14a30fdc4-640.jpg",
+          "format": "jpeg",
+          "width": 640,
+          "height": 480,
+          "bytes": 25102,
+          "sha256": "83ecad829e5c9ebc024a09fd5a63d1850756fbe22fdcb46ab213c07200923049"
+        },
+        {
+          "path": "img/opt/events/events-5-jpg-i59531a3ed81e-c461548b99c196214e944-r38a14a30fdc4-1024.avif",
+          "format": "avif",
+          "width": 1024,
+          "height": 768,
+          "bytes": 27385,
+          "sha256": "c24a5f3ef34643f9b762c4f523bc0aa2ee89ab504c4c8822412372d862476748"
+        },
+        {
+          "path": "img/opt/events/events-5-jpg-i59531a3ed81e-c461548b99c196214e944-r38a14a30fdc4-1024.webp",
+          "format": "webp",
+          "width": 1024,
+          "height": 768,
+          "bytes": 48886,
+          "sha256": "5ba0bc4ed1ef83ca99723743b6469062c66509c92b885ddd5aaeed21c93b7587"
+        },
+        {
+          "path": "img/opt/events/events-5-jpg-i59531a3ed81e-c461548b99c196214e944-r38a14a30fdc4-1024.jpg",
+          "format": "jpeg",
+          "width": 1024,
+          "height": 768,
+          "bytes": 53641,
+          "sha256": "1d6c854204d5dea1e7b368c1c490b2d60eb4b02ccd01db274450129d71bd1e35"
+        }
+      ]
+    },
+    {
+      "source": {
+        "path": "img/hofladen/IMG_3884.jpeg",
+        "identityHash": "04e0dbb81e46",
+        "contentHash": "6f9bc28abfa10cebcc7ff7a37910efaed93bb6195afae343fdcec30476562375",
+        "bytes": 561728,
+        "format": "jpeg",
+        "width": 1512,
+        "height": 2016,
+        "orientedWidth": 1512,
+        "orientedHeight": 2016,
+        "orientation": 1,
+        "usage": {
+          "id": "hofladen-eingang",
+          "slots": [
+            "hofladen-gallery"
+          ],
+          "alt": "Eingang des Selbstbedienungs-Hofladens",
+          "maximumVariantBytes": 300000
+        }
+      },
+      "variants": [
+        {
+          "path": "img/opt/hofladen/img-3884-jpeg-i04e0dbb81e46-c6f9bc28abfa10cebcc7f-r38a14a30fdc4-320.avif",
+          "format": "avif",
+          "width": 320,
+          "height": 427,
+          "bytes": 9185,
+          "sha256": "1e820fbb1e11cb8a28c889e21125bfae614a0236876240210ebe53958c67facc"
+        },
+        {
+          "path": "img/opt/hofladen/img-3884-jpeg-i04e0dbb81e46-c6f9bc28abfa10cebcc7f-r38a14a30fdc4-320.webp",
+          "format": "webp",
+          "width": 320,
+          "height": 427,
+          "bytes": 18338,
+          "sha256": "e8cc5569a2a7552dc916dfbffafd674b66123ec6caca7a297fa4a224bb4e53e5"
+        },
+        {
+          "path": "img/opt/hofladen/img-3884-jpeg-i04e0dbb81e46-c6f9bc28abfa10cebcc7f-r38a14a30fdc4-320.jpg",
+          "format": "jpeg",
+          "width": 320,
+          "height": 427,
+          "bytes": 21005,
+          "sha256": "0e02efd306bee8cb53d755f46ccdcb4426dad246f9d6d965e3fe22c28e29480f"
+        },
+        {
+          "path": "img/opt/hofladen/img-3884-jpeg-i04e0dbb81e46-c6f9bc28abfa10cebcc7f-r38a14a30fdc4-640.avif",
+          "format": "avif",
+          "width": 640,
+          "height": 853,
+          "bytes": 30686,
+          "sha256": "e28a13995f32ef06ee6aefefc827543923d74731fa0f4042ab100c6fb234e0f6"
+        },
+        {
+          "path": "img/opt/hofladen/img-3884-jpeg-i04e0dbb81e46-c6f9bc28abfa10cebcc7f-r38a14a30fdc4-640.webp",
+          "format": "webp",
+          "width": 640,
+          "height": 853,
+          "bytes": 62652,
+          "sha256": "9728312f0748a20ba32e144903a77c271e6c697be9346d07dababef74bc60a7d"
+        },
+        {
+          "path": "img/opt/hofladen/img-3884-jpeg-i04e0dbb81e46-c6f9bc28abfa10cebcc7f-r38a14a30fdc4-640.jpg",
+          "format": "jpeg",
+          "width": 640,
+          "height": 853,
+          "bytes": 71986,
+          "sha256": "cfd3bca46ed820d3acdb417b1f51d65f7a45454def0a2e6440b1743c49f0fbc1"
+        },
+        {
+          "path": "img/opt/hofladen/img-3884-jpeg-i04e0dbb81e46-c6f9bc28abfa10cebcc7f-r38a14a30fdc4-1024.avif",
+          "format": "avif",
+          "width": 1024,
+          "height": 1365,
+          "bytes": 67482,
+          "sha256": "92dfe4e89df6fbfc723c12d2ae769bfdfa358ef327a51a2709919ff691fac556"
+        },
+        {
+          "path": "img/opt/hofladen/img-3884-jpeg-i04e0dbb81e46-c6f9bc28abfa10cebcc7f-r38a14a30fdc4-1024.webp",
+          "format": "webp",
+          "width": 1024,
+          "height": 1365,
+          "bytes": 143032,
+          "sha256": "e16b8118689a5408c4904215df8661067805b0dd2ec0e275e09fa414194f9e60"
+        },
+        {
+          "path": "img/opt/hofladen/img-3884-jpeg-i04e0dbb81e46-c6f9bc28abfa10cebcc7f-r38a14a30fdc4-1024.jpg",
+          "format": "jpeg",
+          "width": 1024,
+          "height": 1365,
+          "bytes": 168999,
+          "sha256": "2c70b8a8434b12715776ed93cde104801c6e7a19dfdf556133ebcedef5df5ce8"
+        }
+      ]
+    },
+    {
+      "source": {
+        "path": "img/hofladen/IMG_3952.jpeg",
+        "identityHash": "36baceb3db80",
+        "contentHash": "eb5bdbd33300b8b947f94f98776ba78625c0e43f7c018d74ea930d2c0613e67a",
+        "bytes": 627899,
+        "format": "jpeg",
+        "width": 1512,
+        "height": 2016,
+        "orientedWidth": 1512,
+        "orientedHeight": 2016,
+        "orientation": 1,
+        "usage": {
+          "id": "hofladen-nudeln",
+          "slots": [
+            "hofladen-gallery"
+          ],
+          "alt": "Regionale Nudeln im Hofladen",
+          "maximumVariantBytes": 300000
+        }
+      },
+      "variants": [
+        {
+          "path": "img/opt/hofladen/img-3952-jpeg-i36baceb3db80-ceb5bdbd33300b8b947f9-r38a14a30fdc4-320.avif",
+          "format": "avif",
+          "width": 320,
+          "height": 427,
+          "bytes": 12031,
+          "sha256": "d8dbdbc30d68b4e01e9ca808bf3ba8796c4f9c1ce52e87124ceaa04438be396e"
+        },
+        {
+          "path": "img/opt/hofladen/img-3952-jpeg-i36baceb3db80-ceb5bdbd33300b8b947f9-r38a14a30fdc4-320.webp",
+          "format": "webp",
+          "width": 320,
+          "height": 427,
+          "bytes": 27452,
+          "sha256": "4bdbfba20b51dcff9239a71f3d9afe62236520c7ee9dc4db6d71ca3b0a0b94f7"
+        },
+        {
+          "path": "img/opt/hofladen/img-3952-jpeg-i36baceb3db80-ceb5bdbd33300b8b947f9-r38a14a30fdc4-320.jpg",
+          "format": "jpeg",
+          "width": 320,
+          "height": 427,
+          "bytes": 26628,
+          "sha256": "639a819e1cc6b7e36900c02db4d57b4a1ccd8fd892f40edf159674dae2f6aae6"
+        },
+        {
+          "path": "img/opt/hofladen/img-3952-jpeg-i36baceb3db80-ceb5bdbd33300b8b947f9-r38a14a30fdc4-640.avif",
+          "format": "avif",
+          "width": 640,
+          "height": 853,
+          "bytes": 38795,
+          "sha256": "fca64d20c9a160ec67aaf9b33a37b8ccbb2549455d14eb70d927c637bfc810c7"
+        },
+        {
+          "path": "img/opt/hofladen/img-3952-jpeg-i36baceb3db80-ceb5bdbd33300b8b947f9-r38a14a30fdc4-640.webp",
+          "format": "webp",
+          "width": 640,
+          "height": 853,
+          "bytes": 83140,
+          "sha256": "cce22852c81a6d3cfca91d2aca86ab3a84205a1bd4c9f3cfb116f2feff31978b"
+        },
+        {
+          "path": "img/opt/hofladen/img-3952-jpeg-i36baceb3db80-ceb5bdbd33300b8b947f9-r38a14a30fdc4-640.jpg",
+          "format": "jpeg",
+          "width": 640,
+          "height": 853,
+          "bytes": 85812,
+          "sha256": "d6ae169ea11ca63bf0e47c415040609205b61601db0461a59d1da663133acfa6"
+        },
+        {
+          "path": "img/opt/hofladen/img-3952-jpeg-i36baceb3db80-ceb5bdbd33300b8b947f9-r38a14a30fdc4-1024.avif",
+          "format": "avif",
+          "width": 1024,
+          "height": 1365,
+          "bytes": 87140,
+          "sha256": "da39d3b37761f75a079fb933bf9fe34b991eee262e200f2c36baa6925cf01787"
+        },
+        {
+          "path": "img/opt/hofladen/img-3952-jpeg-i36baceb3db80-ceb5bdbd33300b8b947f9-r38a14a30fdc4-1024.webp",
+          "format": "webp",
+          "width": 1024,
+          "height": 1365,
+          "bytes": 186780,
+          "sha256": "e2064918cf5d1d496bde087dbb84d2de69ff35653914d379d276b963485d0618"
+        },
+        {
+          "path": "img/opt/hofladen/img-3952-jpeg-i36baceb3db80-ceb5bdbd33300b8b947f9-r38a14a30fdc4-1024.jpg",
+          "format": "jpeg",
+          "width": 1024,
+          "height": 1365,
+          "bytes": 191447,
+          "sha256": "48f2250e8c9a2fdba3c4340c6caac7965d1efec79ce1a177a93f298910d4c5c7"
+        }
+      ]
+    },
+    {
+      "source": {
+        "path": "img/hofladen/IMG_4030.jpeg",
+        "identityHash": "6e8afec7dbff",
+        "contentHash": "857e3425c0357b569fe41d5db1d31a0c836dc5908006a8a4b1940783fccc7c4e",
+        "bytes": 463065,
+        "format": "jpeg",
+        "width": 1512,
+        "height": 2016,
+        "orientedWidth": 1512,
+        "orientedHeight": 2016,
+        "orientation": 1,
+        "usage": {
+          "id": "hofladen-glaeser",
+          "slots": [
+            "hofladen-gallery"
+          ],
+          "alt": "Honig, Marmeladen und Sirup im Hofladen",
+          "maximumVariantBytes": 300000
+        }
+      },
+      "variants": [
+        {
+          "path": "img/opt/hofladen/img-4030-jpeg-i6e8afec7dbff-c857e3425c0357b569fe4-r38a14a30fdc4-320.avif",
+          "format": "avif",
+          "width": 320,
+          "height": 427,
+          "bytes": 9588,
+          "sha256": "10780216e8b821b5a68b37bdac46b8e9b047aa7720cee70ed52818f01ff9ba68"
+        },
+        {
+          "path": "img/opt/hofladen/img-4030-jpeg-i6e8afec7dbff-c857e3425c0357b569fe4-r38a14a30fdc4-320.webp",
+          "format": "webp",
+          "width": 320,
+          "height": 427,
+          "bytes": 18540,
+          "sha256": "73a5e53c1b37f2886e5de80ea4ccfcd3c5f4d621e3e668417dc968189d109b50"
+        },
+        {
+          "path": "img/opt/hofladen/img-4030-jpeg-i6e8afec7dbff-c857e3425c0357b569fe4-r38a14a30fdc4-320.jpg",
+          "format": "jpeg",
+          "width": 320,
+          "height": 427,
+          "bytes": 21076,
+          "sha256": "bb2ad8db54bde4b89fa905b822d37db0e01568752f6c91e5356b2ca48fcb0d00"
+        },
+        {
+          "path": "img/opt/hofladen/img-4030-jpeg-i6e8afec7dbff-c857e3425c0357b569fe4-r38a14a30fdc4-640.avif",
+          "format": "avif",
+          "width": 640,
+          "height": 853,
+          "bytes": 27529,
+          "sha256": "b48ac26dc65a77cbf300f5787c8e3b7b3de956fbcbe47889e867dec803f7c554"
+        },
+        {
+          "path": "img/opt/hofladen/img-4030-jpeg-i6e8afec7dbff-c857e3425c0357b569fe4-r38a14a30fdc4-640.webp",
+          "format": "webp",
+          "width": 640,
+          "height": 853,
+          "bytes": 54144,
+          "sha256": "271554cb471020eb0c96f40e3589bab9c1b831b165f4f8f4776fa720b19cf3b6"
+        },
+        {
+          "path": "img/opt/hofladen/img-4030-jpeg-i6e8afec7dbff-c857e3425c0357b569fe4-r38a14a30fdc4-640.jpg",
+          "format": "jpeg",
+          "width": 640,
+          "height": 853,
+          "bytes": 62771,
+          "sha256": "3394f8d61f8833fbd89786788e61f57cbd434f5715c96ee6096c46fb80648eb3"
+        },
+        {
+          "path": "img/opt/hofladen/img-4030-jpeg-i6e8afec7dbff-c857e3425c0357b569fe4-r38a14a30fdc4-1024.avif",
+          "format": "avif",
+          "width": 1024,
+          "height": 1365,
+          "bytes": 60191,
+          "sha256": "fa7847fd7f0f1d4e6e4097bedabc304186ac361d465f1052397b1a8d4e97408a"
+        },
+        {
+          "path": "img/opt/hofladen/img-4030-jpeg-i6e8afec7dbff-c857e3425c0357b569fe4-r38a14a30fdc4-1024.webp",
+          "format": "webp",
+          "width": 1024,
+          "height": 1365,
+          "bytes": 117846,
+          "sha256": "322466b9dc6e670f4ba2a4fdcbdc2379b1a90137b6ba89090e3d3c265a02a297"
+        },
+        {
+          "path": "img/opt/hofladen/img-4030-jpeg-i6e8afec7dbff-c857e3425c0357b569fe4-r38a14a30fdc4-1024.jpg",
+          "format": "jpeg",
+          "width": 1024,
+          "height": 1365,
+          "bytes": 135705,
+          "sha256": "3ebe99e08085c5ccf7873596334c1344207e2ae35982edaf412348f8e25f3a29"
+        }
+      ]
+    },
+    {
+      "source": {
+        "path": "img/hofladen/IMG_4111.jpeg",
+        "identityHash": "f61a6caee190",
+        "contentHash": "a697be373e1d6cfbcf7718ce434760288628343b6e8c713c4097d15077790213",
+        "bytes": 710851,
+        "format": "jpeg",
+        "width": 2016,
+        "height": 1512,
+        "orientedWidth": 2016,
+        "orientedHeight": 1512,
+        "orientation": 1,
+        "usage": {
+          "id": "hofladen-geschenkkorb",
+          "slots": [
+            "hofladen-gallery"
+          ],
+          "alt": "Liebevoll zusammengestellter Geschenkkorb",
+          "maximumVariantBytes": 300000
+        }
+      },
+      "variants": [
+        {
+          "path": "img/opt/hofladen/img-4111-jpeg-if61a6caee190-ca697be373e1d6cfbcf77-r38a14a30fdc4-320.avif",
+          "format": "avif",
+          "width": 320,
+          "height": 240,
+          "bytes": 8060,
+          "sha256": "6697d3c11ef13c418029717cdbdbec711698c578754065ca54eba3d92450b107"
+        },
+        {
+          "path": "img/opt/hofladen/img-4111-jpeg-if61a6caee190-ca697be373e1d6cfbcf77-r38a14a30fdc4-320.webp",
+          "format": "webp",
+          "width": 320,
+          "height": 240,
+          "bytes": 16482,
+          "sha256": "75439b9ac124b63948872341a3be7fca4a299059f17f89d0ee0365504919495d"
+        },
+        {
+          "path": "img/opt/hofladen/img-4111-jpeg-if61a6caee190-ca697be373e1d6cfbcf77-r38a14a30fdc4-320.jpg",
+          "format": "jpeg",
+          "width": 320,
+          "height": 240,
+          "bytes": 14755,
+          "sha256": "4789a28f065c157e31c35053817526ce1a68efcec543ad139865ef942881bf45"
+        },
+        {
+          "path": "img/opt/hofladen/img-4111-jpeg-if61a6caee190-ca697be373e1d6cfbcf77-r38a14a30fdc4-640.avif",
+          "format": "avif",
+          "width": 640,
+          "height": 480,
+          "bytes": 27350,
+          "sha256": "737e6f5d0583fb50e0c57f2d8fa85725d50c0b25284d7dc418ba734bc084dd3d"
+        },
+        {
+          "path": "img/opt/hofladen/img-4111-jpeg-if61a6caee190-ca697be373e1d6cfbcf77-r38a14a30fdc4-640.webp",
+          "format": "webp",
+          "width": 640,
+          "height": 480,
+          "bytes": 57840,
+          "sha256": "40fd31e48f4c96b51eb60ce7798c0ec843f666d87ba72e40e6e36774424dd7f2"
+        },
+        {
+          "path": "img/opt/hofladen/img-4111-jpeg-if61a6caee190-ca697be373e1d6cfbcf77-r38a14a30fdc4-640.jpg",
+          "format": "jpeg",
+          "width": 640,
+          "height": 480,
+          "bytes": 50907,
+          "sha256": "3bb248a0863d4cdc567074089c8a560f063be2801db0b513fbafbc46aca39e3d"
+        },
+        {
+          "path": "img/opt/hofladen/img-4111-jpeg-if61a6caee190-ca697be373e1d6cfbcf77-r38a14a30fdc4-1024.avif",
+          "format": "avif",
+          "width": 1024,
+          "height": 768,
+          "bytes": 67033,
+          "sha256": "0257c3b6b048253403fb54f1d730218ed06a1743d85225abec083079a93c2543"
+        },
+        {
+          "path": "img/opt/hofladen/img-4111-jpeg-if61a6caee190-ca697be373e1d6cfbcf77-r38a14a30fdc4-1024.webp",
+          "format": "webp",
+          "width": 1024,
+          "height": 768,
+          "bytes": 145494,
+          "sha256": "bf4993a543ae8c5985e934846732f24f83cf57e7a6de6a9fd8306ab7abe556d5"
+        },
+        {
+          "path": "img/opt/hofladen/img-4111-jpeg-if61a6caee190-ca697be373e1d6cfbcf77-r38a14a30fdc4-1024.jpg",
+          "format": "jpeg",
+          "width": 1024,
+          "height": 768,
+          "bytes": 126635,
+          "sha256": "556a3a5560ac4332884b41f0cfda0cb4f042cb20b3118744b89f6b479994b91d"
+        }
+      ]
+    },
+    {
+      "source": {
+        "path": "img/hofladen/IMG_4528.jpeg",
+        "identityHash": "62c652204839",
+        "contentHash": "c9a355130d6975f6de8fa3b3316e81d7bbe97ae8dab4361416f5dac1a5ffca4f",
+        "bytes": 274353,
+        "format": "jpeg",
+        "width": 2016,
+        "height": 1512,
+        "orientedWidth": 2016,
+        "orientedHeight": 1512,
+        "orientation": 1,
+        "usage": {
+          "id": "hofladen-eier",
+          "slots": [
+            "hofladen-gallery"
+          ],
+          "alt": "Frische Eier im Hofladen",
+          "maximumVariantBytes": 300000
+        }
+      },
+      "variants": [
+        {
+          "path": "img/opt/hofladen/img-4528-jpeg-i62c652204839-cc9a355130d6975f6de8f-r38a14a30fdc4-320.avif",
+          "format": "avif",
+          "width": 320,
+          "height": 240,
+          "bytes": 3259,
+          "sha256": "a7d51e1d14264bfd83d8abccc52b7c230d480df18f6c8e16a290ae45c0fd834a"
+        },
+        {
+          "path": "img/opt/hofladen/img-4528-jpeg-i62c652204839-cc9a355130d6975f6de8f-r38a14a30fdc4-320.webp",
+          "format": "webp",
+          "width": 320,
+          "height": 240,
+          "bytes": 4670,
+          "sha256": "ebb8a758bc2524ac2eb7b179f31954332e5672eb0624c82648259c040e3334f2"
+        },
+        {
+          "path": "img/opt/hofladen/img-4528-jpeg-i62c652204839-cc9a355130d6975f6de8f-r38a14a30fdc4-320.jpg",
+          "format": "jpeg",
+          "width": 320,
+          "height": 240,
+          "bytes": 5729,
+          "sha256": "f82ec8d71073d9a47fd70d50a9736bd9bce81777a421310cbf059a1a2c9ce818"
+        },
+        {
+          "path": "img/opt/hofladen/img-4528-jpeg-i62c652204839-cc9a355130d6975f6de8f-r38a14a30fdc4-640.avif",
+          "format": "avif",
+          "width": 640,
+          "height": 480,
+          "bytes": 8640,
+          "sha256": "385c8070fd750bfea69448736e9f98e21f9eee67320500058fde8c5ad097e9ab"
+        },
+        {
+          "path": "img/opt/hofladen/img-4528-jpeg-i62c652204839-cc9a355130d6975f6de8f-r38a14a30fdc4-640.webp",
+          "format": "webp",
+          "width": 640,
+          "height": 480,
+          "bytes": 13368,
+          "sha256": "720ca2d45fdfdc2f290be62af491564175096da71cbf207c30837b68963cc9a9"
+        },
+        {
+          "path": "img/opt/hofladen/img-4528-jpeg-i62c652204839-cc9a355130d6975f6de8f-r38a14a30fdc4-640.jpg",
+          "format": "jpeg",
+          "width": 640,
+          "height": 480,
+          "bytes": 16272,
+          "sha256": "d04e4ccdc9aad3fe944d165fcb7aca0793f1caa199c692c767cdfe67a1a12794"
+        },
+        {
+          "path": "img/opt/hofladen/img-4528-jpeg-i62c652204839-cc9a355130d6975f6de8f-r38a14a30fdc4-1024.avif",
+          "format": "avif",
+          "width": 1024,
+          "height": 768,
+          "bytes": 16333,
+          "sha256": "a0721facffddf907f2dc602a9380f6ae3dad54ed1524b80229fc71bf2c537b21"
+        },
+        {
+          "path": "img/opt/hofladen/img-4528-jpeg-i62c652204839-cc9a355130d6975f6de8f-r38a14a30fdc4-1024.webp",
+          "format": "webp",
+          "width": 1024,
+          "height": 768,
+          "bytes": 27316,
+          "sha256": "aafcb89b3bc9d1985e801b7dfd15d97dcc6336d92ebd9bd44ac9af90fa52fe82"
+        },
+        {
+          "path": "img/opt/hofladen/img-4528-jpeg-i62c652204839-cc9a355130d6975f6de8f-r38a14a30fdc4-1024.jpg",
+          "format": "jpeg",
+          "width": 1024,
+          "height": 768,
+          "bytes": 33839,
+          "sha256": "aad17609e1b43c847e3009528c9fd9f6b531b0b06981f26b24d283db64617ad1"
+        }
+      ]
+    },
+    {
+      "source": {
+        "path": "img/home/home1.jpg",
+        "identityHash": "440b8509892c",
+        "contentHash": "f7eff786189730ab26fa4d7aea74af76c6c89fbdff47dd2d81eb0a3ffdbdf54b",
+        "bytes": 825274,
+        "format": "jpeg",
+        "width": 3024,
+        "height": 2619,
+        "orientedWidth": 3024,
+        "orientedHeight": 2619,
+        "orientation": 1,
+        "usage": {
+          "id": "hero-weide",
+          "slots": [
+            "hero"
+          ],
+          "alt": "",
+          "maximumVariantBytes": 700000
+        }
+      },
+      "variants": [
+        {
+          "path": "img/opt/home/home1-jpg-i440b8509892c-cf7eff786189730ab26fa-r38a14a30fdc4-640.avif",
+          "format": "avif",
+          "width": 640,
+          "height": 554,
+          "bytes": 54599,
+          "sha256": "2109d324c9d07f45d409a326cfbc163d85d764fc80bd597d9b72a0c30d1d0444"
+        },
+        {
+          "path": "img/opt/home/home1-jpg-i440b8509892c-cf7eff786189730ab26fa-r38a14a30fdc4-640.webp",
+          "format": "webp",
+          "width": 640,
+          "height": 554,
+          "bytes": 121266,
+          "sha256": "e9de0bc9502786565af8d1168334359836efe554cd379f77c5db6607144503a5"
+        },
+        {
+          "path": "img/opt/home/home1-jpg-i440b8509892c-cf7eff786189730ab26fa-r38a14a30fdc4-640.jpg",
+          "format": "jpeg",
+          "width": 640,
+          "height": 554,
+          "bytes": 91390,
+          "sha256": "9398bc3b04f16e46d271cc69c49168e556db13d9ee7fab947b67120a91ff6be5"
+        },
+        {
+          "path": "img/opt/home/home1-jpg-i440b8509892c-cf7eff786189730ab26fa-r38a14a30fdc4-1024.avif",
+          "format": "avif",
+          "width": 1024,
+          "height": 887,
+          "bytes": 137618,
+          "sha256": "97d8b9789ba338cfd63c5f63de554243706d93ec9915b341918d5d0d9b89b804"
+        },
+        {
+          "path": "img/opt/home/home1-jpg-i440b8509892c-cf7eff786189730ab26fa-r38a14a30fdc4-1024.webp",
+          "format": "webp",
+          "width": 1024,
+          "height": 887,
+          "bytes": 298426,
+          "sha256": "9cdce512a2a529fdd72a0ede5c0cccf6ea9a39a0bdb9a4993c0e6ed4a61cd770"
+        },
+        {
+          "path": "img/opt/home/home1-jpg-i440b8509892c-cf7eff786189730ab26fa-r38a14a30fdc4-1024.jpg",
+          "format": "jpeg",
+          "width": 1024,
+          "height": 887,
+          "bytes": 231752,
+          "sha256": "1aace65dbd20ea776c8fc6f446ece9b0e753f40976d4d6eecd5938e5c2db9848"
+        },
+        {
+          "path": "img/opt/home/home1-jpg-i440b8509892c-cf7eff786189730ab26fa-r38a14a30fdc4-1600.avif",
+          "format": "avif",
+          "width": 1600,
+          "height": 1386,
+          "bytes": 313087,
+          "sha256": "ce0d96c29ff6ae691333de13998a82d41912c08e381f7cb79026060e51ba2c48"
+        },
+        {
+          "path": "img/opt/home/home1-jpg-i440b8509892c-cf7eff786189730ab26fa-r38a14a30fdc4-1600.webp",
+          "format": "webp",
+          "width": 1600,
+          "height": 1386,
+          "bytes": 665830,
+          "sha256": "4f7701150cf8739b4d26d056ddb776dbb6f7d307fea19638bd470b29454ee86d"
+        },
+        {
+          "path": "img/opt/home/home1-jpg-i440b8509892c-cf7eff786189730ab26fa-r38a14a30fdc4-1600.jpg",
+          "format": "jpeg",
+          "width": 1600,
+          "height": 1386,
+          "bytes": 535977,
+          "sha256": "01cb66bcaf0d11206b882a5001e29d84718d2a2111b4d097cc752a959d8018b6"
+        }
+      ]
+    },
+    {
+      "source": {
+        "path": "img/home/home2.jpg",
+        "identityHash": "cf2dd56a1389",
+        "contentHash": "d4e4c5ec9e2698c19f6200d22732eb17552df58525412944844374a7c5e70ed9",
+        "bytes": 597823,
+        "format": "jpeg",
+        "width": 1200,
+        "height": 1600,
+        "orientedWidth": 1200,
+        "orientedHeight": 1600,
+        "orientation": 1,
+        "usage": {
+          "id": "hero-hof",
+          "slots": [
+            "hero"
+          ],
+          "alt": "",
+          "maximumVariantBytes": 700000
+        }
+      },
+      "variants": [
+        {
+          "path": "img/opt/home/home2-jpg-icf2dd56a1389-cd4e4c5ec9e2698c19f62-r38a14a30fdc4-640.avif",
+          "format": "avif",
+          "width": 640,
+          "height": 853,
+          "bytes": 62588,
+          "sha256": "28751346b16c22b96c5fd40e96a7f18940a695e3b6c370bc93e7d960bdf9d647"
+        },
+        {
+          "path": "img/opt/home/home2-jpg-icf2dd56a1389-cd4e4c5ec9e2698c19f62-r38a14a30fdc4-640.webp",
+          "format": "webp",
+          "width": 640,
+          "height": 853,
+          "bytes": 141630,
+          "sha256": "b9ba4ad95fe8488cd8cc99b065ac17a2e2ce41593e4d78b476842a8c8b8fc9c5"
+        },
+        {
+          "path": "img/opt/home/home2-jpg-icf2dd56a1389-cd4e4c5ec9e2698c19f62-r38a14a30fdc4-640.jpg",
+          "format": "jpeg",
+          "width": 640,
+          "height": 853,
+          "bytes": 119098,
+          "sha256": "61b735986b0f47ee4e67a30c8c1af47d02f5bcb3bbf3d027059c95a15302f5a1"
+        },
+        {
+          "path": "img/opt/home/home2-jpg-icf2dd56a1389-cd4e4c5ec9e2698c19f62-r38a14a30fdc4-1024.avif",
+          "format": "avif",
+          "width": 1024,
+          "height": 1365,
+          "bytes": 147714,
+          "sha256": "55d00d47ab34323afa8bac04d481d79e8958b475d8c699588966a1772a8fc6c6"
+        },
+        {
+          "path": "img/opt/home/home2-jpg-icf2dd56a1389-cd4e4c5ec9e2698c19f62-r38a14a30fdc4-1024.webp",
+          "format": "webp",
+          "width": 1024,
+          "height": 1365,
+          "bytes": 336028,
+          "sha256": "5583067630d71979add5d68c60ffb89f6fbc91427d2f0a07c95229e1a5c66dce"
+        },
+        {
+          "path": "img/opt/home/home2-jpg-icf2dd56a1389-cd4e4c5ec9e2698c19f62-r38a14a30fdc4-1024.jpg",
+          "format": "jpeg",
+          "width": 1024,
+          "height": 1365,
+          "bytes": 287804,
+          "sha256": "92d942b05d3621873a8d070ddaf9107f337855a065f3100de78025c099b53e1e"
+        },
+        {
+          "path": "img/opt/home/home2-jpg-icf2dd56a1389-cd4e4c5ec9e2698c19f62-r38a14a30fdc4-1200.avif",
+          "format": "avif",
+          "width": 1200,
+          "height": 1600,
+          "bytes": 212172,
+          "sha256": "3e9d7fc1bab41e6d96eea13fcb5507095e35d9a9068d1e81d454098adf0633d7"
+        },
+        {
+          "path": "img/opt/home/home2-jpg-icf2dd56a1389-cd4e4c5ec9e2698c19f62-r38a14a30fdc4-1200.webp",
+          "format": "webp",
+          "width": 1200,
+          "height": 1600,
+          "bytes": 433270,
+          "sha256": "c70d24f410ae1611f1ad8f4cb90f41356628d29a3c49e0ba33ea1dbc7706e0c8"
+        },
+        {
+          "path": "img/opt/home/home2-jpg-icf2dd56a1389-cd4e4c5ec9e2698c19f62-r38a14a30fdc4-1200.jpg",
+          "format": "jpeg",
+          "width": 1200,
+          "height": 1600,
+          "bytes": 420753,
+          "sha256": "42069dc4aa69a39de96d974b7e493103165093f99ef9f5e576d8dfd174fd1118"
+        }
+      ]
+    },
+    {
+      "source": {
+        "path": "img/home/home3.jpg",
+        "identityHash": "c5d616a25c7d",
+        "contentHash": "162c7656dee0d142e12ee5b7cd58fa3f49d52b7fcc70775368dfe509b7416ddc",
+        "bytes": 620687,
+        "format": "jpeg",
+        "width": 2000,
+        "height": 1500,
+        "orientedWidth": 2000,
+        "orientedHeight": 1500,
+        "orientation": 1,
+        "usage": {
+          "id": "hero-tiere",
+          "slots": [
+            "hero"
+          ],
+          "alt": "",
+          "maximumVariantBytes": 700000
+        }
+      },
+      "variants": [
+        {
+          "path": "img/opt/home/home3-jpg-ic5d616a25c7d-c162c7656dee0d142e12e-r38a14a30fdc4-640.avif",
+          "format": "avif",
+          "width": 640,
+          "height": 480,
+          "bytes": 31582,
+          "sha256": "d8e8d91ce02ef399749f11e807c2a36db3071d49e4cc06c77cd4e09df432d219"
+        },
+        {
+          "path": "img/opt/home/home3-jpg-ic5d616a25c7d-c162c7656dee0d142e12e-r38a14a30fdc4-640.webp",
+          "format": "webp",
+          "width": 640,
+          "height": 480,
+          "bytes": 67322,
+          "sha256": "ced681d041b7e01b89a8b94db3fade52c303e795a423b41399d1194e2576f006"
+        },
+        {
+          "path": "img/opt/home/home3-jpg-ic5d616a25c7d-c162c7656dee0d142e12e-r38a14a30fdc4-640.jpg",
+          "format": "jpeg",
+          "width": 640,
+          "height": 480,
+          "bytes": 54744,
+          "sha256": "cceb2986529cd6815113c3779c72564fae6230c72e0a8718b3752162893302c6"
+        },
+        {
+          "path": "img/opt/home/home3-jpg-ic5d616a25c7d-c162c7656dee0d142e12e-r38a14a30fdc4-1024.avif",
+          "format": "avif",
+          "width": 1024,
+          "height": 768,
+          "bytes": 78036,
+          "sha256": "da410dca4098b11858aa9c46d59b0f54d51a65cc59529d6ce3852d0b895f64e1"
+        },
+        {
+          "path": "img/opt/home/home3-jpg-ic5d616a25c7d-c162c7656dee0d142e12e-r38a14a30fdc4-1024.webp",
+          "format": "webp",
+          "width": 1024,
+          "height": 768,
+          "bytes": 165104,
+          "sha256": "37f88dfa01299440a64a98ca41b9ed406de087c83a98565017f65783f38fa67d"
+        },
+        {
+          "path": "img/opt/home/home3-jpg-ic5d616a25c7d-c162c7656dee0d142e12e-r38a14a30fdc4-1024.jpg",
+          "format": "jpeg",
+          "width": 1024,
+          "height": 768,
+          "bytes": 136825,
+          "sha256": "5e4b6bf115a1a486e3a200b8302a909e8e850398e705d62af2ce68ee439b9e6c"
+        },
+        {
+          "path": "img/opt/home/home3-jpg-ic5d616a25c7d-c162c7656dee0d142e12e-r38a14a30fdc4-1600.avif",
+          "format": "avif",
+          "width": 1600,
+          "height": 1200,
+          "bytes": 162299,
+          "sha256": "db651ba4e383e73fdd295ecee718ada3d43bd2b399c8b97b9828f8b5f4e3c81e"
+        },
+        {
+          "path": "img/opt/home/home3-jpg-ic5d616a25c7d-c162c7656dee0d142e12e-r38a14a30fdc4-1600.webp",
+          "format": "webp",
+          "width": 1600,
+          "height": 1200,
+          "bytes": 329972,
+          "sha256": "be7c5d1749cc9aea93c121622d36760f94a165e86d8015beff64b0af8b543572"
+        },
+        {
+          "path": "img/opt/home/home3-jpg-ic5d616a25c7d-c162c7656dee0d142e12e-r38a14a30fdc4-1600.jpg",
+          "format": "jpeg",
+          "width": 1600,
+          "height": 1200,
+          "bytes": 296932,
+          "sha256": "d30ec2e4b7a6e4986173f71ddf34fe3b9ba09c52231a0b8f52f2ceeaff2abaa9"
+        }
+      ]
+    },
+    {
+      "source": {
+        "path": "img/menu/cake_1.JPG",
+        "identityHash": "8c20f9bd6b96",
+        "contentHash": "206d66906ba61e0f7f2e66a420df26c08303662635264defbe5a76d11c340201",
+        "bytes": 891967,
+        "format": "jpeg",
+        "width": 3024,
+        "height": 4032,
+        "orientedWidth": 3024,
+        "orientedHeight": 4032,
+        "orientation": 1,
+        "usage": {
+          "id": "cafe-kuchentheke",
+          "slots": [
+            "hofcafe-gallery"
+          ],
+          "alt": "Torte in der Kuchentheke des Hofcafés",
+          "maximumVariantBytes": 300000
+        }
+      },
+      "variants": [
+        {
+          "path": "img/opt/menu/cake-1-jpg-i8c20f9bd6b96-c206d66906ba61e0f7f2e-r38a14a30fdc4-320.avif",
+          "format": "avif",
+          "width": 320,
+          "height": 427,
+          "bytes": 4473,
+          "sha256": "fd1ead9e99b4909e69154ada60b0e7825f958390f9c79f698bf7dd7864fc3a21"
+        },
+        {
+          "path": "img/opt/menu/cake-1-jpg-i8c20f9bd6b96-c206d66906ba61e0f7f2e-r38a14a30fdc4-320.webp",
+          "format": "webp",
+          "width": 320,
+          "height": 427,
+          "bytes": 7756,
+          "sha256": "9be4fc604561e3c608a7a16c091cd763a7f930127ae360a9300dd01a0c7e190d"
+        },
+        {
+          "path": "img/opt/menu/cake-1-jpg-i8c20f9bd6b96-c206d66906ba61e0f7f2e-r38a14a30fdc4-320.jpg",
+          "format": "jpeg",
+          "width": 320,
+          "height": 427,
+          "bytes": 9884,
+          "sha256": "7b6f64c588db597cfdf86c165275d8c2ef3350ed01a1e1ca9304f5eaef0f8e60"
+        },
+        {
+          "path": "img/opt/menu/cake-1-jpg-i8c20f9bd6b96-c206d66906ba61e0f7f2e-r38a14a30fdc4-640.avif",
+          "format": "avif",
+          "width": 640,
+          "height": 853,
+          "bytes": 12868,
+          "sha256": "ecd26cb11f6372c068cadce308ab58bdb964ae71c49398e18e4a281b110073c3"
+        },
+        {
+          "path": "img/opt/menu/cake-1-jpg-i8c20f9bd6b96-c206d66906ba61e0f7f2e-r38a14a30fdc4-640.webp",
+          "format": "webp",
+          "width": 640,
+          "height": 853,
+          "bytes": 21384,
+          "sha256": "dcd13a08fd7da8b002f9b52d5e7962828f08300d21a36a2efab49fb7d4af093f"
+        },
+        {
+          "path": "img/opt/menu/cake-1-jpg-i8c20f9bd6b96-c206d66906ba61e0f7f2e-r38a14a30fdc4-640.jpg",
+          "format": "jpeg",
+          "width": 640,
+          "height": 853,
+          "bytes": 27813,
+          "sha256": "308de11a495af7c63073a87fe905f86620b608b2a37381d02df5e8590ad2f7a3"
+        },
+        {
+          "path": "img/opt/menu/cake-1-jpg-i8c20f9bd6b96-c206d66906ba61e0f7f2e-r38a14a30fdc4-1024.avif",
+          "format": "avif",
+          "width": 1024,
+          "height": 1365,
+          "bytes": 28173,
+          "sha256": "d0b45581795ab9c6309f31e70c8d774a72aacc3688a969fbaa83990966aabd1c"
+        },
+        {
+          "path": "img/opt/menu/cake-1-jpg-i8c20f9bd6b96-c206d66906ba61e0f7f2e-r38a14a30fdc4-1024.webp",
+          "format": "webp",
+          "width": 1024,
+          "height": 1365,
+          "bytes": 46812,
+          "sha256": "9b8e6c0136ea53d2bbb1f491323e22d9ec59108901d7c6cbb2928eb1dd69dde9"
+        },
+        {
+          "path": "img/opt/menu/cake-1-jpg-i8c20f9bd6b96-c206d66906ba61e0f7f2e-r38a14a30fdc4-1024.jpg",
+          "format": "jpeg",
+          "width": 1024,
+          "height": 1365,
+          "bytes": 60977,
+          "sha256": "9fefd5d62a54be1c976969f3fecd90218b4cb6a9ceeb7bd81f8a32e8c578215b"
+        }
+      ]
+    },
+    {
+      "source": {
+        "path": "img/menu/cake_4.JPG",
+        "identityHash": "14706c2752e3",
+        "contentHash": "fac73e3d436b54941398202e8a5a59863fdcd484eac7263acd80d43b2d8555f7",
+        "bytes": 1148342,
+        "format": "jpeg",
+        "width": 3024,
+        "height": 4032,
+        "orientedWidth": 3024,
+        "orientedHeight": 4032,
+        "orientation": 1,
+        "usage": {
+          "id": "cafe-weisse-torte",
+          "slots": [
+            "hofcafe-gallery"
+          ],
+          "alt": "Weiße Torte aus unserer Kuchenauswahl",
+          "maximumVariantBytes": 300000
+        }
+      },
+      "variants": [
+        {
+          "path": "img/opt/menu/cake-4-jpg-i14706c2752e3-cfac73e3d436b54941398-r38a14a30fdc4-320.avif",
+          "format": "avif",
+          "width": 320,
+          "height": 427,
+          "bytes": 7385,
+          "sha256": "3a151028167345f47bd151dc5102090544fece145b173a490f937a8e2ca431ac"
+        },
+        {
+          "path": "img/opt/menu/cake-4-jpg-i14706c2752e3-cfac73e3d436b54941398-r38a14a30fdc4-320.webp",
+          "format": "webp",
+          "width": 320,
+          "height": 427,
+          "bytes": 12736,
+          "sha256": "ca89a327dcfcecbab7c8be404ea414c34ec492cba5a9b344a5620bab1c26517f"
+        },
+        {
+          "path": "img/opt/menu/cake-4-jpg-i14706c2752e3-cfac73e3d436b54941398-r38a14a30fdc4-320.jpg",
+          "format": "jpeg",
+          "width": 320,
+          "height": 427,
+          "bytes": 14250,
+          "sha256": "3d75496f2d7ce8ae87218459e3b4c7935950b4e71415d60d49e86a5a36f20051"
+        },
+        {
+          "path": "img/opt/menu/cake-4-jpg-i14706c2752e3-cfac73e3d436b54941398-r38a14a30fdc4-640.avif",
+          "format": "avif",
+          "width": 640,
+          "height": 853,
+          "bytes": 22319,
+          "sha256": "e7f7d122d80a7df4be830abceec8b51bc7112f1f482a8f587e4851a0fad83e87"
+        },
+        {
+          "path": "img/opt/menu/cake-4-jpg-i14706c2752e3-cfac73e3d436b54941398-r38a14a30fdc4-640.webp",
+          "format": "webp",
+          "width": 640,
+          "height": 853,
+          "bytes": 38578,
+          "sha256": "4424ede985544ffb20ea9c1c2e6d8c2d149c8c1de992e3b77521fed707bfaf77"
+        },
+        {
+          "path": "img/opt/menu/cake-4-jpg-i14706c2752e3-cfac73e3d436b54941398-r38a14a30fdc4-640.jpg",
+          "format": "jpeg",
+          "width": 640,
+          "height": 853,
+          "bytes": 44413,
+          "sha256": "e1e640bb5328429cc73cb2a35e8276e9e01bd2fd020c36c0c87ed84befe1d12a"
+        },
+        {
+          "path": "img/opt/menu/cake-4-jpg-i14706c2752e3-cfac73e3d436b54941398-r38a14a30fdc4-1024.avif",
+          "format": "avif",
+          "width": 1024,
+          "height": 1365,
+          "bytes": 47678,
+          "sha256": "9530c86794bb8d01bc052fe200d649ec29f423786a2f777a5d65f0bcdda3e771"
+        },
+        {
+          "path": "img/opt/menu/cake-4-jpg-i14706c2752e3-cfac73e3d436b54941398-r38a14a30fdc4-1024.webp",
+          "format": "webp",
+          "width": 1024,
+          "height": 1365,
+          "bytes": 81126,
+          "sha256": "44b1ef25543a7eca1b85a954a5d1f19b4cc5e81b1f104cfba853c2be29d19a9a"
+        },
+        {
+          "path": "img/opt/menu/cake-4-jpg-i14706c2752e3-cfac73e3d436b54941398-r38a14a30fdc4-1024.jpg",
+          "format": "jpeg",
+          "width": 1024,
+          "height": 1365,
+          "bytes": 95942,
+          "sha256": "9e16c8d0c12f6e84e61edbe1c9531e94b7fa13722b642cda2ed451cb4f56fae7"
+        }
+      ]
+    },
+    {
+      "source": {
+        "path": "img/menu/cake_6.JPG",
+        "identityHash": "799ba22991c6",
+        "contentHash": "5397a0b8596f905315436de7a2a879ba190868801d36fb886b311d4997ca7bad",
+        "bytes": 503294,
+        "format": "jpeg",
+        "width": 1536,
+        "height": 2048,
+        "orientedWidth": 1536,
+        "orientedHeight": 2048,
+        "orientation": 1,
+        "usage": {
+          "id": "cafe-kuchen",
+          "slots": [
+            "hofcafe-gallery"
+          ],
+          "alt": "Hausgemachter Kuchen auf einem Teller",
+          "maximumVariantBytes": 300000
+        }
+      },
+      "variants": [
+        {
+          "path": "img/opt/menu/cake-6-jpg-i799ba22991c6-c5397a0b8596f90531543-r38a14a30fdc4-320.avif",
+          "format": "avif",
+          "width": 320,
+          "height": 427,
+          "bytes": 8679,
+          "sha256": "2a54cf3d820fcb515a809db31c0a9a02dac5cf561b92db58cb425a0556efc569"
+        },
+        {
+          "path": "img/opt/menu/cake-6-jpg-i799ba22991c6-c5397a0b8596f90531543-r38a14a30fdc4-320.webp",
+          "format": "webp",
+          "width": 320,
+          "height": 427,
+          "bytes": 16544,
+          "sha256": "5a0b33e6f87b95ba28fb4379d5323072211203fac9b1e5e5fbc44d1facc0e5e9"
+        },
+        {
+          "path": "img/opt/menu/cake-6-jpg-i799ba22991c6-c5397a0b8596f90531543-r38a14a30fdc4-320.jpg",
+          "format": "jpeg",
+          "width": 320,
+          "height": 427,
+          "bytes": 17375,
+          "sha256": "ffddfbb307348713dcaffbfd611e07a99aa598f6eed4880e55a2622df514b8f9"
+        },
+        {
+          "path": "img/opt/menu/cake-6-jpg-i799ba22991c6-c5397a0b8596f90531543-r38a14a30fdc4-640.avif",
+          "format": "avif",
+          "width": 640,
+          "height": 853,
+          "bytes": 30816,
+          "sha256": "7a60838ded39999cc944e77111f33168345fad1fbd8fa084c31caf9e378413d8"
+        },
+        {
+          "path": "img/opt/menu/cake-6-jpg-i799ba22991c6-c5397a0b8596f90531543-r38a14a30fdc4-640.webp",
+          "format": "webp",
+          "width": 640,
+          "height": 853,
+          "bytes": 60190,
+          "sha256": "348e41b45ecc9e76999dd01cfdb9c33833f29b417d4c27a88db057c34349007b"
+        },
+        {
+          "path": "img/opt/menu/cake-6-jpg-i799ba22991c6-c5397a0b8596f90531543-r38a14a30fdc4-640.jpg",
+          "format": "jpeg",
+          "width": 640,
+          "height": 853,
+          "bytes": 61967,
+          "sha256": "ff85f808cac06cfc62e3a3b4fea466f28256b63d211d01be10651ceb5743c46e"
+        },
+        {
+          "path": "img/opt/menu/cake-6-jpg-i799ba22991c6-c5397a0b8596f90531543-r38a14a30fdc4-1024.avif",
+          "format": "avif",
+          "width": 1024,
+          "height": 1365,
+          "bytes": 77139,
+          "sha256": "b9e3789559d437788ecb611e8d9bd50904f55606292b85dca5d208dbf1775975"
+        },
+        {
+          "path": "img/opt/menu/cake-6-jpg-i799ba22991c6-c5397a0b8596f90531543-r38a14a30fdc4-1024.webp",
+          "format": "webp",
+          "width": 1024,
+          "height": 1365,
+          "bytes": 141544,
+          "sha256": "1e4006cef9a685a35ac7b5fa4ef4bb2c4adf203bacd3067eb09b13e472e3969a"
+        },
+        {
+          "path": "img/opt/menu/cake-6-jpg-i799ba22991c6-c5397a0b8596f90531543-r38a14a30fdc4-1024.jpg",
+          "format": "jpeg",
+          "width": 1024,
+          "height": 1365,
+          "bytes": 148937,
+          "sha256": "b1db5ffb80db456ab88efc030762cb521b86e3a7ca2d300712181bf13470d3f8"
+        }
+      ]
+    },
+    {
+      "source": {
+        "path": "img/menu/food_1.JPG",
+        "identityHash": "02a85a7b2321",
+        "contentHash": "39b277d22e586a88a62554183ec560afdcd846d8d29b3d621bb0451b8eb9b276",
+        "bytes": 1861175,
+        "format": "jpeg",
+        "width": 3024,
+        "height": 4032,
+        "orientedWidth": 3024,
+        "orientedHeight": 4032,
+        "orientation": 1,
+        "usage": {
+          "id": "cafe-brotzeit",
+          "slots": [
+            "hofcafe-gallery"
+          ],
+          "alt": "Herzhafter Teller mit Rührei, Käse, Aufstrichen und Obst",
+          "maximumVariantBytes": 300000
+        }
+      },
+      "variants": [
+        {
+          "path": "img/opt/menu/food-1-jpg-i02a85a7b2321-c39b277d22e586a88a625-r38a14a30fdc4-320.avif",
+          "format": "avif",
+          "width": 320,
+          "height": 427,
+          "bytes": 10668,
+          "sha256": "e70b001bfb987d919e865f452502b267e56a38ad7a0a697891f7cf4e096e0732"
+        },
+        {
+          "path": "img/opt/menu/food-1-jpg-i02a85a7b2321-c39b277d22e586a88a625-r38a14a30fdc4-320.webp",
+          "format": "webp",
+          "width": 320,
+          "height": 427,
+          "bytes": 20464,
+          "sha256": "482eb25d6c578c2ed1a2e0723888f48dbddb9427878998d25e046e4cb476ef1d"
+        },
+        {
+          "path": "img/opt/menu/food-1-jpg-i02a85a7b2321-c39b277d22e586a88a625-r38a14a30fdc4-320.jpg",
+          "format": "jpeg",
+          "width": 320,
+          "height": 427,
+          "bytes": 19455,
+          "sha256": "25b1e0d9f53960ec6e3c2ad1b7549fc9be7e52a3b8c0945823cc48363c0177dd"
+        },
+        {
+          "path": "img/opt/menu/food-1-jpg-i02a85a7b2321-c39b277d22e586a88a625-r38a14a30fdc4-640.avif",
+          "format": "avif",
+          "width": 640,
+          "height": 853,
+          "bytes": 38888,
+          "sha256": "972c3dff9efdfddd4a6ea06747ab1f4488cc88c4248eed6998546201e763784e"
+        },
+        {
+          "path": "img/opt/menu/food-1-jpg-i02a85a7b2321-c39b277d22e586a88a625-r38a14a30fdc4-640.webp",
+          "format": "webp",
+          "width": 640,
+          "height": 853,
+          "bytes": 75852,
+          "sha256": "e9a8c8133019e1ef0297a93eaed520c384294f01bc5014bfaa6407194a677869"
+        },
+        {
+          "path": "img/opt/menu/food-1-jpg-i02a85a7b2321-c39b277d22e586a88a625-r38a14a30fdc4-640.jpg",
+          "format": "jpeg",
+          "width": 640,
+          "height": 853,
+          "bytes": 70282,
+          "sha256": "1b9f19814b00ab465abe50e8a09f4fc75457fc81ced07f27630d7381d409ba6b"
+        },
+        {
+          "path": "img/opt/menu/food-1-jpg-i02a85a7b2321-c39b277d22e586a88a625-r38a14a30fdc4-1024.avif",
+          "format": "avif",
+          "width": 1024,
+          "height": 1365,
+          "bytes": 91473,
+          "sha256": "2e18ac2cbaac91770aa492e85e7dc72ff099a2e2007e283256f6c6ca8a030758"
+        },
+        {
+          "path": "img/opt/menu/food-1-jpg-i02a85a7b2321-c39b277d22e586a88a625-r38a14a30fdc4-1024.webp",
+          "format": "webp",
+          "width": 1024,
+          "height": 1365,
+          "bytes": 173428,
+          "sha256": "2869f95433194eec0e73b1a05f1a9dc2e343729bc8fe48b6642bf94592bfa278"
+        },
+        {
+          "path": "img/opt/menu/food-1-jpg-i02a85a7b2321-c39b277d22e586a88a625-r38a14a30fdc4-1024.jpg",
+          "format": "jpeg",
+          "width": 1024,
+          "height": 1365,
+          "bytes": 166132,
+          "sha256": "53ee8904edad7088dfd6bc141e20099fe5d2870cb4d861f8aa03ec66267a0a6f"
+        }
+      ]
+    },
+    {
+      "source": {
+        "path": "img/menu/food_2.JPG",
+        "identityHash": "46cfdbab18e8",
+        "contentHash": "e5077b4c97183b8a32b1cf9a1d270ffa9986d7ca0de966bd45662cee2437bca5",
+        "bytes": 1653681,
+        "format": "jpeg",
+        "width": 3024,
+        "height": 4032,
+        "orientedWidth": 3024,
+        "orientedHeight": 4032,
+        "orientation": 1,
+        "usage": {
+          "id": "cafe-brotzeit-zwei",
+          "slots": [
+            "hofcafe-gallery"
+          ],
+          "alt": "Brotzeit mit Wurst, Käse und frischem Gemüse",
+          "maximumVariantBytes": 300000
+        }
+      },
+      "variants": [
+        {
+          "path": "img/opt/menu/food-2-jpg-i46cfdbab18e8-ce5077b4c97183b8a32b1-r38a14a30fdc4-320.avif",
+          "format": "avif",
+          "width": 320,
+          "height": 427,
+          "bytes": 8868,
+          "sha256": "f2f9330250accc15b1282adc893daee7cc0ec8d54f413c2318c317beb74398a2"
+        },
+        {
+          "path": "img/opt/menu/food-2-jpg-i46cfdbab18e8-ce5077b4c97183b8a32b1-r38a14a30fdc4-320.webp",
+          "format": "webp",
+          "width": 320,
+          "height": 427,
+          "bytes": 16442,
+          "sha256": "674617dd17a6c32699e3583b3a8f079869d59327dfd995ff101e501c7e96b541"
+        },
+        {
+          "path": "img/opt/menu/food-2-jpg-i46cfdbab18e8-ce5077b4c97183b8a32b1-r38a14a30fdc4-320.jpg",
+          "format": "jpeg",
+          "width": 320,
+          "height": 427,
+          "bytes": 17238,
+          "sha256": "638508114543d4851982619ecc4d5d6f9ef5eb58f0263beb478101ddcd787d4c"
+        },
+        {
+          "path": "img/opt/menu/food-2-jpg-i46cfdbab18e8-ce5077b4c97183b8a32b1-r38a14a30fdc4-640.avif",
+          "format": "avif",
+          "width": 640,
+          "height": 853,
+          "bytes": 30815,
+          "sha256": "957ff6adb399221ebc621cdd00e7d31a3756960c4846244584d33eead1dbb1a3"
+        },
+        {
+          "path": "img/opt/menu/food-2-jpg-i46cfdbab18e8-ce5077b4c97183b8a32b1-r38a14a30fdc4-640.webp",
+          "format": "webp",
+          "width": 640,
+          "height": 853,
+          "bytes": 57922,
+          "sha256": "d159f726a73178718326c44202a4d9d011e74c88fc1f8a951b0f6af97469d0a1"
+        },
+        {
+          "path": "img/opt/menu/food-2-jpg-i46cfdbab18e8-ce5077b4c97183b8a32b1-r38a14a30fdc4-640.jpg",
+          "format": "jpeg",
+          "width": 640,
+          "height": 853,
+          "bytes": 58336,
+          "sha256": "b5d6540109e97cb8dcfad8cc4e152ce7b058f491dc445676425598b828566f94"
+        },
+        {
+          "path": "img/opt/menu/food-2-jpg-i46cfdbab18e8-ce5077b4c97183b8a32b1-r38a14a30fdc4-1024.avif",
+          "format": "avif",
+          "width": 1024,
+          "height": 1365,
+          "bytes": 70527,
+          "sha256": "077d2fef092c04b6808865e843c687e500831457698c3bd3e1da8152c768e78a"
+        },
+        {
+          "path": "img/opt/menu/food-2-jpg-i46cfdbab18e8-ce5077b4c97183b8a32b1-r38a14a30fdc4-1024.webp",
+          "format": "webp",
+          "width": 1024,
+          "height": 1365,
+          "bytes": 129398,
+          "sha256": "568d5d2df82e9637e90696c88b12c4fd012b2efda8132c7603583612f5e193e8"
+        },
+        {
+          "path": "img/opt/menu/food-2-jpg-i46cfdbab18e8-ce5077b4c97183b8a32b1-r38a14a30fdc4-1024.jpg",
+          "format": "jpeg",
+          "width": 1024,
+          "height": 1365,
+          "bytes": 133249,
+          "sha256": "8204989da2239e4e7df7027483a3a9d2461c07a2c8718f2f9199a89944c2540d"
+        }
+      ]
+    }
+  ]
+}

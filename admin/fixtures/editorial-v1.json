@@ -1,0 +1,25 @@
+{
+  "schemaVersion": 1,
+  "writeRevision": 1,
+  "updatedAt": "2030-06-01T09:00:00+02:00",
+  "entries": [
+    {
+      "id": "11111111111111111111111111111111",
+      "type": "news",
+      "intent": "approved",
+      "title": "Beispiel-Neuigkeit",
+      "body": "Dieser bereinigte Inhalt enthält keine Produktionsdaten.",
+      "imageId": null,
+      "imageAlt": "",
+      "displayStart": "2030-06-01T09:00:00+02:00",
+      "approvedAt": "2030-05-31T12:00:00+02:00",
+      "createdAt": "2030-05-31T12:00:00+02:00",
+      "updatedAt": "2030-05-31T12:00:00+02:00",
+      "expiry": "2030-06-30T22:00:00+02:00"
+    }
+  ],
+  "exceptions": [],
+  "themes": {"mode": "off", "windows": {"spring": null, "summer": null, "autumn": null}},
+  "assets": [],
+  "recovery": {"lastBackupAt": null, "lastRestoreAt": null}
+}

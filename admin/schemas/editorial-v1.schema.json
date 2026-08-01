@@ -1,0 +1,122 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://erlebnishof-auszeit.de/internal/editorial-v1.schema.json",
+  "title": "Private editorial store v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schemaVersion", "writeRevision", "updatedAt", "entries", "exceptions", "themes", "assets", "recovery"],
+  "properties": {
+    "schemaVersion": {"const": 1},
+    "writeRevision": {"type": "integer", "minimum": 0},
+    "updatedAt": {"$ref": "#/$defs/instant"},
+    "entries": {"type": "array", "maxItems": 500, "items": {"oneOf": [{"$ref": "#/$defs/news"}, {"$ref": "#/$defs/event"}]}},
+    "exceptions": {"type": "array", "maxItems": 100, "items": {"$ref": "#/$defs/exception"}},
+    "themes": {"$ref": "#/$defs/themes"},
+    "assets": {"type": "array", "maxItems": 500, "items": {"$ref": "#/$defs/asset"}},
+    "recovery": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["lastBackupAt", "lastRestoreAt"],
+      "properties": {
+        "lastBackupAt": {"oneOf": [{"$ref": "#/$defs/instant"}, {"type": "null"}]},
+        "lastRestoreAt": {"oneOf": [{"$ref": "#/$defs/instant"}, {"type": "null"}]}
+      }
+    }
+  },
+  "$defs": {
+    "id": {"type": "string", "pattern": "^[a-f0-9]{32}$"},
+    "instant": {"type": "string", "format": "date-time"},
+    "date": {"type": "string", "format": "date"},
+    "intent": {"enum": ["draft", "approved", "archived", "trashed"]},
+    "entryBase": {
+      "type": "object",
+      "properties": {
+        "id": {"$ref": "#/$defs/id"},
+        "intent": {"$ref": "#/$defs/intent"},
+        "title": {"type": "string", "maxLength": 120},
+        "body": {"type": "string", "maxLength": 3000},
+        "imageId": {"oneOf": [{"$ref": "#/$defs/id"}, {"type": "null"}]},
+        "imageAlt": {"type": "string", "maxLength": 300},
+        "displayStart": {"oneOf": [{"$ref": "#/$defs/instant"}, {"type": "null"}]},
+        "approvedAt": {"oneOf": [{"$ref": "#/$defs/instant"}, {"type": "null"}]},
+        "createdAt": {"$ref": "#/$defs/instant"},
+        "updatedAt": {"$ref": "#/$defs/instant"}
+      }
+    },
+    "news": {
+      "allOf": [
+        {"$ref": "#/$defs/entryBase"},
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["id", "type", "intent", "title", "body", "imageId", "imageAlt", "displayStart", "expiry", "approvedAt", "createdAt", "updatedAt"],
+          "properties": {
+            "id": {"$ref": "#/$defs/id"}, "type": {"const": "news"}, "intent": {"$ref": "#/$defs/intent"},
+            "title": {"type": "string", "maxLength": 120}, "body": {"type": "string", "maxLength": 3000},
+            "imageId": {"oneOf": [{"$ref": "#/$defs/id"}, {"type": "null"}]}, "imageAlt": {"type": "string", "maxLength": 300},
+            "displayStart": {"oneOf": [{"$ref": "#/$defs/instant"}, {"type": "null"}]},
+            "expiry": {"oneOf": [{"$ref": "#/$defs/instant"}, {"type": "null"}]},
+            "approvedAt": {"oneOf": [{"$ref": "#/$defs/instant"}, {"type": "null"}]},
+            "createdAt": {"$ref": "#/$defs/instant"}, "updatedAt": {"$ref": "#/$defs/instant"}
+          }
+        }
+      ]
+    },
+    "event": {
+      "allOf": [
+        {"$ref": "#/$defs/entryBase"},
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["id", "type", "intent", "title", "body", "imageId", "imageAlt", "displayStart", "eventStart", "eventEnd", "approvedAt", "createdAt", "updatedAt"],
+          "properties": {
+            "id": {"$ref": "#/$defs/id"}, "type": {"const": "event"}, "intent": {"$ref": "#/$defs/intent"},
+            "title": {"type": "string", "maxLength": 120}, "body": {"type": "string", "maxLength": 3000},
+            "imageId": {"oneOf": [{"$ref": "#/$defs/id"}, {"type": "null"}]}, "imageAlt": {"type": "string", "maxLength": 300},
+            "displayStart": {"oneOf": [{"$ref": "#/$defs/instant"}, {"type": "null"}]},
+            "eventStart": {"$ref": "#/$defs/instant"}, "eventEnd": {"oneOf": [{"$ref": "#/$defs/instant"}, {"type": "null"}]},
+            "approvedAt": {"oneOf": [{"$ref": "#/$defs/instant"}, {"type": "null"}]},
+            "createdAt": {"$ref": "#/$defs/instant"}, "updatedAt": {"$ref": "#/$defs/instant"}
+          }
+        }
+      ]
+    },
+    "exception": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "intent", "target", "startDate", "endDate", "closed", "opens", "closes", "note", "createdAt", "updatedAt"],
+      "properties": {
+        "id": {"$ref": "#/$defs/id"}, "intent": {"$ref": "#/$defs/intent"}, "target": {"enum": ["cafe", "shop", "both"]},
+        "startDate": {"$ref": "#/$defs/date"}, "endDate": {"$ref": "#/$defs/date"}, "closed": {"type": "boolean"},
+        "opens": {"type": ["string", "null"], "pattern": "^(?:[01][0-9]|2[0-3]):[0-5][0-9]$"},
+        "closes": {"type": ["string", "null"], "pattern": "^(?:[01][0-9]|2[0-3]):[0-5][0-9]$"},
+        "note": {"type": "string", "maxLength": 120}, "createdAt": {"$ref": "#/$defs/instant"}, "updatedAt": {"$ref": "#/$defs/instant"}
+      }
+    },
+    "themes": {
+      "type": "object", "additionalProperties": false, "required": ["mode", "windows"],
+      "properties": {
+        "mode": {"enum": ["automatic", "off", "spring", "summer", "autumn", "christmas", "winter"]},
+        "windows": {
+          "type": "object", "additionalProperties": false, "required": ["spring", "summer", "autumn"],
+          "properties": {
+            "spring": {"oneOf": [{"$ref": "#/$defs/date"}, {"type": "null"}]},
+            "summer": {"oneOf": [{"$ref": "#/$defs/date"}, {"type": "null"}]},
+            "autumn": {"oneOf": [{"$ref": "#/$defs/date"}, {"type": "null"}]}
+          }
+        }
+      }
+    },
+    "asset": {
+      "type": "object", "additionalProperties": false,
+      "required": ["id", "status", "sourceFile", "sourceMime", "hash", "width", "height", "variants", "createdAt", "trashedAt"],
+      "properties": {
+        "id": {"$ref": "#/$defs/id"}, "status": {"enum": ["active", "trashed"]},
+        "sourceFile": {"type": "string", "pattern": "^[A-Za-z0-9._-]+$"}, "sourceMime": {"enum": ["image/jpeg", "image/png", "image/webp"]},
+        "hash": {"type": "string", "pattern": "^[a-f0-9]{64}$"}, "width": {"type": "integer", "minimum": 1, "maximum": 8000}, "height": {"type": "integer", "minimum": 1, "maximum": 8000},
+        "variants": {"type": "array", "minItems": 1, "items": {"type": "object", "additionalProperties": false, "required": ["file", "width", "height", "mime", "bytes"], "properties": {"file": {"type": "string", "pattern": "^[A-Za-z0-9._-]+$"}, "width": {"type": "integer", "minimum": 1}, "height": {"type": "integer", "minimum": 1}, "mime": {"enum": ["image/jpeg", "image/webp"]}, "bytes": {"type": "integer", "minimum": 1}}}},
+        "createdAt": {"$ref": "#/$defs/instant"}, "trashedAt": {"oneOf": [{"$ref": "#/$defs/instant"}, {"type": "null"}]}
+      }
+    }
+  }
+}

@@ -1,0 +1,25 @@
+# Architecture decision records
+
+All decisions below were accepted during the planning session on 22 July 2026.
+
+1. [IONOS production and local preview](0001-ionos-production-and-local-preview.md)
+2. [Telephone and email instead of web forms](0002-use-phone-and-email-instead-of-web-forms.md)
+3. [Changing menu and prices stay off the site](0003-keep-changing-menu-and-prices-out-of-the-site.md)
+4. [Single-page visitor experience with separate legal pages](0004-use-a-single-page-visitor-experience-with-separate-legal-pages.md)
+5. [German-only publication](0005-publish-the-site-in-german-only.md)
+6. [Seasonal themes and admin override](0006-schedule-seasonal-themes-with-an-admin-override.md)
+7. [Narrow current-information admin](0007-limit-the-admin-area-to-current-information.md)
+8. [Google Maps links instead of an embed](0008-link-to-google-maps-instead-of-embedding-it.md)
+9. [Aggregate GoatCounter statistics](0009-keep-aggregate-goatcounter-statistics.md)
+10. [Framework-free local front end](0010-use-a-framework-free-local-front-end.md)
+11. [Committed responsive image variants](0011-commit-generated-responsive-image-variants.md)
+12. [File-backed editorial store](0012-use-a-file-backed-editorial-store.md)
+13. [One password-only owner account](0013-use-one-password-only-owner-account.md)
+14. [Legal sign-off before publication](0014-require-legal-sign-off-before-publication.md)
+15. [No consent banner in the approved architecture](0015-do-not-show-a-consent-banner.md)
+16. [Mobile performance budget](0016-enforce-a-mobile-performance-budget.md)
+17. [WCAG 2.2 AA release target](0017-require-wcag-2-2-aa.md)
+18. [One public current-content snapshot](0018-publish-one-public-json-snapshot.md)
+19. [Linked Hofcafé and Hofladen business components](0019-model-hofcafe-and-hofladen-as-linked-business-components.md)
+20. [Isolated IONOS staging](0020-use-an-isolated-ionos-staging-deployment.md)
+21. [Time-dependent public content resolved on request](0021-resolve-time-dependent-public-content-on-request.md)

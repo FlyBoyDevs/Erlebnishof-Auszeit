@@ -1,0 +1,54 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://erlebnishof-auszeit.de/content/current-v1.schema.json",
+  "title": "Current public content v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schemaVersion", "releaseVersion", "effectCapabilityVersion", "generatedAt", "nextTransitionAt", "snapshotRevision", "cacheValidator", "newsVersion", "entries", "exceptions", "theme"],
+  "properties": {
+    "schemaVersion": {"const": 1},
+    "releaseVersion": {"type": "string", "pattern": "^[A-Za-z0-9._-]{1,64}$"},
+    "effectCapabilityVersion": {"type": "string", "pattern": "^[a-f0-9]{16}$"},
+    "generatedAt": {"$ref": "#/$defs/instant"},
+    "nextTransitionAt": {"oneOf": [{"$ref": "#/$defs/instant"}, {"type": "null"}]},
+    "snapshotRevision": {"type": "string", "pattern": "^[a-f0-9]{32}$"},
+    "cacheValidator": {"type": "string", "pattern": "^[a-f0-9]{32}$"},
+    "newsVersion": {"$ref": "#/$defs/version"},
+    "entries": {"type": "array", "maxItems": 50, "items": {"$ref": "#/$defs/entry"}},
+    "exceptions": {"type": "array", "maxItems": 50, "items": {"$ref": "#/$defs/exception"}},
+    "theme": {
+      "type": "object", "additionalProperties": false, "required": ["name", "effect"],
+      "properties": {
+        "name": {"type": ["string", "null"], "enum": [null, "spring", "summer", "autumn", "christmas", "winter"]},
+        "effect": {"type": ["string", "null"], "pattern": "^[a-z0-9-]+$"}
+      }
+    }
+  },
+  "$defs": {
+    "id": {"type": "string", "pattern": "^[a-f0-9]{32}$"},
+    "instant": {"type": "string", "format": "date-time"},
+    "date": {"type": "string", "format": "date"},
+    "version": {
+      "type": "object", "additionalProperties": false, "required": ["generation", "sequence"],
+      "properties": {"generation": {"type": "string", "pattern": "^[a-f0-9]{32}$"}, "sequence": {"type": "integer", "minimum": 0}}
+    },
+    "entry": {
+      "type": "object", "additionalProperties": false,
+      "required": ["id", "type", "title", "body", "publishedAt", "eventStart", "eventEnd", "image", "changeVersion"],
+      "properties": {
+        "id": {"$ref": "#/$defs/id"}, "type": {"enum": ["news", "event"]}, "title": {"type": "string", "maxLength": 120}, "body": {"type": "string", "maxLength": 3000},
+        "publishedAt": {"$ref": "#/$defs/instant"}, "eventStart": {"oneOf": [{"$ref": "#/$defs/instant"}, {"type": "null"}]}, "eventEnd": {"oneOf": [{"$ref": "#/$defs/instant"}, {"type": "null"}]},
+        "image": {"oneOf": [{"type": "null"}, {"type": "object", "additionalProperties": false, "required": ["url", "width", "height", "alt"], "properties": {"url": {"type": "string", "pattern": "^/content/media/[A-Za-z0-9%._-]+$"}, "width": {"type": "integer", "minimum": 1}, "height": {"type": "integer", "minimum": 1}, "alt": {"type": "string", "maxLength": 300}}}]},
+        "changeVersion": {"$ref": "#/$defs/version"}
+      }
+    },
+    "exception": {
+      "type": "object", "additionalProperties": false,
+      "required": ["id", "target", "startDate", "endDate", "closed", "opens", "closes", "note"],
+      "properties": {
+        "id": {"$ref": "#/$defs/id"}, "target": {"enum": ["cafe", "shop", "both"]}, "startDate": {"$ref": "#/$defs/date"}, "endDate": {"$ref": "#/$defs/date"}, "closed": {"type": "boolean"},
+        "opens": {"type": ["string", "null"], "pattern": "^(?:[01][0-9]|2[0-3]):[0-5][0-9]$"}, "closes": {"type": ["string", "null"], "pattern": "^(?:[01][0-9]|2[0-3]):[0-5][0-9]$"}, "note": {"type": "string", "maxLength": 120}
+      }
+    }
+  }
+}

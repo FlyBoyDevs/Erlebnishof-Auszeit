@@ -22,7 +22,8 @@
     box-sizing: border-box
 }
 
-html, body {
+html,
+body {
     margin: 0;
     padding: 0;
     height: 100%;
@@ -51,12 +52,14 @@ body {
     /*rgba(123, 100, 72, 0.9) 0%,*/
     /*rgba(74, 79, 54, 0.9) 100%*/
     /*);*/
-    background-color: rgba(123, 100, 72, 0.9); /* warm dark wheat / wood */
+    background-color: rgba(123, 100, 72, 0.9);
+    /* warm dark wheat / wood */
     color: var(--text);
     font-family: "Inter", "Segoe UI", system-ui, -apple-system, sans-serif;
     line-height: 1.55;
     padding-top: var(--header-h);
-    position: relative; /* needed for stacking with ::before */
+    position: relative;
+    /* needed for stacking with ::before */
 }
 
 /* global photo background – works on mobile too */
@@ -64,7 +67,8 @@ body::before {
     content: "";
     position: fixed;
     inset: 0;
-    z-index: -1; /* sit behind all content */
+    z-index: -1;
+    /* sit behind all content */
     pointer-events: none;
     background-image: url("img/background_erlebnishof.webp");
     background-repeat: no-repeat;
@@ -95,14 +99,16 @@ body::before {
     align-items: center;
     scroll-margin-top: calc(var(--header-h) + 12px);
     /*border: #0f1a14 solid 1px; !* TODO remove *!*/
-    position: relative; /* added so ::after can be positioned relative to the section */
+    position: relative;
+    /* added so ::after can be positioned relative to the section */
 }
 
 /* ensure section content sits above the overlay */
-.section > .container {
+.section>.container {
     width: 90%;
     position: relative;
-    z-index: 200; /* increased so sections render above the snow canvas */
+    z-index: 200;
+    /* increased so sections render above the snow canvas */
 }
 
 /* apply the same overlay effect used for .bg-wheat to all sections (except hero).
@@ -125,7 +131,8 @@ body::before {
     top: 0;
     left: 0;
     right: 0;
-    z-index: 1500; /* above most content */
+    z-index: 1500;
+    /* above most content */
     backdrop-filter: blur(10px);
     -webkit-backdrop-filter: blur(10px);
     background: rgba(255, 255, 255, .9);
@@ -202,8 +209,13 @@ body::before {
 }
 
 @keyframes nav-ticker-scroll {
-    0% { transform: translateX(0); }
-    100% { transform: translateX(-50%); }
+    0% {
+        transform: translateX(0);
+    }
+
+    100% {
+        transform: translateX(-50%);
+    }
 }
 
 .nav-ticker:hover .nav-ticker__track {
@@ -211,14 +223,29 @@ body::before {
 }
 
 @media (prefers-reduced-motion: reduce) {
-    .nav-ticker__track { animation: none; }
+    .nav-ticker__track {
+        animation: none;
+    }
 }
 
 @media (max-width: 860px) {
+
     /* Keep ticker visible on small devices; make it more compact */
-    .nav-ticker { display: flex; min-width: 0; flex: 0 1 220px; max-width: 220px; }
-    .nav-ticker__track { gap: 24px; animation-duration: 32s; }
-    .nav-ticker__group { font-size: .85rem; }
+    .nav-ticker {
+        display: flex;
+        min-width: 0;
+        flex: 0 1 220px;
+        max-width: 220px;
+    }
+
+    .nav-ticker__track {
+        gap: 24px;
+        animation-duration: 32s;
+    }
+
+    .nav-ticker__group {
+        font-size: .85rem;
+    }
 }
 
 .nav-toggle {
@@ -254,7 +281,8 @@ body::before {
     transform: translateX(-50%)
 }
 
-.main-nav a:hover::after, .main-nav a.is-active::after {
+.main-nav a:hover::after,
+.main-nav a.is-active::after {
     width: 60%
 }
 
@@ -433,18 +461,48 @@ body::before {
 }
 
 /* Keep hero title/content above slides (images/video) and overlay */
-.hero__center{
+.hero__center {
     position: relative;
     z-index: 5;
     width: 100%;
     display: grid;
     place-items: center;
-    padding-top: clamp(72px, 10vh, 150px);
+    padding: clamp(24px, 5vh, 64px) 16px 32px;
 }
 
-.hero__title{
+.vacation-banner {
+    width: min(680px, 94vw);
+    padding: 18px 22px;
+    color: #2b1607;
+    background: rgba(255, 248, 226, .96);
+    border: 3px solid var(--brand-primary);
+    border-radius: 8px;
+    box-shadow: 0 18px 44px rgba(0, 0, 0, .38);
+}
+
+.vacation-banner h2 {
+    margin: 0 0 6px;
+    color: #8a3411;
+    font-size: 1.25rem;
+    letter-spacing: 0;
+}
+
+.vacation-banner p {
+    margin: 4px 0;
+}
+
+.vacation-banner ul {
+    margin: 6px 0 0;
+    padding-left: 20px;
+}
+
+.vacation-banner li {
+    margin-top: 2px;
+}
+
+.hero__title {
     color: #fff;
-    text-shadow: 0 10px 30px rgba(0,0,0,1);
+    text-shadow: 0 10px 30px rgba(0, 0, 0, 1);
     letter-spacing: 2px;
     display: inline-block;
     padding: 14px 18px;
@@ -515,10 +573,24 @@ body::before {
 }
 
 @media (max-width: 480px) {
+    .hero__center {
+        padding-top: 16px;
+    }
+
+    .vacation-banner {
+        padding: 14px 16px;
+        font-size: .88rem;
+    }
+
+    .vacation-banner h2 {
+        font-size: 1.05rem;
+    }
+
     .hero__subtitle {
         margin-top: 12px;
         padding: 10px 12px;
     }
+
     .hero-cta {
         padding: 10px 14px;
         width: min(88vw, 320px);
@@ -533,7 +605,7 @@ body::before {
 }
 
 
-.bg-wheat > .container {
+.bg-wheat>.container {
     position: relative;
     z-index: 1
 }
@@ -582,9 +654,8 @@ body::before {
     /*);*/
 
     background: linear-gradient(135deg,
-    rgba(247, 243, 243, 0.9),
-    rgba(236, 230, 230, 0.9)
-    );
+            rgba(247, 243, 243, 0.9),
+            rgba(236, 230, 230, 0.9));
     box-shadow: 0 32px 60px -40px rgba(57, 28, 8, .55);
     display: flex;
     flex-direction: column;
@@ -599,7 +670,7 @@ body::before {
     position: absolute;
     inset: 0;
     background-image: linear-gradient(0deg, rgba(255, 255, 255, .03) 50%, transparent 50%),
-    linear-gradient(90deg, rgba(0, 0, 0, .03) 50%, transparent 50%);
+        linear-gradient(90deg, rgba(0, 0, 0, .03) 50%, transparent 50%);
     background-size: 3px 3px;
     opacity: 0.35;
     mix-blend-mode: multiply;
@@ -610,9 +681,11 @@ body::before {
 /* darker cozy farm gradient */
 .container--dark {
     background: linear-gradient(135deg,
-        rgba(123, 100, 72, 0.5) 0%, /* warm dark wheat / wood */
-        rgba(74, 79, 54, 0.5) 100% /* muted farmhouse green/brown */
-    );
+            rgba(123, 100, 72, 0.5) 0%,
+            /* warm dark wheat / wood */
+            rgba(74, 79, 54, 0.5) 100%
+            /* muted farmhouse green/brown */
+        );
     color: #ffffff;
 }
 
@@ -640,9 +713,7 @@ body::before {
 }
 
 /* events specific card adjustments */
-#events .events-layout {
-
-}
+#events .events-layout {}
 
 #events .events-layout .events-text {
     max-width: var(--maxw);
@@ -676,29 +747,41 @@ body::before {
     /*max-height: 520px*/
 }
 
-#menuCarousel, .hof-carousel {
+#menuCarousel,
+.hof-carousel {
     position: relative;
     width: 100%;
     height: 100%;
     min-height: 320px
 }
 
-#food-menu .menu-gallery img, #hofladen .hof-gallery img, .events-carousel img {
+#food-menu .menu-gallery img,
+#hofladen .hof-gallery img,
+.events-carousel img {
     object-fit: cover;
     width: 100%;
     height: 100%
 }
 
 /* ensure carousel inner/items/images fill container and keep consistent mobile height */
-#menuCarousel .carousel-inner, #hofladenCarousel .carousel-inner, #newsCarousel .carousel-inner, #eventsCarousel .carousel-inner {
+#menuCarousel .carousel-inner,
+#hofladenCarousel .carousel-inner,
+#newsCarousel .carousel-inner,
+#eventsCarousel .carousel-inner {
     height: 100%
 }
 
-#menuCarousel .carousel-item, #hofladenCarousel .carousel-item, #newsCarousel .carousel-item, #eventsCarousel .carousel-item {
+#menuCarousel .carousel-item,
+#hofladenCarousel .carousel-item,
+#newsCarousel .carousel-item,
+#eventsCarousel .carousel-item {
     height: 100%
 }
 
-#menuCarousel .carousel-item img, #hofladenCarousel .carousel-item img, #newsCarousel .carousel-item img, #eventsCarousel .carousel-item img {
+#menuCarousel .carousel-item img,
+#hofladenCarousel .carousel-item img,
+#newsCarousel .carousel-item img,
+#eventsCarousel .carousel-item img {
     width: 50vw;
     height: 50vh;
     object-fit: contain;
@@ -711,7 +794,8 @@ body::before {
 #newsCarousel .carousel-item img {
     width: 100%;
     max-width: 100%;
-    height: 80vh; /* tall on desktop */
+    height: 80vh;
+    /* tall on desktop */
     max-height: 85vh;
     object-fit: contain;
     margin: 0 auto;
@@ -750,12 +834,22 @@ body::before {
 
 /* keep a stable, non-jumping carousel height on small screens */
 @media (max-width: 899px) {
-    #menuCarousel, #hofladenCarousel, #newsCarousel, #eventsCarousel, #food-menu .menu-gallery, #hofladen .hof-gallery, .events-carousel {
+
+    #menuCarousel,
+    #hofladenCarousel,
+    #newsCarousel,
+    #eventsCarousel,
+    #food-menu .menu-gallery,
+    #hofladen .hof-gallery,
+    .events-carousel {
         min-height: 360px;
         max-height: 420px;
     }
 
-    #menuCarousel .carousel-item img, #hofladenCarousel .carousel-item img, #newsCarousel .carousel-item img, #eventsCarousel .carousel-item img {
+    #menuCarousel .carousel-item img,
+    #hofladenCarousel .carousel-item img,
+    #newsCarousel .carousel-item img,
+    #eventsCarousel .carousel-item img {
         object-fit: contain;
     }
 
@@ -764,6 +858,7 @@ body::before {
         min-height: unset;
         max-height: unset;
     }
+
     #newsCarousel .carousel-item img {
         height: 75vh;
         max-height: 80vh;
@@ -772,15 +867,17 @@ body::before {
 }
 
 /* --- Hofladen gallery fallback grid --- */
-.menu-gallery-simple, .hof-gallery-simple {
+.menu-gallery-simple,
+.hof-gallery-simple {
     display: grid;
-    grid-template-columns:1fr;
+    grid-template-columns: 1fr;
     gap: 12px;
     margin-top: 16px;
     justify-items: center
 }
 
-.menu-gallery-simple img, .hof-gallery-simple img {
+.menu-gallery-simple img,
+.hof-gallery-simple img {
     width: 100%;
     max-width: 220px;
     height: auto;
@@ -790,14 +887,18 @@ body::before {
 }
 
 @media (min-width: 480px) {
-    .menu-gallery-simple, .hof-gallery-simple {
-        grid-template-columns:repeat(auto-fit, minmax(160px, 1fr))
+
+    .menu-gallery-simple,
+    .hof-gallery-simple {
+        grid-template-columns: repeat(auto-fit, minmax(160px, 1fr))
     }
 }
 
 @media (min-width: 768px) {
-    .menu-gallery-simple, .hof-gallery-simple {
-        grid-template-columns:repeat(auto-fit, minmax(160px, 1fr))
+
+    .menu-gallery-simple,
+    .hof-gallery-simple {
+        grid-template-columns: repeat(auto-fit, minmax(160px, 1fr))
     }
 }
 
@@ -809,8 +910,10 @@ body::before {
 
 .events-carousel {
     width: 100%;
-    max-width: 100%; /* changed from 1080px to match other carousels */
-    margin: 12px 0 0; /* changed from "12px auto 0" to remove auto centering */
+    max-width: 100%;
+    /* changed from 1080px to match other carousels */
+    margin: 12px 0 0;
+    /* changed from "12px auto 0" to remove auto centering */
     position: relative;
     overflow: hidden;
     cursor: pointer;
@@ -867,7 +970,8 @@ body::before {
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 0; /* keep centering exact */
+    padding: 0;
+    /* keep centering exact */
 }
 
 #newsCarousel .carousel-item img {
@@ -919,7 +1023,7 @@ body::before {
     pointer-events: none;
     z-index: 10;
     text-shadow: 0 2px 8px rgba(0, 0, 0, 0.5),
-                 0 0 12px rgba(255, 255, 255, 0.8);
+        0 0 12px rgba(255, 255, 255, 0.8);
     filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
 }
 
@@ -947,7 +1051,7 @@ body::before {
 
 .kv {
     display: grid;
-    grid-template-columns:140px 1fr;
+    grid-template-columns: 140px 1fr;
     gap: 6px 12px
 }
 
@@ -969,7 +1073,8 @@ body::before {
 }
 
 .social-icon {
-    font-size: 1.35rem; /* size of bootstrap icon */
+    font-size: 1.35rem;
+    /* size of bootstrap icon */
     line-height: 1;
     vertical-align: middle;
 }
@@ -991,7 +1096,8 @@ footer .container {
     align-items: center;
     flex-wrap: wrap;
     padding: 16px 0;
-    justify-content: center; /* <-- added to center-align footer content */
+    justify-content: center;
+    /* <-- added to center-align footer content */
 }
 
 .legal-link {
@@ -1011,7 +1117,8 @@ footer .container {
     display: grid;
     place-items: center;
     padding: 24px;
-    z-index: 9999; /* changed from 5000 to be above navbar (1500) */
+    z-index: 9999;
+    /* changed from 5000 to be above navbar (1500) */
 }
 
 .legal-modal[hidden] {
@@ -1036,10 +1143,13 @@ footer .container {
     right: 12px;
     border: none;
     background: rgba(0, 0, 0, .08);
-    width: 28px; /* changed from 36px */
-    height: 28px; /* changed from 36px */
+    width: 28px;
+    /* changed from 36px */
+    height: 28px;
+    /* changed from 36px */
     border-radius: 50%;
-    font-size: 1.2rem; /* changed from 1.5rem */
+    font-size: 1.2rem;
+    /* changed from 1.5rem */
     cursor: pointer;
     display: flex;
     align-items: center;
@@ -1116,8 +1226,14 @@ footer .container {
 }
 
 @media (max-width: 899px) {
+
     /* stabilize mobile carousel height to avoid jumping */
-    #menuCarousel, #hofladenCarousel, #newsCarousel, #food-menu .menu-gallery, #hofladen .hof-gallery, .events-carousel {
+    #menuCarousel,
+    #hofladenCarousel,
+    #newsCarousel,
+    #food-menu .menu-gallery,
+    #hofladen .hof-gallery,
+    .events-carousel {
         min-height: 360px;
         max-height: 420px
     }
@@ -1160,9 +1276,12 @@ footer .container {
 }
 
 .nav-open .nav-toggle .bar:nth-child(2) {
-    opacity: 0; /* hide visually */
-    transform: scaleX(0); /* eliminate any anti-aliasing remnants */
-    background-color: transparent; /* prevent faint tint on some devices */
+    opacity: 0;
+    /* hide visually */
+    transform: scaleX(0);
+    /* eliminate any anti-aliasing remnants */
+    background-color: transparent;
+    /* prevent faint tint on some devices */
 }
 
 .nav-open .nav-toggle .bar:nth-child(3) {
@@ -1263,7 +1382,8 @@ footer .container {
 }
 
 /* keep these overrides last so they win if earlier rules differ */
-.nav-open .nav-toggle .bar { /* ensure transform origin smoothness */
+.nav-open .nav-toggle .bar {
+    /* ensure transform origin smoothness */
     transform-origin: center;
 }
 
@@ -1273,9 +1393,11 @@ footer .container {
     position: fixed;
     inset: 0;
     pointer-events: none;
-    z-index: 50; /* sits above hero slides (0) but below section content (200) and header (1500) */
+    z-index: 50;
+    /* sits above hero slides (0) but below section content (200) and header (1500) */
     overflow: hidden;
-    mix-blend-mode: screen; /* optional, gives a subtle brighter look against darker backgrounds */
+    mix-blend-mode: screen;
+    /* optional, gives a subtle brighter look against darker backgrounds */
 }
 
 #snowCanvas {
@@ -1287,7 +1409,9 @@ footer .container {
 
 /* Respect reduced-motion preference: don't render/animate snow */
 @media (prefers-reduced-motion: reduce) {
-    #snow, #snowCanvas {
+
+    #snow,
+    #snowCanvas {
         display: none !important;
     }
 }
@@ -1344,7 +1468,8 @@ footer .container {
 
 .kontakt-grid {
     display: grid;
-    grid-template-columns: 1fr; /* mobile: single column */
+    grid-template-columns: 1fr;
+    /* mobile: single column */
     gap: 32px;
     width: 100%;
     align-items: start;
@@ -1353,7 +1478,8 @@ footer .container {
 /* Desktop: two columns */
 @media (min-width: 900px) {
     .kontakt-grid {
-        grid-template-columns: 1fr 1fr; /* two equal columns */
+        grid-template-columns: 1fr 1fr;
+        /* two equal columns */
         gap: 48px;
     }
 }
@@ -1397,8 +1523,10 @@ footer .container {
 
 .events-carousel {
     width: 100%;
-    max-width: 100%; /* changed from 1080px to match other carousels */
-    margin: 12px 0 0; /* changed from "12px auto 0" to remove auto centering */
+    max-width: 100%;
+    /* changed from 1080px to match other carousels */
+    margin: 12px 0 0;
+    /* changed from "12px auto 0" to remove auto centering */
     position: relative;
     overflow: hidden;
     cursor: pointer;
@@ -1455,7 +1583,8 @@ footer .container {
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 0; /* keep centering exact */
+    padding: 0;
+    /* keep centering exact */
 }
 
 #newsCarousel .carousel-item img {
@@ -1507,7 +1636,7 @@ footer .container {
     pointer-events: none;
     z-index: 10;
     text-shadow: 0 2px 8px rgba(0, 0, 0, 0.5),
-                 0 0 12px rgba(255, 255, 255, 0.8);
+        0 0 12px rgba(255, 255, 255, 0.8);
     filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
 }
 
@@ -1535,7 +1664,7 @@ footer .container {
 
 .kv {
     display: grid;
-    grid-template-columns:140px 1fr;
+    grid-template-columns: 140px 1fr;
     gap: 6px 12px
 }
 
@@ -1557,7 +1686,8 @@ footer .container {
 }
 
 .social-icon {
-    font-size: 1.35rem; /* size of bootstrap icon */
+    font-size: 1.35rem;
+    /* size of bootstrap icon */
     line-height: 1;
     vertical-align: middle;
 }
@@ -1579,7 +1709,8 @@ footer .container {
     align-items: center;
     flex-wrap: wrap;
     padding: 16px 0;
-    justify-content: center; /* <-- added to center-align footer content */
+    justify-content: center;
+    /* <-- added to center-align footer content */
 }
 
 .legal-link {
@@ -1599,7 +1730,8 @@ footer .container {
     display: grid;
     place-items: center;
     padding: 24px;
-    z-index: 9999; /* changed from 5000 to be above navbar (1500) */
+    z-index: 9999;
+    /* changed from 5000 to be above navbar (1500) */
 }
 
 .legal-modal[hidden] {
@@ -1624,10 +1756,13 @@ footer .container {
     right: 12px;
     border: none;
     background: rgba(0, 0, 0, .08);
-    width: 28px; /* changed from 36px */
-    height: 28px; /* changed from 36px */
+    width: 28px;
+    /* changed from 36px */
+    height: 28px;
+    /* changed from 36px */
     border-radius: 50%;
-    font-size: 1.2rem; /* changed from 1.5rem */
+    font-size: 1.2rem;
+    /* changed from 1.5rem */
     cursor: pointer;
     display: flex;
     align-items: center;
@@ -1704,8 +1839,14 @@ footer .container {
 }
 
 @media (max-width: 899px) {
+
     /* stabilize mobile carousel height to avoid jumping */
-    #menuCarousel, #hofladenCarousel, #newsCarousel, #food-menu .menu-gallery, #hofladen .hof-gallery, .events-carousel {
+    #menuCarousel,
+    #hofladenCarousel,
+    #newsCarousel,
+    #food-menu .menu-gallery,
+    #hofladen .hof-gallery,
+    .events-carousel {
         min-height: 360px;
         max-height: 420px
     }
@@ -1748,9 +1889,12 @@ footer .container {
 }
 
 .nav-open .nav-toggle .bar:nth-child(2) {
-    opacity: 0; /* hide visually */
-    transform: scaleX(0); /* eliminate any anti-aliasing remnants */
-    background-color: transparent; /* prevent faint tint on some devices */
+    opacity: 0;
+    /* hide visually */
+    transform: scaleX(0);
+    /* eliminate any anti-aliasing remnants */
+    background-color: transparent;
+    /* prevent faint tint on some devices */
 }
 
 .nav-open .nav-toggle .bar:nth-child(3) {
@@ -1851,7 +1995,8 @@ footer .container {
 }
 
 /* keep these overrides last so they win if earlier rules differ */
-.nav-open .nav-toggle .bar { /* ensure transform origin smoothness */
+.nav-open .nav-toggle .bar {
+    /* ensure transform origin smoothness */
     transform-origin: center;
 }
 
@@ -1861,9 +2006,11 @@ footer .container {
     position: fixed;
     inset: 0;
     pointer-events: none;
-    z-index: 50; /* sits above hero slides (0) but below section content (200) and header (1500) */
+    z-index: 50;
+    /* sits above hero slides (0) but below section content (200) and header (1500) */
     overflow: hidden;
-    mix-blend-mode: screen; /* optional, gives a subtle brighter look against darker backgrounds */
+    mix-blend-mode: screen;
+    /* optional, gives a subtle brighter look against darker backgrounds */
 }
 
 #snowCanvas {
@@ -1875,7 +2022,9 @@ footer .container {
 
 /* Respect reduced-motion preference: don't render/animate snow */
 @media (prefers-reduced-motion: reduce) {
-    #snow, #snowCanvas {
+
+    #snow,
+    #snowCanvas {
         display: none !important;
     }
 }
@@ -1895,7 +2044,8 @@ footer .container {
 
 .kontakt-grid {
     display: grid;
-    grid-template-columns: 1fr; /* mobile: single column */
+    grid-template-columns: 1fr;
+    /* mobile: single column */
     gap: 32px;
     width: 100%;
     align-items: start;
@@ -1904,7 +2054,8 @@ footer .container {
 /* Desktop: two columns */
 @media (min-width: 900px) {
     .kontakt-grid {
-        grid-template-columns: 1fr 1fr; /* two equal columns */
+        grid-template-columns: 1fr 1fr;
+        /* two equal columns */
         gap: 48px;
     }
 }
